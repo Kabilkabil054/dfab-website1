@@ -10,16 +10,18 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 import hashlib
-from openai import OpenAI
+import resend
+from google import genai
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
 
 # =================== ENV / CLIENTS ===================
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 MONGO_URL = os.environ.get("MONGO_URL")
 DB_NAME = os.environ.get("DB_NAME")
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
 
 if not MONGO_URL:
     raise RuntimeError("MONGO_URL is missing in backend/.env")
@@ -27,10 +29,11 @@ if not MONGO_URL:
 if not DB_NAME:
     raise RuntimeError("DB_NAME is missing in backend/.env")
 
-openai_client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
-
 client = AsyncIOMotorClient(MONGO_URL)
 db = client[DB_NAME]
+
+gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+resend.api_key = RESEND_API_KEY
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -64,15 +67,12 @@ Industries: Energy, Pharmaceuticals, Locomotive, Aeronautical, Food & Dairy, Aut
 
 Contact: Phone: 080 43748186 | Email: info@dfab.in | WhatsApp: +91 8043748186
 
-Be professional, concise, and knowledgeable about:
-- Welding processes (TIG, MIG, Arc, Laser, Stellite)
-- Fabrication materials (stainless steel, carbon steel, aluminum, inconel)
-- Industry standards (ASME, AWS, ISO, ASTM)
-- Pressure vessel and pipeline codes
-- Industrial applications and sector-specific requirements
-
-For pricing and quotes, always direct users to contact DFAB directly via phone or WhatsApp.
-Keep responses concise and helpful. Use bullet points for clarity.
+Rules:
+- Be professional, concise, and knowledgeable.
+- Answer clearly about welding, fabrication, machining, materials, and industrial use cases.
+- For pricing or quotations, direct users to contact DFAB directly via phone or WhatsApp.
+- Keep responses concise and helpful.
+- Use bullet points when useful.
 """
 
 # =================== MODELS ===================
@@ -137,60 +137,95 @@ def parse_post(p):
 
 def send_emails(name, email, phone, subject, message):
     try:
-        sg_key = os.environ.get("SENDGRID_API_KEY")
         sender_email = os.environ.get("SENDER_EMAIL")
         receiver_email = os.environ.get("RECEIVER_EMAIL")
 
-        if not sg_key or not sender_email or not receiver_email:
-            logger.warning("SendGrid not configured fully, skipping email")
+        if not RESEND_API_KEY or not sender_email or not receiver_email:
+            logger.warning("Resend not configured fully, skipping email")
             return
-
-        sg = sendgrid.SendGridAPIClient(api_key=sg_key)
 
         admin_html = f"""
         <div style="font-family:Arial,sans-serif;max-width:600px">
-        <h2 style="color:#0A66C2">New Contact Inquiry - DFAB Website</h2>
-        <p><strong>Name:</strong> {name}</p>
-        <p><strong>Email:</strong> {email}</p>
-        <p><strong>Phone:</strong> {phone or 'Not provided'}</p>
-        <p><strong>Subject:</strong> {subject}</p>
-        <p><strong>Message:</strong></p><p>{message}</p>
+            <h2 style="color:#0A66C2">New Contact Inquiry - DFAB Website</h2>
+            <p><strong>Name:</strong> {name}</p>
+            <p><strong>Email:</strong> {email}</p>
+            <p><strong>Phone:</strong> {phone or 'Not provided'}</p>
+            <p><strong>Subject:</strong> {subject}</p>
+            <p><strong>Message:</strong></p>
+            <p>{message}</p>
         </div>
         """
 
-        sg.send(
-            Mail(
-                from_email=sender_email,
-                to_emails=receiver_email,
-                subject=f"New Inquiry: {subject} - {name}",
-                html_content=admin_html
-            )
-        )
+        resend.Emails.send({
+            "from": sender_email,
+            "to": [receiver_email],
+            "subject": f"New Inquiry: {subject} - {name}",
+            "reply_to": email,
+            "html": admin_html,
+        })
 
         client_html = f"""
         <div style="font-family:Arial,sans-serif;max-width:600px">
-        <h2 style="color:#0A66C2">Thank you for contacting DFAB!</h2>
-        <p>Dear {name},</p>
-        <p>We have received your inquiry and our team will get back to you within 24 hours.</p>
-        <p><strong>Your message:</strong> {message}</p>
-        <br><p>Best regards,<br><strong>DFAB Stainless System Pvt Ltd</strong></p>
-        <p>Phone: 080 43748186 | Email: info@dfab.in</p>
+            <h2 style="color:#0A66C2">Thank you for contacting DFAB!</h2>
+            <p>Dear {name},</p>
+            <p>We have received your inquiry and our team will get back to you soon.</p>
+            <p><strong>Your subject:</strong> {subject}</p>
+            <p><strong>Your message:</strong> {message}</p>
+            <br>
+            <p>Best regards,<br><strong>DFAB Stainless System Pvt Ltd</strong></p>
+            <p>Phone: 080 43748186 | Email: info@dfab.in</p>
         </div>
         """
 
-        sg.send(
-            Mail(
-                from_email=sender_email,
-                to_emails=email,
-                subject="We received your inquiry - DFAB Stainless System",
-                html_content=client_html
-            )
-        )
+        resend.Emails.send({
+            "from": sender_email,
+            "to": [email],
+            "subject": "We received your inquiry - DFAB Stainless System",
+            "html": client_html,
+        })
 
-        logger.info(f"Emails sent for inquiry from {name}")
+        logger.info(f"Emails sent successfully for inquiry from {name}")
 
     except Exception as e:
         logger.error(f"Email sending failed: {e}")
+
+def build_chat_prompt(previous_messages, latest_message):
+    history_text = ""
+    for msg in previous_messages[-10:]:
+        role = msg.get("role", "user").upper()
+        content = msg.get("content", "")
+        history_text += f"{role}: {content}\n"
+
+    prompt = f"""
+{DFAB_SYSTEM_MSG}
+
+Conversation history:
+{history_text}
+
+USER: {latest_message}
+
+Answer as DFAB AI Assistant.
+"""
+    return prompt
+
+def get_gemini_response(previous_messages, latest_message):
+    if not gemini_client:
+        raise HTTPException(
+            status_code=500,
+            detail="GEMINI_API_KEY is missing in backend/.env"
+        )
+
+    prompt = build_chat_prompt(previous_messages, latest_message)
+
+    response = gemini_client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+    )
+
+    if not response or not getattr(response, "text", None):
+        return "I'm sorry, I couldn't generate a response right now. Please contact DFAB at 080 43748186."
+
+    return response.text.strip()
 
 # =================== ROUTES ===================
 
@@ -222,30 +257,13 @@ async def submit_contact(form: ContactForm, background_tasks: BackgroundTasks):
 @api_router.post("/chat")
 async def chat_endpoint(msg: ChatMessage):
     try:
-        if not openai_client:
-            raise HTTPException(
-                status_code=500,
-                detail="OPENAI_API_KEY is missing in backend/.env"
-            )
-
         session_doc = await db.chat_sessions.find_one(
             {"session_id": msg.session_id},
             {"_id": 0}
         )
         previous_messages = session_doc.get("messages", []) if session_doc else []
 
-        messages = [
-            {"role": "system", "content": DFAB_SYSTEM_MSG},
-            *previous_messages,
-            {"role": "user", "content": msg.message},
-        ]
-
-        response = openai_client.responses.create(
-            model="gpt-4o-mini",
-            input=messages,
-        )
-
-        assistant_text = response.output_text
+        assistant_text = get_gemini_response(previous_messages, msg.message)
 
         updated_messages = [
             *previous_messages,
