@@ -10,8 +10,6 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 import hashlib
-import sendgrid
-from sendgrid.helpers.mail import Mail
 from openai import OpenAI
 
 ROOT_DIR = Path(__file__).parent
