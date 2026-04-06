@@ -117,6 +117,7 @@ requests-oauthlib==2.0.0
 requests-oauthlib>=2.0.0
 requests==2.32.5
 requests>=2.31.0
+resend==2.13.1
 rich==14.3.3
 rpds-py==0.30.0
 rsa==4.9.1
