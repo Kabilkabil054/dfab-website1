@@ -27,8 +27,8 @@ export default function Infrastructure() {
   return (
     <main className="bg-white">
       {/* Header */}
-      <div className="bg-[#0F172A] py-16 px-4">
-        <div className="max-w-7xl mx-auto">
+      <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
+        <div className="max-w-7xl mx-auto w-full">
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Our Facility</span>
           <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Infrastructure</h1>
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
@@ -104,7 +104,11 @@ export default function Infrastructure() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {MACHINES.map((m) => (
-                <div key={m.name} className="bg-slate-50 border border-slate-200 rounded-md p-6 text-center hover:border-[#0A66C2] transition-colors" data-testid={`machine-${m.name.replace(/\s+/g, "-").toLowerCase()}`}>
+                <div
+                  key={m.name}
+                  className="bg-slate-50 border border-slate-200 rounded-md p-6 text-center hover:border-[#0A66C2] transition-colors"
+                  data-testid={`machine-${m.name.replace(/\s+/g, "-").toLowerCase()}`}
+                >
                   <div className="text-3xl font-bold text-[#0A66C2] font-['Chivo'] mb-2">{m.count}</div>
                   <h4 className="font-semibold text-slate-900 mb-2">{m.name}</h4>
                   <p className="text-xs text-slate-500">{m.desc}</p>

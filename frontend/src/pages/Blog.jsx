@@ -61,32 +61,46 @@ export default function Blog() {
       : posts.filter((p) => p.category === activeCategory);
 
   const formatDate = (d) =>
-    new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+    new Date(d).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
 
   return (
     <main className="bg-white">
-      {/* Header */}
-      <div className="bg-[#0F172A] py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Knowledge Hub</span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Our Blog</h1>
+
+      {/* ✅ UPDATED HEADER (FIXED SIZE) */}
+      <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
+        <div className="max-w-7xl mx-auto w-full">
+          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
+            Knowledge Hub
+          </span>
+
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
+            Our Blog
+          </h1>
+
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
-            <Link to="/" className="hover:text-white transition-colors">Home</Link>
+            <Link to="/" className="hover:text-white transition-colors">
+              Home
+            </Link>
             <span>/</span>
             <span className="text-white">Blog</span>
           </div>
         </div>
       </div>
 
+      {/* BLOG CONTENT */}
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
+
           {/* Category Filter */}
-          <div className="flex flex-wrap gap-3 mb-12" data-testid="blog-category-filter">
+          <div className="flex flex-wrap gap-3 mb-12">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                data-testid={`category-btn-${cat.toLowerCase().replace(/\s/g, "-")}`}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   activeCategory === cat
                     ? "bg-[#0A66C2] text-white"
@@ -109,21 +123,32 @@ export default function Blog() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-testid="blog-posts-grid">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filtered.map((post) => (
-                <article key={post.id} className="group bg-white border border-slate-200 rounded-md overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-300" data-testid={`blog-post-${post.id}`}>
+                <article
+                  key={post.id}
+                  className="group bg-white border border-slate-200 rounded-md overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+                >
                   <div className="relative h-48 overflow-hidden">
                     {post.image_url ? (
-                      <img src={post.image_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img
+                        src={post.image_url}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
                     ) : (
                       <div className="w-full h-full bg-slate-200 flex items-center justify-center">
                         <span className="text-slate-400 text-sm">No Image</span>
                       </div>
                     )}
+
                     <div className="absolute top-3 left-3">
-                      <span className="bg-[#0A66C2] text-white text-xs font-semibold px-3 py-1 rounded-full">{post.category}</span>
+                      <span className="bg-[#0A66C2] text-white text-xs font-semibold px-3 py-1 rounded-full">
+                        {post.category}
+                      </span>
                     </div>
                   </div>
+
                   <div className="p-6">
                     <div className="flex items-center gap-4 text-xs text-slate-500 mb-3">
                       <span className="flex items-center gap-1">
@@ -133,22 +158,19 @@ export default function Blog() {
                         <User size={12} /> {post.author}
                       </span>
                     </div>
-                    <h3 className="text-lg font-bold text-slate-900 mb-2 font-['Chivo'] line-clamp-2">{post.title}</h3>
-                    <p className="text-sm text-slate-600 leading-relaxed mb-4 line-clamp-3">{post.excerpt}</p>
-                    {post.tags && post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        {post.tags.slice(0, 3).map((tag) => (
-                          <span key={tag} className="flex items-center gap-1 text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
-                            <Tag size={10} /> {tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+
+                    <h3 className="text-lg font-bold text-slate-900 mb-2 font-['Chivo']">
+                      {post.title}
+                    </h3>
+
+                    <p className="text-sm text-slate-600 mb-4">
+                      {post.excerpt}
+                    </p>
+
                     <Link
                       to={`/blog/${post.id}`}
                       state={{ post }}
-                      className="inline-flex items-center gap-1 text-sm font-semibold text-[#0A66C2] hover:gap-2 transition-all"
-                      data-testid={`blog-read-more-${post.id}`}
+                      className="inline-flex items-center gap-1 text-sm font-semibold text-[#0A66C2]"
                     >
                       Read More <ArrowRight size={14} />
                     </Link>
@@ -158,21 +180,15 @@ export default function Blog() {
             </div>
           )}
 
-          {filtered.length === 0 && !loading && (
-            <div className="text-center py-20 text-slate-400" data-testid="blog-empty">
-              <p className="text-lg">No posts in this category yet.</p>
-            </div>
-          )}
-
           <div className="mt-12 text-right">
             <Link
               to="/blog/admin"
-              className="text-sm text-slate-400 hover:text-[#0A66C2] transition-colors"
-              data-testid="blog-admin-link"
+              className="text-sm text-slate-400 hover:text-[#0A66C2]"
             >
               Admin Panel
             </Link>
           </div>
+
         </div>
       </section>
     </main>

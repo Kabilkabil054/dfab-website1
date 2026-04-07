@@ -36,11 +36,11 @@ export default function Navbar() {
     <>
       <header
         data-testid="navbar"
-        className={`sticky top-0 z-50 bg-white transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full z-50 bg-white transition-all duration-300 ${
           scrolled ? "shadow-lg" : "border-b border-slate-100"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-16">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-16 overflow-hidden">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group" data-testid="nav-logo">
             <img
@@ -52,8 +52,11 @@ export default function Navbar() {
               <span className="font-bold text-xl text-[#0A66C2] font-['Chivo'] group-hover:text-[#084e96] transition-colors">
                 
               </span>
-              <span className="text-[15px] text-slate-500 uppercase tracking-widest">
-                Stainless System Pvt Ltd
+              <span className="text-[15px] text-gray-800 uppercase tracking-widest">
+  Stainless System Pvt Ltd
+
+
+                <span className="text-[10px] ml-1 align-top">™</span>
               </span>
             </div>
           </Link>

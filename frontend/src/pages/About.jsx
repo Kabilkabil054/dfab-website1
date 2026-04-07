@@ -35,17 +35,25 @@ export default function About() {
   return (
     <main className="bg-white">
       {/* Page Header */}
-      <div className="bg-[#0F172A] py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">About DFAB</span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo'] animate-fade-up">Who We Are</h1>
-          <div className="flex items-center gap-2 mt-4 text-sm text-slate-400 animate-fade-in delay-200">
-            <Link to="/" className="hover:text-white transition-colors">Home</Link>
-            <span>/</span>
-            <span className="text-white">About</span>
-          </div>
-        </div>
-      </div>
+<div className="bg-[#0F172A] h-[260px] flex items-center px-4">
+  <div className="max-w-7xl mx-auto w-full">
+    <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
+      About DFAB
+    </span>
+
+    <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
+      Who We Are
+    </h1>
+
+    <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
+      <Link to="/" className="hover:text-white transition-colors">
+        Home
+      </Link>
+      <span>/</span>
+      <span className="text-white">About</span>
+    </div>
+  </div>
+</div>
 
       {/* About Content */}
       <section className="py-16 md:py-24" ref={storyRef}>

@@ -4,14 +4,23 @@ from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import re
 from pathlib import Path
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, field_validator
 from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 import hashlib
-import resend
-from google import genai
+
+try:
+    import resend
+except ImportError:
+    resend = None
+
+try:
+    from google import genai
+except ImportError:
+    genai = None
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -32,8 +41,9 @@ if not DB_NAME:
 client = AsyncIOMotorClient(MONGO_URL)
 db = client[DB_NAME]
 
-gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
-resend.api_key = RESEND_API_KEY
+gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY and genai else None
+if resend:
+    resend.api_key = RESEND_API_KEY
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -79,10 +89,17 @@ Rules:
 
 class ContactForm(BaseModel):
     name: str
-    email: EmailStr
+    email: str
     phone: Optional[str] = None
     subject: str
     message: str
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value):
+        if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", value):
+            raise ValueError("Invalid email address")
+        return value
 
 class BlogPostCreate(BaseModel):
     title: str
@@ -140,7 +157,7 @@ def send_emails(name, email, phone, subject, message):
         sender_email = os.environ.get("SENDER_EMAIL")
         receiver_email = os.environ.get("RECEIVER_EMAIL")
 
-        if not RESEND_API_KEY or not sender_email or not receiver_email:
+        if not resend or not RESEND_API_KEY or not sender_email or not receiver_email:
             logger.warning("Resend not configured fully, skipping email")
             return
 
@@ -208,12 +225,45 @@ Answer as DFAB AI Assistant.
 """
     return prompt
 
+def get_fallback_response(latest_message):
+    lower_msg = latest_message.lower()
+
+    if any(term in lower_msg for term in ["service", "offer", "do you do", "capabilit"]):
+        return (
+            "DFAB offers sheet metal fabrication, pressure vessels, pipeline fabrication, "
+            "stellite welding, die welding, custom fabrication, jigs and fixtures, precision "
+            "machining, and new product development. For project-specific details, call "
+            "080 43748186 or email info@dfab.in."
+        )
+
+    if any(term in lower_msg for term in ["contact", "phone", "email", "address", "location", "whatsapp"]):
+        return (
+            "You can reach DFAB at 080 43748186, info@dfab.in, or WhatsApp +91 8043748186. "
+            "The facility is in Peenya Industrial Area, Bengaluru."
+        )
+
+    if any(term in lower_msg for term in ["quote", "pricing", "price", "cost", "estimate"]):
+        return (
+            "For pricing or a quotation, please contact DFAB directly at 080 43748186 or "
+            "WhatsApp +91 8043748186 so the team can review your fabrication requirement."
+        )
+
+    if any(term in lower_msg for term in ["industry", "industries", "sector"]):
+        return (
+            "DFAB serves energy, pharmaceuticals, locomotive, aeronautical, food and dairy, "
+            "and automotive industries."
+        )
+
+    return (
+        "DFAB specializes in stainless steel fabrication, machining, welding, and industrial "
+        "project support. Tell me what you need help with, or contact DFAB directly at "
+        "080 43748186 for a quotation."
+    )
+
 def get_gemini_response(previous_messages, latest_message):
     if not gemini_client:
-        raise HTTPException(
-            status_code=500,
-            detail="GEMINI_API_KEY is missing in backend/.env"
-        )
+        logger.warning("GEMINI_API_KEY is missing, using fallback chat response")
+        return get_fallback_response(latest_message)
 
     prompt = build_chat_prompt(previous_messages, latest_message)
 
