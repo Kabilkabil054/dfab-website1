@@ -75,6 +75,27 @@ export const SERVICES = [
     desc: "We specialize in comprehensive new product development (NPD) services designed to turn your vision into a successful reality. From concept to prototype to production.",
     sectors: ["Startups", "R&D", "Manufacturing"],
   },
+  {
+    image: newProductDevelopmentImg,
+    title: "Welding Engineering Services",
+    subtitle: "WPS / PQR Development",
+    desc: "We provide complete welding engineering services including development of Welding Procedure Specifications (WPS) and Procedure Qualification Records (PQR) to ensure compliance with industry standards and high-quality weld performance.",
+    sectors: ["Oil & Gas", "Manufacturing", "Heavy Engineering"],
+  },
+  {
+    image: newProductDevelopmentImg,
+    title: "Design to Manufacturing (D2M)",
+    subtitle: "3D Design · Optimization · Cost Reduction",
+    desc: "We transform concepts into manufacturable products through 3D design, engineering optimization, and cost reduction strategies. Our D2M approach ensures efficiency, scalability, and production readiness.",
+    sectors: ["Product Development", "R&D", "Manufacturing"],
+  },
+  {
+    image: newProductDevelopmentImg,
+    title: "Prototype Development Services",
+    subtitle: "1–50 Quantity Builds · Rapid Fabrication",
+    desc: "We offer rapid prototype development services from 1 to 50 quantity builds. Our fast fabrication process helps validate designs quickly and accelerates time-to-market.",
+    sectors: ["Startups", "Innovation", "Product Testing"],
+  },
 ];
 
 export default function Services() {
