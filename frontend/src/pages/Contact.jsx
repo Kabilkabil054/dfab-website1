@@ -11,8 +11,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 
-// Temporary hardcoded live backend URL for debugging/live use
-const API = process.env.REACT_APP_BACKEND_URL + "/api";
+const API = "https://dfab-backend.onrender.com/api";
 
 const EMPTY = {
   name: "",
@@ -41,13 +40,15 @@ export default function Contact() {
       if (response.data?.status === "success") {
         setStatus({
           type: "success",
-          msg: response.data.message || "Message sent successfully.",
+          msg:
+            response.data.message ||
+            "Your inquiry has been submitted successfully.",
         });
         setForm(EMPTY);
       } else {
         setStatus({
           type: "error",
-          msg: "Unexpected response from server.",
+          msg: "Unexpected response from server. Please try again.",
         });
       }
     } catch (err) {
@@ -63,22 +64,22 @@ export default function Contact() {
       } else if (err?.response?.status === 500) {
         setStatus({
           type: "error",
-          msg: "Backend server error. Please try again in a moment.",
+          msg: "Your details could not be submitted right now. Please try again in a moment.",
         });
       } else if (err?.code === "ECONNABORTED") {
         setStatus({
           type: "error",
-          msg: "Request timed out. Render may be waking up. Please try again.",
+          msg: "Request timed out. Please try again.",
         });
       } else if (err?.message === "Network Error") {
         setStatus({
           type: "error",
-          msg: "Network error. Backend may be blocked or unavailable.",
+          msg: "Network error. Please check again in a moment.",
         });
       } else {
         setStatus({
           type: "error",
-          msg: err?.response?.data?.detail || "Server error. Please try later.",
+          msg: err?.response?.data?.detail || "Something went wrong. Please try later.",
         });
       }
     } finally {
@@ -146,7 +147,10 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900">Call Us</h4>
-                  <a href="tel:+918428866121" className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block">
+                  <a
+                    href="tel:+918428866121"
+                    className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block"
+                  >
                     8428866121
                   </a>
                 </div>
@@ -158,7 +162,10 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900">Email Us</h4>
-                  <a href="mailto:info@dfab.in" className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block">
+                  <a
+                    href="mailto:info@dfab.in"
+                    className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block"
+                  >
                     info@dfab.in
                   </a>
                 </div>

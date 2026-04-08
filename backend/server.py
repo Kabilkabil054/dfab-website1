@@ -166,15 +166,15 @@ def send_emails(name, email, phone, subject, message):
 
         if not resend:
             logger.warning("Resend library not installed, skipping email")
-            return
+            return False
 
         if not RESEND_API_KEY:
             logger.warning("RESEND_API_KEY missing, skipping email")
-            return
+            return False
 
         if not sender_email or not receiver_email:
             logger.warning("SENDER_EMAIL or RECEIVER_EMAIL missing, skipping email")
-            return
+            return False
 
         admin_html = f"""
         <div style="font-family:Arial,sans-serif;max-width:600px">
@@ -217,10 +217,11 @@ def send_emails(name, email, phone, subject, message):
         })
 
         logger.info(f"Emails sent successfully for inquiry from {name}")
+        return True
 
     except Exception as e:
         logger.error(f"Email sending failed: {e}")
-        raise
+        return False
 
 
 def build_chat_prompt(previous_messages, latest_message):
