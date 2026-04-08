@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header, Form, File, UploadFile
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -86,21 +86,7 @@ Rules:
 """
 
 # =================== MODELS ===================
-
-class ContactForm(BaseModel):
-    name: str
-    email: str
-    phone: Optional[str] = None
-    subject: str
-    message: str
-
-    @field_validator("email")
-    @classmethod
-    def validate_email(cls, value):
-        if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", value):
-            raise ValueError("Invalid email address")
-        return value
-
+# Note: ContactForm is removed because FastAPI handles multipart forms directly via function arguments.
 
 class BlogPostCreate(BaseModel):
     title: str
@@ -111,7 +97,6 @@ class BlogPostCreate(BaseModel):
     image_url: Optional[str] = None
     tags: List[str] = []
     published: bool = True
-
 
 class BlogPost(BaseModel):
     id: str
@@ -126,10 +111,8 @@ class BlogPost(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-
 class AdminLogin(BaseModel):
     password: str
-
 
 class ChatMessage(BaseModel):
     session_id: str
@@ -141,7 +124,6 @@ def get_admin_token_value():
     password = os.environ.get("ADMIN_PASSWORD", "dfab@admin2026")
     return hashlib.sha256(f"dfab-secret-{password}".encode()).hexdigest()
 
-
 async def verify_admin(authorization: Optional[str] = Header(None)):
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Unauthorized")
@@ -150,7 +132,6 @@ async def verify_admin(authorization: Optional[str] = Header(None)):
         raise HTTPException(status_code=401, detail="Invalid token")
     return token
 
-
 def parse_post(p):
     if isinstance(p.get("created_at"), str):
         p["created_at"] = datetime.fromisoformat(p["created_at"])
@@ -158,8 +139,8 @@ def parse_post(p):
         p["updated_at"] = datetime.fromisoformat(p["updated_at"])
     return p
 
-
-def send_emails(name, email, phone, subject, message):
+# Updated to accept an optional attachment parameter
+def send_emails(name, email, phone, subject, message, attachment=None):
     try:
         sender_email = os.environ.get("SENDER_EMAIL")       # Must be verified in Resend (e.g., no-reply@dfab.in)
         receiver_email = os.environ.get("RECEIVER_EMAIL")   # Company email (e.g., info@dfab.in)
@@ -171,11 +152,10 @@ def send_emails(name, email, phone, subject, message):
         # ==========================================
         # EMAIL 1: TO THE COMPANY (DFAB ADMIN)
         # ==========================================
-        resend.Emails.send({
+        admin_payload = {
             "from": sender_email,
             "to": [receiver_email],
             "subject": f"New Inquiry: {subject} - {name}",
-            # 👇 THIS IS THE MAGIC LINE: When you hit "Reply", it goes to the user.
             "reply_to": email, 
             "html": f"""
             <div style="font-family:Arial,sans-serif;max-width:600px">
@@ -186,15 +166,20 @@ def send_emails(name, email, phone, subject, message):
                 <p><strong>Subject:</strong> {subject}</p>
                 <p><strong>Message:</strong><br>{message}</p>
             </div>
-            """,
-        })
+            """
+        }
+
+        # If a file is uploaded, attach it to the email going to the company
+        if attachment:
+            admin_payload["attachments"] = [attachment]
+
+        resend.Emails.send(admin_payload)
 
         # ==========================================
         # EMAIL 2: CONFIRMATION TO THE USER
         # ==========================================
         resend.Emails.send({
             "from": sender_email, 
-            # 👇 Sends the confirmation strictly to the user's email address
             "to": [email], 
             "subject": "Thank you for contacting DFAB",
             "html": f"""
@@ -297,30 +282,59 @@ def get_gemini_response(previous_messages, latest_message):
 async def root():
     return {"message": "DFAB API Running"}
 
-
+# Updated to use Form and File for multipart data
 @api_router.post("/contact")
-async def submit_contact(form: ContactForm):
+async def submit_contact(
+    name: str = Form(...),
+    email: str = Form(...),
+    subject: str = Form(...),
+    message: str = Form(...),
+    phone: Optional[str] = Form(None),
+    file: Optional[UploadFile] = File(None)
+):
     try:
+        # Validate email manually
+        if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
+            raise HTTPException(status_code=422, detail="Invalid email address")
+
+        attachment = None
+        filename = None
+
+        # Check if a file was uploaded and read its bytes
+        if file and file.filename:
+            file_bytes = await file.read()
+            filename = file.filename
+            
+            # Format the attachment specifically for the Resend Python SDK
+            attachment = {
+                "filename": filename,
+                "content": list(file_bytes) 
+            }
+
         doc = {
             "id": str(uuid.uuid4()),
-            **form.model_dump(),
+            "name": name,
+            "email": email,
+            "phone": phone,
+            "subject": subject,
+            "message": message,
+            "has_attachment": bool(attachment),
+            "filename": filename,
             "created_at": datetime.now(timezone.utc).isoformat()
         }
 
         await db.contacts.insert_one(doc)
-        send_emails(
-            form.name,
-            form.email,
-            form.phone,
-            form.subject,
-            form.message
-        )
+        
+        # Pass the attachment variable to the email function
+        send_emails(name, email, phone, subject, message, attachment=attachment)
 
         return {
             "status": "success",
             "message": "Your inquiry has been submitted. We'll be in touch soon!"
         }
 
+    except HTTPException as he:
+        raise he
     except Exception as e:
         logger.error(f"Contact submission failed: {e}")
         raise HTTPException(status_code=500, detail="Failed to submit contact form")
