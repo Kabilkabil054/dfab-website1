@@ -8,6 +8,7 @@ import {
   Send,
   CheckCircle,
   AlertCircle,
+  Paperclip, // <-- Added Paperclip icon for attachments
 } from "lucide-react";
 import axios from "axios";
 
@@ -23,6 +24,7 @@ const EMPTY = {
 
 export default function Contact() {
   const [form, setForm] = useState(EMPTY);
+  const [file, setFile] = useState(null); // <-- Added state for the file
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
 
@@ -31,9 +33,26 @@ export default function Contact() {
     setLoading(true);
     setStatus(null);
 
+    // Create FormData instead of standard JSON for file uploads
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("email", form.email);
+    formData.append("subject", form.subject);
+    formData.append("message", form.message);
+    
+    if (form.phone) {
+      formData.append("phone", form.phone);
+    }
+    
+    // Append the file if the user selected one
+    if (file) {
+      formData.append("file", file);
+    }
+
     try {
-      const response = await axios.post(`${API}/contact`, form, {
-        headers: { "Content-Type": "application/json" },
+      const response = await axios.post(`${API}/contact`, formData, {
+        // Change headers to multipart/form-data
+        headers: { "Content-Type": "multipart/form-data" },
         timeout: 60000,
       });
 
@@ -45,6 +64,8 @@ export default function Contact() {
             "Your inquiry has been submitted successfully.",
         });
         setForm(EMPTY);
+        setFile(null); // Clear the file state
+        document.getElementById("file-upload").value = ""; // Clear the file input UI
       } else {
         setStatus({
           type: "error",
@@ -86,6 +107,11 @@ export default function Contact() {
 
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // Handler for file selection
+  const onFileChange = (e) => {
+    setFile(e.target.files[0]);
   };
 
   return (
@@ -179,7 +205,7 @@ export default function Contact() {
                   <div>
                     <h4 className="font-semibold text-slate-900">WhatsApp</h4>
                     <a
-                      href="https://wa.me/918428866121"
+                      href="https://api.whatsapp.com/send?phone=918428866121"
                       target="_blank"
                       rel="noreferrer"
                       className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block"
@@ -192,7 +218,7 @@ export default function Contact() {
 
               <div className="mt-8">
                 <a
-                  href="https://wa.me/918428866121"
+                  href="https://api.whatsapp.com/send?phone=918428866121"
                   target="_blank"
                   rel="noreferrer"
                   className="block text-center bg-[#25D366] hover:bg-[#1fb457] text-white py-3 rounded-md font-semibold transition-colors"
@@ -273,6 +299,29 @@ export default function Contact() {
                     placeholder="Message"
                     className="w-full border border-slate-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#0A66C2] resize-none"
                   />
+
+                  {/* FILE UPLOAD INPUT */}
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="file-upload"
+                      onChange={onFileChange}
+                      className="hidden" // Hide the default ugly file input
+                    />
+                    <label
+                      htmlFor="file-upload"
+                      className="flex items-center justify-center gap-2 w-full border-2 border-dashed border-slate-300 rounded-md p-3 text-sm text-slate-600 hover:bg-slate-50 hover:border-[#0A66C2] transition-colors cursor-pointer"
+                    >
+                      <Paperclip size={16} />
+                      {file ? (
+                        <span className="font-medium text-slate-900 truncate">
+                          {file.name}
+                        </span>
+                      ) : (
+                        <span>Attach a document (Optional)</span>
+                      )}
+                    </label>
+                  </div>
                 </div>
 
                 <button
@@ -302,7 +351,6 @@ export default function Contact() {
                 loading="lazy"
                 allowFullScreen
                 referrerPolicy="no-referrer-when-downgrade"
-                // Using a generic search query for Peenya Industrial Area based on the address provided
                 src="https://maps.google.com/maps?q=Peenya+Industrial+Area,+Bengaluru+-+560058&t=&z=13&ie=UTF8&iwloc=&output=embed"
               ></iframe>
             </div>
