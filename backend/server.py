@@ -291,14 +291,7 @@ async def submit_contact(form: ContactForm, background_tasks: BackgroundTasks):
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.contacts.insert_one(doc)
-    background_tasks.add_task(
-        send_emails,
-        form.name,
-        form.email,
-        form.phone,
-        form.subject,
-        form.message
-    )
+    await send_emails(contact_data)
     return {
         "status": "success",
         "message": "Your inquiry has been submitted. We'll be in touch soon!"
