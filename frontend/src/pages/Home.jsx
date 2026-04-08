@@ -184,7 +184,12 @@ function StarRating({ count }) {
 }
 
 function HeroCarousel({ onInquire }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    align: "start",
+    skipSnaps: false,
+    containScroll: "trimSnaps",
+  });
   const [current, setCurrent] = useState(0);
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
@@ -192,32 +197,58 @@ function HeroCarousel({ onInquire }) {
 
   useEffect(() => {
     if (!emblaApi) return;
-    emblaApi.on("select", () => setCurrent(emblaApi.selectedScrollSnap()));
-    const timer = setInterval(() => emblaApi.scrollNext(), 5500);
-    return () => clearInterval(timer);
+
+    const onSelect = () => setCurrent(emblaApi.selectedScrollSnap());
+
+    onSelect();
+    emblaApi.on("select", onSelect);
+
+    const timer = setInterval(() => {
+      if (emblaApi) emblaApi.scrollNext();
+    }, 5500);
+
+    return () => {
+      clearInterval(timer);
+      emblaApi.off("select", onSelect);
+    };
   }, [emblaApi]);
 
   return (
-    <section className="relative h-[560px] md:h-[680px]" data-testid="hero-carousel">
-      <div className="embla h-full" ref={emblaRef}>
-        <div className="embla__container h-full">
+    <section
+      className="relative w-full h-[560px] md:h-[680px] overflow-hidden"
+      data-testid="hero-carousel"
+    >
+      <div className="embla w-full h-full overflow-hidden" ref={emblaRef}>
+        <div className="embla__container flex h-full">
           {HERO_SLIDES.map((slide, i) => (
-            <div key={i} className="embla__slide h-full relative" data-testid={`hero-slide-${i + 1}`}>
-              <img src={slide.img} alt={slide.heading} className="absolute inset-0 w-full h-full object-cover scale-[1.02]" />
+            <div
+              key={i}
+              className="embla__slide relative h-full w-full min-w-0 flex-[0_0_100%]"
+              data-testid={`hero-slide-${i + 1}`}
+            >
+              <img
+                src={slide.img}
+                alt={slide.heading}
+                className="absolute inset-0 w-full h-full object-cover object-center"
+              />
               <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(10,102,194,0.24),transparent_32%)]" />
+
               <div className="relative z-10 h-full flex items-center">
                 <div className="max-w-7xl mx-auto px-4 md:px-8 w-full">
                   <div className="max-w-2xl">
                     <span className="inline-block bg-[#0A66C2] text-white text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-sm mb-5 animate-fade-in shadow-lg">
                       {slide.tag}
                     </span>
+
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-5 font-['Chivo'] animate-fade-up delay-100">
                       {slide.heading}
                     </h1>
+
                     <p className="text-base md:text-lg text-white/85 mb-8 leading-relaxed animate-fade-up delay-200">
                       {slide.text}
                     </p>
+
                     <div className="flex flex-wrap gap-4 animate-fade-up delay-300">
                       {slide.cta1.action === "modal" ? (
                         <button
@@ -236,6 +267,7 @@ function HeroCarousel({ onInquire }) {
                           {slide.cta1.label}
                         </Link>
                       )}
+
                       <Link
                         to={slide.cta2.to}
                         className="border border-white/80 text-white px-7 py-3 font-semibold rounded-sm hover:bg-white hover:text-slate-900 transition-all duration-300 hover:-translate-y-0.5"
@@ -254,25 +286,29 @@ function HeroCarousel({ onInquire }) {
 
       <button
         onClick={scrollPrev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/15 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-105"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 bg-white/15 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-105"
         data-testid="hero-prev"
       >
         <ChevronLeft size={20} />
       </button>
+
       <button
         onClick={scrollNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/15 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-105"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 bg-white/15 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-105"
         data-testid="hero-next"
       >
         <ChevronRight size={20} />
       </button>
 
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {HERO_SLIDES.map((_, i) => (
           <button
             key={i}
             onClick={() => emblaApi?.scrollTo(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${i === current ? "w-8 bg-[#0A66C2]" : "w-2 bg-white/50"}`}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              i === current ? "w-8 bg-[#0A66C2]" : "w-2 bg-white/50"
+            }`}
+            aria-label={`Go to slide ${i + 1}`}
           />
         ))}
       </div>
@@ -299,7 +335,7 @@ function TestimonialsSection() {
           <h2 className="text-3xl lg:text-4xl font-bold text-white mt-2 font-['Chivo']">What Our Clients Say</h2>
         </div>
 
-        <div className="embla" ref={emblaRef} data-testid="testimonials-carousel">
+        <div className="embla overflow-hidden" ref={emblaRef} data-testid="testimonials-carousel">
           <div className="embla__container">
             {TESTIMONIALS.map((t, i) => (
               <div
