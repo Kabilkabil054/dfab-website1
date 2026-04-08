@@ -176,7 +176,7 @@ def send_emails(name, email, phone, subject, message):
             logger.warning("SENDER_EMAIL or RECEIVER_EMAIL missing, skipping email")
             return False
 
-        # --- 1. Email to DFAB Admin ---
+        # --- 1. Email to DFAB Admin (Your Company) ---
         admin_html = f"""
         <div style="font-family:Arial,sans-serif;max-width:600px">
             <h2 style="color:#0A66C2">New Contact Inquiry - DFAB Website</h2>
@@ -193,7 +193,7 @@ def send_emails(name, email, phone, subject, message):
             "from": sender_email,
             "to": [receiver_email],
             "subject": f"New Inquiry: {subject} - {name}",
-            "reply_to": email,
+            "reply_to": email, # Allows you to hit "Reply" in your inbox to reply to the user
             "html": admin_html,
         })
 
@@ -212,13 +212,13 @@ def send_emails(name, email, phone, subject, message):
         """
 
         resend.Emails.send({
-            "from": sender_email,
-            "to": [email],
+            "from": sender_email, 
+            "to": [email], # Sending to the user's email address
             "subject": "Thank you for contacting DFAB",
             "html": user_html,
         })
 
-        logger.info(f"Admin and user confirmation emails sent successfully for inquiry from {name}")
+        logger.info(f"Emails sent successfully to admin and user for inquiry from {name}")
         return True
 
     except Exception as e:
