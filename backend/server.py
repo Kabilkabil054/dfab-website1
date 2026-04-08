@@ -196,27 +196,7 @@ def send_emails(name, email, phone, subject, message):
             "html": admin_html,
         })
 
-        client_html = f"""
-        <div style="font-family:Arial,sans-serif;max-width:600px">
-            <h2 style="color:#0A66C2">Thank you for contacting DFAB!</h2>
-            <p>Dear {name},</p>
-            <p>We have received your inquiry and our team will get back to you soon.</p>
-            <p><strong>Your subject:</strong> {subject}</p>
-            <p><strong>Your message:</strong> {message}</p>
-            <br>
-            <p>Best regards,<br><strong>DFAB Stainless System Pvt Ltd</strong></p>
-            <p>Phone: 8428866121 | Email: info@dfab.in</p>
-        </div>
-        """
-
-        resend.Emails.send({
-            "from": sender_email,
-            "to": [email],
-            "subject": "We received your inquiry - DFAB Stainless System",
-            "html": client_html,
-        })
-
-        logger.info(f"Emails sent successfully for inquiry from {name}")
+        logger.info(f"Admin email sent successfully for inquiry from {name}")
         return True
 
     except Exception as e:
