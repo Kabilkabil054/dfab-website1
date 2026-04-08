@@ -9,3 +9,4 @@ python-multipart==0.0.22
 google-genai==1.68.0
 resend==2.13.1
 dnspython==2.8.0
+python-multipart==0.0.9
