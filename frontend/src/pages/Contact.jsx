@@ -11,10 +11,8 @@ import {
 } from "lucide-react";
 import axios from "axios";
 
-// CRA-compatible backend URL
-const API = process.env.REACT_APP_BACKEND_URL
-  ? `${process.env.REACT_APP_BACKEND_URL}/api`
-  : "http://localhost:8000/api";
+// Temporary hardcoded live backend URL for debugging/live use
+const API = "https://dfab-backend.onrender.com/api";
 
 const EMPTY = {
   name: "",
@@ -36,45 +34,51 @@ export default function Contact() {
 
     try {
       const response = await axios.post(`${API}/contact`, form, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
+        timeout: 60000,
       });
 
       if (response.data?.status === "success") {
         setStatus({
           type: "success",
-          msg:
-            response.data.message ||
-            "Your inquiry has been submitted successfully.",
+          msg: response.data.message || "Message sent successfully.",
         });
         setForm(EMPTY);
       } else {
         setStatus({
           type: "error",
-          msg: "Something went wrong. Please try again.",
+          msg: "Unexpected response from server.",
         });
       }
     } catch (err) {
       console.error("Contact form error:", err);
+      console.error("Response data:", err?.response?.data);
+      console.error("Status:", err?.response?.status);
 
-      if (err.response?.status === 422) {
+      if (err?.response?.status === 422) {
         setStatus({
           type: "error",
           msg: "Please enter valid details in all required fields.",
         });
-      } else if (err.response?.data?.detail) {
+      } else if (err?.response?.status === 500) {
         setStatus({
           type: "error",
-          msg:
-            typeof err.response.data.detail === "string"
-              ? err.response.data.detail
-              : "Validation failed. Please check your input.",
+          msg: "Backend server error. Please try again in a moment.",
+        });
+      } else if (err?.code === "ECONNABORTED") {
+        setStatus({
+          type: "error",
+          msg: "Request timed out. Render may be waking up. Please try again.",
+        });
+      } else if (err?.message === "Network Error") {
+        setStatus({
+          type: "error",
+          msg: "Network error. Backend may be blocked or unavailable.",
         });
       } else {
         setStatus({
           type: "error",
-          msg: "Server error. Please try later.",
+          msg: err?.response?.data?.detail || "Server error. Please try later.",
         });
       }
     } finally {
@@ -88,7 +92,6 @@ export default function Contact() {
 
   return (
     <main className="bg-white">
-      {/* Header */}
       <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full px-4 md:px-8">
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
@@ -112,7 +115,6 @@ export default function Contact() {
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="grid md:grid-cols-5 gap-12">
-            {/* Contact Info */}
             <div className="md:col-span-2 space-y-6">
               <div>
                 <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
@@ -122,8 +124,7 @@ export default function Contact() {
                   Let's Talk About Your Project
                 </h2>
                 <p className="text-slate-600 mt-3 text-sm leading-relaxed">
-                  Contact our team for inquiries, quotations, or technical
-                  discussions.
+                  Contact our team for inquiries, quotations, or technical discussions.
                 </p>
               </div>
 
@@ -133,9 +134,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900">Visit Us</h4>
-                  <p className="text-slate-600 text-sm mt-1">
-                    No: 3B/415, KIADB Main Road
-                  </p>
+                  <p className="text-slate-600 text-sm mt-1">No: 3B/415, KIADB Main Road</p>
                   <p className="text-slate-600 text-sm">Peenya Industrial Area</p>
                   <p className="text-slate-600 text-sm">Bengaluru – 560058</p>
                 </div>
@@ -147,10 +146,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900">Call Us</h4>
-                  <a
-                    href="tel:+918428866121"
-                    className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block"
-                  >
+                  <a href="tel:+918428866121" className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block">
                     8428866121
                   </a>
                 </div>
@@ -162,10 +158,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-slate-900">Email Us</h4>
-                  <a
-                    href="mailto:info@dfab.in"
-                    className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block"
-                  >
+                  <a href="mailto:info@dfab.in" className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block">
                     info@dfab.in
                   </a>
                 </div>
@@ -198,7 +191,6 @@ export default function Contact() {
               </a>
             </div>
 
-            {/* Form */}
             <div className="md:col-span-3">
               <div className="border border-slate-200 p-8 rounded-md shadow-sm">
                 <h3 className="text-xl font-bold mb-6 text-slate-900 font-['Chivo']">
