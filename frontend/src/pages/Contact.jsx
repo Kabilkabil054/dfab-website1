@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 
 // Temporary hardcoded live backend URL for debugging/live use
-const API = "https://dfab-backend.onrender.com/api";
+const API = process.env.REACT_APP_BACKEND_URL + "/api";
 
 const EMPTY = {
   name: "",
