@@ -161,64 +161,56 @@ def parse_post(p):
 
 def send_emails(name, email, phone, subject, message):
     try:
-        sender_email = os.environ.get("SENDER_EMAIL")
-        receiver_email = os.environ.get("RECEIVER_EMAIL")
+        sender_email = os.environ.get("SENDER_EMAIL")       # Must be verified in Resend (e.g., no-reply@dfab.in)
+        receiver_email = os.environ.get("RECEIVER_EMAIL")   # Company email (e.g., info@dfab.in)
 
-        if not resend:
-            logger.warning("Resend library not installed, skipping email")
+        if not resend or not RESEND_API_KEY or not sender_email or not receiver_email:
+            logger.warning("Missing Resend config. Skipping emails.")
             return False
 
-        if not RESEND_API_KEY:
-            logger.warning("RESEND_API_KEY missing, skipping email")
-            return False
-
-        if not sender_email or not receiver_email:
-            logger.warning("SENDER_EMAIL or RECEIVER_EMAIL missing, skipping email")
-            return False
-
-        # --- 1. Email to DFAB Admin (Your Company) ---
-        admin_html = f"""
-        <div style="font-family:Arial,sans-serif;max-width:600px">
-            <h2 style="color:#0A66C2">New Contact Inquiry - DFAB Website</h2>
-            <p><strong>Name:</strong> {name}</p>
-            <p><strong>Email:</strong> {email}</p>
-            <p><strong>Phone:</strong> {phone or 'Not provided'}</p>
-            <p><strong>Subject:</strong> {subject}</p>
-            <p><strong>Message:</strong></p>
-            <p>{message}</p>
-        </div>
-        """
-
+        # ==========================================
+        # EMAIL 1: TO THE COMPANY (DFAB ADMIN)
+        # ==========================================
         resend.Emails.send({
             "from": sender_email,
             "to": [receiver_email],
             "subject": f"New Inquiry: {subject} - {name}",
-            "reply_to": email, # Allows you to hit "Reply" in your inbox to reply to the user
-            "html": admin_html,
+            # 👇 THIS IS THE MAGIC LINE: When you hit "Reply", it goes to the user.
+            "reply_to": email, 
+            "html": f"""
+            <div style="font-family:Arial,sans-serif;max-width:600px">
+                <h2 style="color:#0A66C2">New Contact Inquiry - DFAB Website</h2>
+                <p><strong>Name:</strong> {name}</p>
+                <p><strong>Email:</strong> {email}</p>
+                <p><strong>Phone:</strong> {phone or 'Not provided'}</p>
+                <p><strong>Subject:</strong> {subject}</p>
+                <p><strong>Message:</strong><br>{message}</p>
+            </div>
+            """,
         })
 
-        # --- 2. Confirmation Email to the User ---
-        user_html = f"""
-        <div style="font-family:Arial,sans-serif;max-width:600px">
-            <h2 style="color:#0A66C2">Thank you for reaching out to DFAB!</h2>
-            <p>Hi {name},</p>
-            <p>We have successfully received your inquiry regarding <strong>"{subject}"</strong>.</p>
-            <p>Our team is currently reviewing your message and will get back to you shortly. If you need immediate assistance, please feel free to call or WhatsApp us at <strong>+91 8428866121</strong>.</p>
-            <br>
-            <p>Best Regards,</p>
-            <p><strong>DFAB Stainless System Pvt Ltd</strong><br>
-            <a href="mailto:info@dfab.in">info@dfab.in</a></p>
-        </div>
-        """
-
+        # ==========================================
+        # EMAIL 2: CONFIRMATION TO THE USER
+        # ==========================================
         resend.Emails.send({
             "from": sender_email, 
-            "to": [email], # Sending to the user's email address
+            # 👇 Sends the confirmation strictly to the user's email address
+            "to": [email], 
             "subject": "Thank you for contacting DFAB",
-            "html": user_html,
+            "html": f"""
+            <div style="font-family:Arial,sans-serif;max-width:600px">
+                <h2 style="color:#0A66C2">Thank you for reaching out to DFAB!</h2>
+                <p>Hi {name},</p>
+                <p>We have successfully received your inquiry regarding <strong>"{subject}"</strong>.</p>
+                <p>Our team is reviewing your message and will get back to you shortly.</p>
+                <br>
+                <p>Best Regards,</p>
+                <p><strong>DFAB Stainless System Pvt Ltd</strong></p>
+            </div>
+            """,
         })
 
-        logger.info(f"Emails sent successfully to admin and user for inquiry from {name}")
+        logger.info(f"Emails successfully sent to Company and User ({email})")
         return True
 
     except Exception as e:
