@@ -176,6 +176,7 @@ def send_emails(name, email, phone, subject, message):
             logger.warning("SENDER_EMAIL or RECEIVER_EMAIL missing, skipping email")
             return False
 
+        # --- 1. Email to DFAB Admin ---
         admin_html = f"""
         <div style="font-family:Arial,sans-serif;max-width:600px">
             <h2 style="color:#0A66C2">New Contact Inquiry - DFAB Website</h2>
@@ -196,7 +197,28 @@ def send_emails(name, email, phone, subject, message):
             "html": admin_html,
         })
 
-        logger.info(f"Admin email sent successfully for inquiry from {name}")
+        # --- 2. Confirmation Email to the User ---
+        user_html = f"""
+        <div style="font-family:Arial,sans-serif;max-width:600px">
+            <h2 style="color:#0A66C2">Thank you for reaching out to DFAB!</h2>
+            <p>Hi {name},</p>
+            <p>We have successfully received your inquiry regarding <strong>"{subject}"</strong>.</p>
+            <p>Our team is currently reviewing your message and will get back to you shortly. If you need immediate assistance, please feel free to call or WhatsApp us at <strong>+91 8428866121</strong>.</p>
+            <br>
+            <p>Best Regards,</p>
+            <p><strong>DFAB Stainless System Pvt Ltd</strong><br>
+            <a href="mailto:info@dfab.in">info@dfab.in</a></p>
+        </div>
+        """
+
+        resend.Emails.send({
+            "from": sender_email,
+            "to": [email],
+            "subject": "Thank you for contacting DFAB",
+            "html": user_html,
+        })
+
+        logger.info(f"Admin and user confirmation emails sent successfully for inquiry from {name}")
         return True
 
     except Exception as e:
