@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
 import {
   MapPin,
   Phone,
@@ -122,7 +123,7 @@ export default function Contact() {
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
             Get In Touch
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']animate-fade-up">
             Contact Us
           </h1>
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">

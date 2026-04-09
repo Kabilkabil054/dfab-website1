@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import { useReveal } from "../hooks/useReveal";
 import {
   ArrowRight,
@@ -9,6 +10,7 @@ import {
   Layers,
   Settings,
   FlaskConical,
+  Microscope,
 } from "lucide-react";
 import { useState } from "react";
 import InquireModal from "../components/InquireModal";
@@ -40,10 +42,7 @@ const CAPABILITIES = [
       "CNC controlled bending",
       "Complex multi-bend components",
     ],
-    applications: [
-      "Industrial equipment housings",
-      "Structural assemblies",
-    ],
+    applications: ["Industrial equipment housings", "Structural assemblies"],
   },
   {
     id: "welding",
@@ -120,6 +119,25 @@ const CAPABILITIES = [
   },
 ];
 
+const TEAM_MEMBERS = [
+  {
+    name: "[Name 1]",
+    department: "[Department / Role 1]",
+  },
+  {
+    name: "[Name 2]",
+    department: "[Department / Role 2]",
+  },
+  {
+    name: "[Name 3]",
+    department: "[Department / Role 3]",
+  },
+  {
+    name: "[Name 4]",
+    department: "[Department / Role 4]",
+  },
+];
+
 function CapabilityCard({ cap }) {
   return (
     <div className="bg-white border border-slate-200 rounded-md p-7 hover:border-[#0A66C2] hover:shadow-md transition-all reveal h-full flex flex-col">
@@ -128,8 +146,12 @@ function CapabilityCard({ cap }) {
           {cap.icon}
         </div>
         <div>
-          <h3 className="text-xl font-bold text-slate-900 font-['Chivo']">{cap.title}</h3>
-          <p className="text-xs text-[#0A66C2] uppercase tracking-wide mt-1">{cap.subtitle}</p>
+          <h3 className="text-xl font-bold text-slate-900 font-['Chivo']animate-fade-up">
+            {cap.title}
+          </h3>
+          <p className="text-xs text-[#0A66C2] uppercase tracking-wide mt-1">
+            {cap.subtitle}
+          </p>
         </div>
       </div>
 
@@ -142,7 +164,10 @@ function CapabilityCard({ cap }) {
         <ul className="space-y-1.5">
           {cap.keyCapabilities.map((k) => (
             <li key={k} className="flex gap-2 text-sm text-slate-700">
-              <CheckCircle size={14} className="text-[#0A66C2] shrink-0 mt-0.5" />
+              <CheckCircle
+                size={14}
+                className="text-[#0A66C2] shrink-0 mt-0.5"
+              />
               {k}
             </li>
           ))}
@@ -241,8 +266,54 @@ export default function Capabilities() {
         </div>
       </section>
 
+      {/* CLEAN R&D AND INNOVATION TEAM SECTION */}
+      <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          
+          {/* Top Title Area */}
+          <div className="text-center mb-14 reveal">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-[#0A66C2] rounded-full text-xs font-bold uppercase tracking-wider mb-4 border border-blue-100">
+              <Microscope size={14} />
+              In-House Expertise
+            </div>
+            
+            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4 font-['Chivo']">
+              Research & Development
+            </h2>
+            
+            <p className="text-slate-600 leading-relaxed max-w-3xl mx-auto">
+              Innovation is at the core of DFAB Stainless System. Our dedicated engineering team works closely with clients to transition complex ideas from initial concept to full-scale production. By leveraging advanced prototyping and rigorous testing, we continuously develop custom engineering solutions that reduce cost without compromising quality.
+            </p>
+          </div>
+
+          {/* Clean Animated Team Grid (No Images) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+            {TEAM_MEMBERS.map((member, index) => (
+              <div 
+                key={index} 
+                className="group relative bg-white border border-slate-200 p-8 rounded-md overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-[#0A66C2]"
+              >
+                {/* Animated Left Accent Line */}
+                <div className="absolute top-0 left-0 w-1.5 h-0 bg-[#0A66C2] transition-all duration-300 ease-out group-hover:h-full"></div>
+                
+                {/* Content */}
+                <div className="pl-2">
+                  <h4 className="text-xl font-bold text-slate-900 font-['Chivo'] group-hover:text-[#0A66C2] transition-colors duration-300">
+                    {member.name}
+                  </h4>
+                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-2">
+                    {member.department}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="py-16 bg-slate-50 text-center border-t border-slate-200">
+      <section className="py-16 bg-white text-center border-t border-slate-200">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold mb-3 text-slate-900 font-['Chivo']">
             Need a Custom Manufacturing Solution?

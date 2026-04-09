@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
 import { useReveal } from "../hooks/useReveal";
+
 import { MapPin, Mail, Phone, CheckCircle, ArrowRight, Users, Award, Zap } from "lucide-react";
 
 const DEFAULT_OPENINGS = [
@@ -101,10 +102,10 @@ export default function Careers() {
       <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full">
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Join Our Team</span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo'] animate-fade-up">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
             Careers at DFAB
           </h1>
-          <p className="text-slate-400 mt-3 max-w-2xl animate-fade-up delay-100">
+          <p className="text-slate-400 mt-3 max-w-2xl">
             Be part of a precision manufacturing team that builds components for the world's most demanding industries.
           </p>
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400 animate-fade-in delay-200">
@@ -123,7 +124,7 @@ export default function Careers() {
             <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 font-['Chivo']">
               Why Work With Us
             </h2>
-            <p className="text-slate-600 mt-3 max-w-xl mx-auto">
+            <p className="text-slate-400 mt-3 max-w-2xl">
               We invest in our people the same way we invest in quality — with purpose, precision, and commitment.
             </p>
           </div>

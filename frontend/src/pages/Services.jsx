@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
+
+
 import sheetmetalImg from "../assets/images/services/sheetmetal.jpg";
 import pressureVesselsImg from "../assets/images/services/pressure-vessels.jpg";
 import pipelineFabricationImg from "../assets/images/services/pipeline-fabrication.jpg";
@@ -10,6 +12,10 @@ import customFabricationImg from "../assets/images/services/custom-fabrication.j
 import jigFixtureImg from "../assets/images/services/jig-fixture.jpg";
 import precisionMachiningImg from "../assets/images/services/precision-machining.jpg";
 import newProductDevelopmentImg from "../assets/images/services/new-product-development.jpg";
+// Added the 3 new image imports below:
+import weldingEngineeringImg from "../assets/images/services/welding-engineering.jpg";
+import d2mImg from "../assets/images/services/d2m.jpg";
+import prototypeDevelopmentImg from "../assets/images/services/prototype-development.jpg";
 
 export const SERVICES = [
   {
@@ -76,21 +82,21 @@ export const SERVICES = [
     sectors: ["Startups", "R&D", "Manufacturing"],
   },
   {
-    image: newProductDevelopmentImg,
+    image: weldingEngineeringImg, // Updated
     title: "Welding Engineering Services",
     subtitle: "WPS / PQR Development",
     desc: "We provide complete welding engineering services including development of Welding Procedure Specifications (WPS) and Procedure Qualification Records (PQR) to ensure compliance with industry standards and high-quality weld performance.",
     sectors: ["Oil & Gas", "Manufacturing", "Heavy Engineering"],
   },
   {
-    image: newProductDevelopmentImg,
+    image: d2mImg, // Updated
     title: "Design to Manufacturing (D2M)",
     subtitle: "3D Design · Optimization · Cost Reduction",
     desc: "We transform concepts into manufacturable products through 3D design, engineering optimization, and cost reduction strategies. Our D2M approach ensures efficiency, scalability, and production readiness.",
     sectors: ["Product Development", "R&D", "Manufacturing"],
   },
   {
-    image: newProductDevelopmentImg,
+    image: prototypeDevelopmentImg, // Updated
     title: "Prototype Development Services",
     subtitle: "1–50 Quantity Builds · Rapid Fabrication",
     desc: "We offer rapid prototype development services from 1 to 50 quantity builds. Our fast fabrication process helps validate designs quickly and accelerates time-to-market.",

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { CheckCircle, Award, Linkedin, Mail } from "lucide-react";
 import { useReveal } from "../hooks/useReveal";
 
+
 const LEADERS = [
   {
     name: "Rajesh Venkataraman",

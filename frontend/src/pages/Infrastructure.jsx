@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
 
+
 const MACHINES = [
   { name: "TIG Welding Machines", count: "6+", desc: "For precision stainless steel welding" },
   { name: "MIG Welding Machines", count: "4+", desc: "For production welding applications" },
@@ -30,7 +31,7 @@ export default function Infrastructure() {
       <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full">
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Our Facility</span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Infrastructure</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']animate-fade-up">Infrastructure</h1>
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
             <Link to="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>

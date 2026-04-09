@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import { Award, CheckCircle, Shield, Globe, ArrowRight } from "lucide-react";
 import { useReveal } from "../hooks/useReveal";
 
@@ -83,10 +84,10 @@ export default function Quality() {
       <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full">
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Standards & Compliance</span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo'] animate-fade-up">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
             Quality & Certifications
           </h1>
-          <p className="text-slate-400 mt-3 max-w-2xl animate-fade-up delay-100">
+          <p className="text-slate-400 mt-3 max-w-2xl">
             Every product leaving our facility meets stringent quality standards. Our certifications reflect our commitment to global-grade manufacturing excellence.
           </p>
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400 animate-fade-in delay-200">

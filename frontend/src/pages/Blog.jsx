@@ -77,7 +77,7 @@ export default function Blog() {
             Knowledge Hub
           </span>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']animate-fade-up">
             Our Blog
           </h1>
 

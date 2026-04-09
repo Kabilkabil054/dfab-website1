@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import useEmblaCarousel from "embla-carousel-react";
 import {
@@ -38,6 +38,29 @@ import video1 from "../assets/images/video1.jpg";
 import video2 from "../assets/images/video2.jpg";
 import video3 from "../assets/images/video3.jpg";
 
+// We Serve images
+import aerospaceProject from "../assets/images/serve/aerospace-project.jpg";
+import defenceProject from "../assets/images/serve/defence-project.jpg";
+import pharmaProject from "../assets/images/serve/pharma-project.jpg";
+import semiProject from "../assets/images/serve/semi-project.jpg";
+import foodProject from "../assets/images/serve/food-project.jpg";
+import energyProject from "../assets/images/serve/energy-project.jpg";
+import autoProject from "../assets/images/serve/auto-project.jpg";
+import chemicalProject from "../assets/images/serve/chemical-project.jpg";
+import oilProject from "../assets/images/serve/oil-project.jpg";
+import waterProject from "../assets/images/serve/water-project.jpg";
+
+// Client logos
+import abb from "../assets/images/clients/abb.png";
+import bel from "../assets/images/clients/bel.png";
+import boeing from "../assets/images/clients/boeing.png";
+import hp from "../assets/images/clients/hp.png";
+import hydrotherm from "../assets/images/clients/hydrotherm.png";
+import hydac from "../assets/images/clients/hydac.png";
+import kennametal from "../assets/images/clients/kennametal.png";
+import leeboy from "../assets/images/clients/leeboy.png";
+import triveni from "../assets/images/clients/triveni.png";
+
 const HERO_SLIDES = [
   {
     img: hero1,
@@ -67,24 +90,24 @@ const HERO_SLIDES = [
 
 const WHYCHOOSE = [
   {
-    icon: <Award size={32} />,
+    icon: <Award size={30} />,
     title: "Quality First",
     desc: "ISO 9001:2015 certified processes ensuring consistent high-quality output every time.",
   },
   {
-    icon: <Users size={32} />,
+    icon: <Users size={30} />,
     title: "Skilled Workforce",
     desc: "Welders qualified for 6G positions with experienced project engineers on every job.",
   },
   {
-    icon: <Clock size={32} />,
+    icon: <Clock size={30} />,
     title: "Timely Delivery",
     desc: "We communicate status to stakeholders and meet every delivery timeline, guaranteed.",
   },
   {
-    icon: <CheckCircle size={32} />,
+    icon: <CheckCircle size={30} />,
     title: "Deep Experience",
-    desc: "Serving energy, pharma, aerospace, automotive & food industries since 2018.",
+    desc: "Serving energy, pharma, aerospace, automotive and food industries since 2018.",
   },
 ];
 
@@ -115,19 +138,72 @@ const STATS = [
   { value: "100%", label: "Quality Adherence" },
   { value: "200+", label: "Successful Projects" },
   { value: "50+", label: "Customers" },
-  { value: "6+", label: "Industry Sectors" },
+  { value: "8+", label: "Industry Sectors" },
 ];
 
-const INDUSTRIES = [
-  { label: "Aerospace", icon: "✈" },
-  { label: "Defence", icon: "🛡" },
-  { label: "Medical", icon: "⚕" },
-  { label: "Pharma", icon: "🔬" },
-  { label: "Semiconductor", icon: "💡" },
-  { label: "Dairy & Food Processing", icon: "🏭" },
-  { label: "Energy & Turbines", icon: "⚡" },
-  { label: "Automotive", icon: "🚗" },
-  { label: "Heavy Engineering", icon: "⚙" },
+const WE_SERVE_ITEMS = [
+  {
+    title: "Aerospace",
+    text: "Precision machined aircraft parts and jet engine components.",
+    image: aerospaceProject,
+  },
+  {
+    title: "Defence",
+    text: "Heavy structural steel for tactical vehicles and radar bases.",
+    image: defenceProject,
+  },
+  {
+    title: "Pharma",
+    text: "Mirror-finish stainless steel laboratory vessels.",
+    image: pharmaProject,
+  },
+  {
+    title: "Semiconductor",
+    text: "High-precision metal jigs and cleanroom equipment.",
+    image: semiProject,
+  },
+  {
+    title: "Food",
+    text: "Large stainless steel milk tanks and conveyor parts.",
+    image: foodProject,
+  },
+  {
+    title: "Energy",
+    text: "Turbine parts, wind energy components and power skids.",
+    image: energyProject,
+  },
+  {
+    title: "Automotive",
+    text: "Assembly line welding fixtures and engine parts.",
+    image: autoProject,
+  },
+  {
+    title: "Chemical",
+    text: "Industrial reactors and large-scale pressure piping.",
+    image: chemicalProject,
+  },
+  {
+    title: "Oil & Gas",
+    text: "Offshore rig piping, heavy skids and pipeline assemblies.",
+    image: oilProject,
+  },
+  {
+    title: "Water",
+    text: "Water filtration modules and reverse osmosis systems.",
+    image: waterProject,
+  },
+];
+
+const CLIENT_LOGOS = [
+  { src: abb, alt: "ABB" },
+  { src: bel, alt: "Bharat Electronics" },
+  { src: boeing, alt: "Boeing" },
+  { src: hp, alt: "HP" },
+  { src: hydrotherm, alt: "Hydrotherm" },
+  { src: hydac, alt: "Hydac" },
+  { src: kennametal, alt: "Kennametal" },
+  { src: leeboy, alt: "LeeBoy" },
+  { src: triveni, alt: "Triveni Turbines" },
 ];
 
 const TESTIMONIALS = [
@@ -173,6 +249,36 @@ const TESTIMONIALS = [
   },
 ];
 
+function SectionHeading({ eyebrow, title, text, light = false }) {
+  return (
+    <div className="text-center mb-12 md:mb-14 reveal">
+      <span
+        className={`text-xs font-semibold uppercase tracking-[0.18em] ${
+          light ? "text-blue-200" : "text-[#0A66C2]"
+        }`}
+      >
+        {eyebrow}
+      </span>
+      <h2
+        className={`mt-3 text-3xl md:text-4xl lg:text-5xl font-bold font-['Chivo'] tracking-tight ${
+          light ? "text-white" : "text-slate-900"
+        }`}
+      >
+        {title}
+      </h2>
+      {text ? (
+        <p
+          className={`mt-4 max-w-2xl mx-auto text-sm md:text-base leading-7 ${
+            light ? "text-slate-300" : "text-slate-600"
+          }`}
+        >
+          {text}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 function StarRating({ count }) {
   return (
     <div className="flex gap-0.5">
@@ -204,7 +310,7 @@ function HeroCarousel({ onInquire }) {
     emblaApi.on("select", onSelect);
 
     const timer = setInterval(() => {
-      if (emblaApi) emblaApi.scrollNext();
+      emblaApi?.scrollNext();
     }, 5500);
 
     return () => {
@@ -214,10 +320,7 @@ function HeroCarousel({ onInquire }) {
   }, [emblaApi]);
 
   return (
-    <section
-      className="relative w-full h-[560px] md:h-[680px] overflow-hidden"
-      data-testid="hero-carousel"
-    >
+    <section className="relative w-full h-[560px] md:h-[680px] overflow-hidden" data-testid="hero-carousel">
       <div className="embla w-full h-full overflow-hidden" ref={emblaRef}>
         <div className="embla__container flex h-full">
           {HERO_SLIDES.map((slide, i) => (
@@ -237,23 +340,23 @@ function HeroCarousel({ onInquire }) {
               <div className="relative z-10 h-full flex items-center">
                 <div className="max-w-7xl mx-auto px-4 md:px-8 w-full">
                   <div className="max-w-2xl">
-                    <span className="inline-block bg-[#0A66C2] text-white text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-sm mb-5 animate-fade-in shadow-lg">
+                    <span className="inline-block bg-[#0A66C2] text-white text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-sm mb-5 shadow-lg">
                       {slide.tag}
                     </span>
 
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-5 font-['Chivo'] animate-fade-up delay-100">
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-5 font-['Chivo']">
                       {slide.heading}
                     </h1>
 
-                    <p className="text-base md:text-lg text-white/85 mb-8 leading-relaxed animate-fade-up delay-200">
+                    <p className="text-base md:text-lg text-white/85 mb-8 leading-relaxed">
                       {slide.text}
                     </p>
 
-                    <div className="flex flex-wrap gap-4 animate-fade-up delay-300">
+                    <div className="flex flex-wrap gap-4">
                       {slide.cta1.action === "modal" ? (
                         <button
                           onClick={onInquire}
-                          className="bg-[#0A66C2] text-white px-7 py-3 font-semibold rounded-sm hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5 pulse-glow"
+                          className="bg-[#0A66C2] text-white px-7 py-3 font-semibold rounded-sm hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
                           data-testid={`hero-cta-primary-${i}`}
                         >
                           {slide.cta1.label}
@@ -261,7 +364,7 @@ function HeroCarousel({ onInquire }) {
                       ) : (
                         <Link
                           to={slide.cta1.to}
-                          className="bg-[#0A66C2] text-white px-7 py-3 font-semibold rounded-sm hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5 pulse-glow"
+                          className="bg-[#0A66C2] text-white px-7 py-3 font-semibold rounded-sm hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
                           data-testid={`hero-cta-primary-${i}`}
                         >
                           {slide.cta1.label}
@@ -316,6 +419,230 @@ function HeroCarousel({ onInquire }) {
   );
 }
 
+function WeServeSection() {
+  const trackRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const frameRef = useRef(null);
+
+  const cardWidth = 240;
+  const gap = 24;
+  const total = cardWidth + gap;
+
+  const speed = 4;
+  const holdTime = 3000;
+
+  const items = [...WE_SERVE_ITEMS, ...WE_SERVE_ITEMS, ...WE_SERVE_ITEMS];
+  const baseIndex = WE_SERVE_ITEMS.length;
+
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  const offsetRef = useRef(baseIndex * total);
+  const activeIndexRef = useRef(baseIndex);
+  const pauseUntilRef = useRef(0);
+  const isPausedRef = useRef(false);
+
+  useEffect(() => {
+    const animate = (time) => {
+      if (!trackRef.current || !wrapperRef.current) {
+        frameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const wrapperWidth = wrapperRef.current.offsetWidth;
+      const centerX = offsetRef.current + wrapperWidth / 2;
+
+      const nearestIndex = Math.round((centerX - cardWidth / 2) / total);
+      const nearestCenter = nearestIndex * total + cardWidth / 2;
+      const distance = Math.abs(nearestCenter - centerX);
+
+      if (
+        !isPausedRef.current &&
+        distance <= speed + 0.5 &&
+        nearestIndex !== activeIndexRef.current
+      ) {
+        activeIndexRef.current = nearestIndex;
+        setActiveIndex(nearestIndex);
+        isPausedRef.current = true;
+        pauseUntilRef.current = time + holdTime;
+
+        offsetRef.current =
+          nearestIndex * total + cardWidth / 2 - wrapperWidth / 2;
+      }
+
+      if (isPausedRef.current) {
+        if (time >= pauseUntilRef.current) {
+          setActiveIndex(null);
+          isPausedRef.current = false;
+        } else {
+          offsetRef.current =
+            activeIndexRef.current * total +
+            cardWidth / 2 -
+            wrapperWidth / 2;
+        }
+      } else {
+        offsetRef.current += speed;
+
+        const resetPoint = WE_SERVE_ITEMS.length * total * 2;
+        const resetTo = WE_SERVE_ITEMS.length * total;
+
+        if (offsetRef.current >= resetPoint) {
+          offsetRef.current = resetTo;
+        }
+      }
+
+      trackRef.current.style.transform = `translateX(-${offsetRef.current}px)`;
+      frameRef.current = requestAnimationFrame(animate);
+    };
+
+    frameRef.current = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(frameRef.current);
+  }, []);
+
+  const move = (dir) => {
+    if (!wrapperRef.current) return;
+
+    const wrapperWidth = wrapperRef.current.offsetWidth;
+    const nextIndex = activeIndexRef.current + dir;
+
+    activeIndexRef.current = nextIndex;
+    setActiveIndex(nextIndex);
+
+    isPausedRef.current = true;
+    pauseUntilRef.current = performance.now() + holdTime;
+
+    offsetRef.current =
+      nextIndex * total + cardWidth / 2 - wrapperWidth / 2;
+
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(-${offsetRef.current}px)`;
+    }
+  };
+
+  return (
+    <section className="py-16 md:py-24 bg-white overflow-hidden relative">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <SectionHeading
+          eyebrow="We Serve"
+          title="Industries We Serve"
+          text="Precision fabrication solutions across critical industries."
+        />
+
+        <div ref={wrapperRef} className="relative overflow-hidden py-6">
+          <button
+            onClick={() => move(-1)}
+            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-30 bg-white border shadow-md rounded-full p-3 hover:scale-110 transition"
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <button
+            onClick={() => move(1)}
+            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-30 bg-white border shadow-md rounded-full p-3 hover:scale-110 transition"
+          >
+            <ChevronRight size={20} />
+          </button>
+
+          <div
+            ref={trackRef}
+            className="flex items-center"
+            style={{
+              gap: `${gap}px`,
+              width: "max-content",
+              willChange: "transform",
+            }}
+          >
+            {items.map((item, index) => {
+              const isActive = index === activeIndex;
+
+              return (
+                <div
+                  key={`${item.title}-${index}`}
+                  className={`group shrink-0 w-[220px] md:w-[240px] rounded-2xl overflow-hidden bg-white border transition-all duration-500 ${
+                    isActive
+                      ? "scale-110 shadow-2xl border-[#0A66C2]"
+                      : "scale-95 shadow-sm border-slate-200 opacity-90"
+                  }`}
+                >
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className={`w-full h-36 md:h-40 object-cover transition-transform duration-700 ${
+                        isActive ? "scale-110" : "scale-100"
+                      } group-hover:scale-105`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <h3 className="text-sm md:text-base font-bold text-white font-['Chivo']">
+                        {item.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="p-3 md:p-4 text-center">
+                    <p className="text-[11px] md:text-xs text-slate-600">
+                      {item.text}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ClientLogosSection() {
+  const logos = [...CLIENT_LOGOS, ...CLIENT_LOGOS];
+
+  return (
+    <section className="py-12 md:py-14 bg-white overflow-hidden" data-testid="client-logos-section">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="text-center mb-8 reveal">
+          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.18em]">
+            Trusted By
+          </span>
+          <h3 className="mt-3 text-2xl md:text-3xl font-bold text-slate-900 font-['Chivo'] tracking-tight">
+            Leading Companies
+          </h3>
+        </div>
+
+        <div className="overflow-hidden relative">
+          <div className="flex items-center gap-12 md:gap-16 w-max animate-[logoScroll_28s_linear_infinite]">
+            {logos.map((logo, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-center min-w-[140px] md:min-w-[170px] opacity-75 hover:opacity-100 transition-opacity duration-300"
+              >
+                <img
+                  src={logo.src}
+                  alt={logo.alt}
+                  className="h-10 md:h-14 object-contain grayscale hover:grayscale-0 transition-all duration-300"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes logoScroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 function TestimonialsSection() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "center", skipSnaps: false });
   const [current, setCurrent] = useState(0);
@@ -330,10 +657,12 @@ function TestimonialsSection() {
   return (
     <section className="py-16 md:py-24 bg-[#0A66C2] overflow-hidden" data-testid="testimonials-section">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="text-center mb-12 reveal">
-          <span className="text-xs font-semibold text-blue-200 uppercase tracking-wider">Client Feedback</span>
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mt-2 font-['Chivo']">What Our Clients Say</h2>
-        </div>
+        <SectionHeading
+          eyebrow="Client Feedback"
+          title="What Our Clients Say"
+          text="Real feedback from customers across critical industrial sectors."
+          light
+        />
 
         <div className="embla overflow-hidden" ref={emblaRef} data-testid="testimonials-carousel">
           <div className="embla__container">
@@ -346,21 +675,29 @@ function TestimonialsSection() {
               >
                 <div className="max-w-2xl mx-auto">
                   <div className="bg-white rounded-2xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
-                    <div className="absolute -top-4 -right-4 text-[140px] font-black text-blue-50 leading-none select-none font-['Chivo']">"</div>
+                    <div className="absolute -top-4 -right-4 text-[140px] font-black text-blue-50 leading-none select-none font-['Chivo']">
+                      "
+                    </div>
+
                     <div className="relative z-10">
                       <StarRating count={t.rating} />
                       <p className="text-slate-700 text-lg leading-relaxed mt-5 mb-7 italic font-medium">
                         "{t.text}"
                       </p>
+
                       <div className="flex items-center gap-4 pt-5 border-t border-slate-100">
                         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#0A66C2] to-blue-400 flex items-center justify-center text-white font-bold text-xl font-['Chivo'] shrink-0">
                           {t.name.charAt(0)}
                         </div>
                         <div className="flex-1">
                           <div className="font-bold text-slate-900 font-['Chivo']">{t.name}</div>
-                          <div className="text-sm text-slate-500">{t.role} · {t.company}</div>
+                          <div className="text-sm text-slate-500">
+                            {t.role} · {t.company}
+                          </div>
                         </div>
-                        <span className="text-xs bg-blue-50 text-[#0A66C2] font-semibold px-3 py-1.5 rounded-full">{t.sector}</span>
+                        <span className="text-xs bg-blue-50 text-[#0A66C2] font-semibold px-3 py-1.5 rounded-full">
+                          {t.sector}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -378,16 +715,20 @@ function TestimonialsSection() {
           >
             <ChevronLeft size={20} />
           </button>
+
           <div className="flex gap-2">
             {TESTIMONIALS.map((_, i) => (
               <button
                 key={i}
                 onClick={() => emblaApi?.scrollTo(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${i === current ? "w-8 bg-white" : "w-2 bg-white/40"}`}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === current ? "w-8 bg-white" : "w-2 bg-white/40"
+                }`}
                 data-testid={`testimonial-dot-${i}`}
               />
             ))}
           </div>
+
           <button
             onClick={() => emblaApi?.scrollNext()}
             className="w-10 h-10 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white transition-colors"
@@ -408,48 +749,64 @@ export default function Home() {
   const whyRef = useReveal();
   const processRef = useReveal();
   const projectsRef = useReveal();
-  const industriesRef = useReveal();
   const infraRef = useReveal();
   const instaRef = useReveal();
   const ctaRef = useReveal();
 
   return (
-    <main>
+    <main className="bg-white">
       <HeroCarousel onInquire={() => setShowInquire(true)} />
 
       <div className="bg-[#0A66C2]" data-testid="stats-bar">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {STATS.map((s, i) => (
-            <div key={s.label} className={`text-center text-white reveal delay-${(i + 1) * 100}`}>
-              <div className="text-3xl font-bold font-['Chivo']">{s.value}</div>
-              <div className="text-sm text-blue-100 mt-1">{s.label}</div>
-            </div>
-          ))}
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8">
+            {STATS.map((s, i) => (
+              <div
+                key={s.label}
+                className={`text-center text-white reveal delay-${(i + 1) * 100}`}
+              >
+                <div className="text-3xl font-bold font-['Chivo']">{s.value}</div>
+                <div className="text-sm text-blue-100 mt-1">{s.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       <section className="py-16 md:py-24 bg-white" data-testid="about-preview" ref={aboutRef}>
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="reveal-left">
-              <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">About DFAB</span>
-              <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 mb-5 font-['Chivo'] tracking-tight">
+              <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.18em]">
+                About DFAB
+              </span>
+              <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-3 mb-5 font-['Chivo'] tracking-tight">
                 Fabricating Your Vision with Precision
               </h2>
-              <p className="text-slate-600 leading-relaxed mb-5">
+              <p className="text-slate-600 leading-7 mb-5">
                 DFAB Stainless System Pvt Ltd is an <strong>ISO 9001:2015 certified</strong> fabrication company established in 2018, located in the prime Peenya Industrial Area, Bengaluru.
               </p>
-              <p className="text-slate-600 leading-relaxed mb-8">
+              <p className="text-slate-600 leading-7 mb-8">
                 With a 7000 sq-ft facility, a 5-ton crane, 10+ welding machines (TIG, MIG), and a highly skilled team, we provide end-to-end solutions in equipment fabrication, high-pressure pipeline welding, and precision machining.
               </p>
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                {["7000 sqft Operating Space", "5 Ton Crane Facility", "10+ Welding Machines", "Skilled 6G Welders"].map((item) => (
-                  <div key={item} className="flex items-center gap-2">
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                {[
+                  "7000 sqft Operating Space",
+                  "5 Ton Crane Facility",
+                  "10+ Welding Machines",
+                  "Skilled 6G Welders",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3"
+                  >
                     <CheckCircle size={16} className="text-[#0A66C2] shrink-0" />
                     <span className="text-sm text-slate-700">{item}</span>
                   </div>
                 ))}
               </div>
+
               <Link
                 to="/about"
                 className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
@@ -460,9 +817,13 @@ export default function Home() {
             </div>
 
             <div className="relative reveal-right">
-              <img src={aboutFactory} alt="DFAB Factory" className="rounded-xl w-full h-96 object-cover shadow-2xl" />
-              <div className="absolute -bottom-5 -left-5 bg-[#0A66C2] text-white p-5 rounded-xl shadow-2xl hidden md:block">
-                <div className="text-3xl font-bold font-['Chivo']">6+</div>
+              <img
+                src={aboutFactory}
+                alt="DFAB Factory"
+                className="rounded-2xl w-full h-96 object-cover shadow-2xl"
+              />
+              <div className="absolute -bottom-5 -left-5 bg-[#0A66C2] text-white p-5 rounded-2xl shadow-2xl hidden md:block">
+                <div className="text-3xl font-bold font-['Chivo']">8+</div>
                 <div className="text-sm text-blue-100">Years of Excellence</div>
               </div>
             </div>
@@ -472,27 +833,31 @@ export default function Home() {
 
       <section className="py-16 md:py-24 bg-slate-50" data-testid="services-section" ref={servicesRef}>
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-12 reveal">
-            <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">What We Do</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 font-['Chivo'] tracking-tight">Our Services</h2>
-            <p className="text-slate-600 mt-3 max-w-xl mx-auto">
-              High-quality fabrication solutions for industrial applications.
-            </p>
-          </div>
+          <SectionHeading
+            eyebrow="What We Do"
+            title="Our Services"
+            text="High-quality fabrication solutions for industrial applications."
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {ALL_SERVICES.slice(0, 3).map((s) => (
               <div
                 key={s.title}
-                className="reveal group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 hover:shadow-2xl hover:border-[#0A66C2]/30 transition-all duration-500"
+                className="reveal group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-[#0A66C2]/30 transition-all duration-500"
                 data-testid={`service-card-${s.title.replace(/\s/g, "-").toLowerCase()}`}
               >
                 <div className="overflow-hidden">
-                  <img src={s.image} alt={s.title} className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <img
+                    src={s.image}
+                    alt={s.title}
+                    className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo']">{s.title}</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">{s.desc}</p>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo']">
+                    {s.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-6 line-clamp-3">{s.desc}</p>
                 </div>
               </div>
             ))}
@@ -500,35 +865,38 @@ export default function Home() {
 
           <div className="text-center mt-10 reveal">
             <Link
-              to="/services"
-              className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
-              data-testid="services-view-all"
-            >
-              View All Services <ArrowRight size={16} />
-            </Link>
+  to="/projects#services"
+  className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
+  data-testid="services-view-all"
+>
+  View All Services <ArrowRight size={16} />
+</Link>
           </div>
         </div>
       </section>
 
       <section className="py-16 md:py-24 bg-white" data-testid="why-choose-section" ref={whyRef}>
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-12 reveal">
-            <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Why DFAB</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 font-['Chivo'] tracking-tight">Why Choose Us</h2>
-          </div>
+          <SectionHeading
+            eyebrow="Why DFAB"
+            title="Why Choose Us"
+            text="Reliable processes, skilled workmanship and delivery confidence for every project."
+          />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 stagger-children">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
             {WHYCHOOSE.map((item) => (
               <div
                 key={item.title}
-                className="reveal text-center bg-white border border-slate-200 rounded-2xl p-7 shadow-sm hover:shadow-2xl hover:-translate-y-2 hover:border-[#0A66C2]/30 transition-all duration-500"
+                className="reveal text-center bg-white border border-slate-200 rounded-2xl p-7 shadow-sm hover:shadow-xl hover:-translate-y-2 hover:border-[#0A66C2]/30 transition-all duration-500"
                 data-testid={`why-card-${item.title.replace(/\s/g, "-").toLowerCase()}`}
               >
-                <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center text-[#0A66C2] mx-auto mb-4 transition-transform duration-300 hover:scale-110">
+                <div className="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center text-[#0A66C2] mx-auto mb-4">
                   {item.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo']">{item.title}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{item.desc}</p>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo']">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-slate-600 leading-6">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -537,19 +905,26 @@ export default function Home() {
 
       <section className="py-16 md:py-24 bg-[#0F172A]" data-testid="process-section" ref={processRef}>
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-12 reveal">
-            <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">How We Work</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mt-2 font-['Chivo'] tracking-tight">Our Work Process</h2>
-          </div>
+          <SectionHeading
+            eyebrow="How We Work"
+            title="Our Work Process"
+            text="A structured approach from design to delivery."
+            light
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
             {PROCESS.map((step, i) => (
               <div key={step.num} className="relative reveal" data-testid={`process-step-${step.num}`}>
                 <div className="bg-slate-800/95 rounded-2xl p-6 h-full border border-slate-700 hover:border-[#0A66C2] hover:-translate-y-2 hover:shadow-2xl transition-all duration-500">
-                  <div className="text-5xl font-black text-[#0A66C2]/30 font-['Chivo'] mb-3">{step.num}</div>
-                  <h3 className="text-base font-semibold text-white mb-2 font-['Chivo']">{step.title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">{step.desc}</p>
+                  <div className="text-5xl font-black text-[#0A66C2]/30 font-['Chivo'] mb-3">
+                    {step.num}
+                  </div>
+                  <h3 className="text-base font-semibold text-white mb-2 font-['Chivo']">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-slate-400 leading-6">{step.desc}</p>
                 </div>
+
                 {i < PROCESS.length - 1 && (
                   <div className="hidden lg:flex absolute top-8 -right-3 z-10 w-6 h-6 bg-[#0A66C2] rounded-full items-center justify-center shadow-lg">
                     <ChevronRight size={14} className="text-white" />
@@ -561,243 +936,175 @@ export default function Home() {
         </div>
       </section>
 
+      <WeServeSection />
+
       <section className="py-16 md:py-24 bg-slate-50" data-testid="projects-preview" ref={projectsRef}>
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-12 reveal">
-            <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Our Portfolio</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 font-['Chivo'] tracking-tight">Featured Projects</h2>
-            <p className="text-slate-600 mt-3 max-w-xl mx-auto">
-              Delivering precision fabrication across diverse industrial sectors.
+  <div className="max-w-7xl mx-auto px-4 md:px-8">
+    <SectionHeading
+      eyebrow="Our Portfolio"
+      title="Featured Projects"
+      text="Delivering precision fabrication across diverse industrial sectors."
+    />
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {ALL_PROJECTS.slice(0, 3).map((p) => (
+        <div
+          key={p.title}
+          className="reveal group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-[#0A66C2]/30 transition-all duration-500"
+          data-testid={`project-card-${p.title.replace(/\s/g, "-").toLowerCase()}`}
+        >
+          <div className="overflow-hidden relative">
+            <img
+              src={p.img}
+              alt={p.title}
+              className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+            {p.tag && (
+              <span className="absolute top-4 left-4 bg-[#0A66C2] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+                {p.tag}
+              </span>
+            )}
+          </div>
+
+          <div className="p-6">
+            <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo']">
+              {p.title}
+            </h3>
+            <p className="text-sm text-slate-600 leading-6 line-clamp-3 mb-4">
+              {p.desc}
             </p>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {ALL_PROJECTS.slice(0, 3).map((p) => (
-              <div
-                key={p.title}
-                className="reveal group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 hover:shadow-2xl hover:border-[#0A66C2]/30 transition-all duration-500"
-                data-testid={`project-card-${p.title.replace(/\s/g, "-").toLowerCase()}`}
-              >
-                <div className="overflow-hidden relative">
-                  <img
-                    src={p.img}
-                    alt={p.title}
-                    className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  {p.tag && (
-                    <span className="absolute top-4 left-4 bg-[#0A66C2] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-                      {p.tag}
-                    </span>
-                  )}
-                </div>
-
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo']">{p.title}</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed line-clamp-3 mb-4">{p.desc}</p>
-
-                  <Link
-                    to="/projects"
-                    className="inline-flex items-center gap-2 text-[#0A66C2] font-semibold text-sm hover:gap-3 transition-all duration-300"
-                  >
-                    Explore Project <ArrowRight size={15} />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-10 reveal">
             <Link
-              to="/projects"
-              className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
-              data-testid="projects-view-all"
-            >
-              View All Projects <ArrowRight size={16} />
-            </Link>
+  to="/projects#projects"
+  className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
+  data-testid="projects-view-all"
+>
+  View All Projects <ArrowRight size={16} />
+</Link>
           </div>
         </div>
-      </section>
+      ))}
+    </div>
 
-      <section className="py-16 md:py-24 bg-slate-50" data-testid="industries-section" ref={industriesRef}>
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-12 reveal">
-            <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Sectors</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 font-['Chivo'] tracking-tight">Industries We Serve</h2>
-            <p className="text-slate-600 mt-3 max-w-xl mx-auto">
-              Delivering precision fabrication across 9 demanding industrial sectors worldwide.
-            </p>
+    <div className="text-center mt-10 reveal">
+      <Link
+        to="/projects"
+        className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
+        data-testid="projects-view-all"
+      >
+        View All Projects <ArrowRight size={16} />
+      </Link>
+    </div>
+  </div>
+</section>
+
+      <section className="py-16 md:py-24 bg-slate-50" data-testid="infrastructure-preview" ref={infraRef}>
+  <div className="max-w-7xl mx-auto px-4 md:px-8">
+    <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-stretch">
+      
+      {/* LEFT SIDE IMAGES */}
+      <div className="reveal-left h-full">
+        <div className="grid grid-rows-[1fr_1.15fr] gap-5 h-full min-h-[620px]">
+          
+          {/* TOP 2 IMAGES */}
+          <div className="grid grid-cols-2 gap-5 h-full">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
+              <img
+                src={infra1}
+                alt="Factory"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
+              <img
+                src={infra2}
+                alt="Machinery"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              />
+            </div>
           </div>
 
-          <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-9 gap-4 stagger-children mb-20">
-            {INDUSTRIES.map((ind) => (
+          {/* BOTTOM 1 IMAGE */}
+          <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
+            <img
+              src={infra3}
+              alt="Welding"
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* RIGHT SIDE CONTENT */}
+      <div className="reveal-right h-full flex flex-col justify-between">
+        <div>
+          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.18em]">
+            Our Facility
+          </span>
+          <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-3 mb-5 font-['Chivo'] tracking-tight">
+            World-Class Infrastructure
+          </h2>
+          <p className="text-slate-600 leading-7 mb-6">
+            Our 7000 sq-ft state-of-the-art facility in Peenya Industrial Area is equipped with advanced machinery and operated by a highly skilled engineering team.
+          </p>
+
+          <div className="space-y-3 mb-8">
+            {[
+              "7000 sqft Operating Space with 5 Ton Crane",
+              "10+ TIG & MIG Welding Machines",
+              "Conventional Milling & Turning Machines",
+              "Radial Drilling Machine",
+              "Advanced Laser Technology",
+              "Quality Inspection Equipment",
+            ].map((item) => (
               <div
-                key={ind.label}
-                className="reveal flex flex-col items-center gap-2 py-5 px-3 bg-white rounded-2xl border border-slate-200 hover:border-[#0A66C2] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center"
-                data-testid={`industry-${ind.label.replace(/\s/g, "-").toLowerCase()}`}
+                key={item}
+                className="flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-3"
               >
-                <span className="text-2xl" role="img" aria-label={ind.label}>{ind.icon}</span>
-                <span className="text-xs font-semibold text-slate-700 leading-tight">{ind.label}</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#0A66C2] shrink-0" />
+                <span className="text-sm text-slate-700">{item}</span>
               </div>
             ))}
           </div>
-
-          <div className="reveal">
-            <div className="text-center mb-12">
-              <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Why Trust Us</span>
-              <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 font-['Chivo'] tracking-tight">Built on Proof, Not Promises</h2>
-              <p className="text-slate-600 mt-3 max-w-xl mx-auto">
-                Real clients, real facilities, real processes — every detail you need to make a confident decision.
-              </p>
-            </div>
-
-            <div className="mb-14" data-testid="client-logos">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest text-center mb-6">Trusted by Industry Leaders</p>
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                {[
-                  "Pharma Corp India",
-                  "Power Gen Systems",
-                  "DairyCo Foods",
-                  "AutoTech Mfg",
-                  "AeroSpace Ltd",
-                  "Defence Systems India",
-                  "SemiCon Tech",
-                  "Energy Solutions",
-                ].map((name) => (
-                  <div
-                    key={name}
-                    className="h-12 px-6 bg-white border border-slate-200 rounded-xl flex items-center justify-center hover:border-[#0A66C2] hover:shadow-md transition-all duration-300"
-                  >
-                    <span className="text-xs font-bold text-slate-500 tracking-wide uppercase">{name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div data-testid="factory-images">
-                <p className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <span className="w-6 h-0.5 bg-[#0A66C2] inline-block" />
-                  Factory Images
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  <img src={factory1} alt="DFAB Workshop — Grinding" className="rounded-xl h-44 w-full object-cover hover:opacity-90 transition-opacity" />
-                  <img src={factory2} alt="DFAB Factory — Welding" className="rounded-xl h-44 w-full object-cover hover:opacity-90 transition-opacity" />
-                  <img src={factory3} alt="DFAB — Laser Cutting" className="rounded-xl h-44 w-full object-cover hover:opacity-90 transition-opacity" />
-                  <img src={factory4} alt="DFAB — Fabrication Process" className="rounded-xl h-44 w-full object-cover hover:opacity-90 transition-opacity" />
-                </div>
-              </div>
-
-              <div data-testid="process-videos">
-                <p className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <span className="w-6 h-0.5 bg-[#0A66C2] inline-block" />
-                  Process Videos
-                </p>
-                <div className="space-y-3">
-                  {[
-                    { title: "TIG Welding — Stainless Steel Precision", thumb: video1 },
-                    { title: "Laser Cutting — Complex Profile Fabrication", thumb: video2 },
-                    { title: "Heavy Fabrication — Structural Assembly", thumb: video3 },
-                  ].map((vid) => (
-                    <a
-                      key={vid.title}
-                      href="https://www.youtube.com/channel/UClfxW0cBkQMjoU3VdhVv-cg"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center gap-4 bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-[#0A66C2] hover:shadow-md transition-all duration-300 group"
-                      data-testid={`process-video-${vid.title.substring(0, 10).replace(/\s/g, "-").toLowerCase()}`}
-                    >
-                      <div className="relative w-28 h-20 shrink-0">
-                        <img src={vid.thumb} alt={vid.title} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/30 transition-colors">
-                          <div className="w-9 h-9 bg-[#0A66C2] rounded-full flex items-center justify-center shadow-lg">
-                            <svg viewBox="0 0 24 24" fill="white" className="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex-1 py-3 pr-4">
-                        <p className="text-sm font-semibold text-slate-800 leading-snug group-hover:text-[#0A66C2] transition-colors">
-                          {vid.title}
-                        </p>
-                        <p className="text-xs text-slate-400 mt-1">Watch on YouTube</p>
-                      </div>
-                    </a>
-                  ))}
-                  <a
-                    href="https://www.youtube.com/channel/UClfxW0cBkQMjoU3VdhVv-cg"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-2 text-sm font-semibold text-[#0A66C2] hover:underline mt-1"
-                  >
-                    View all videos on YouTube <ArrowRight size={14} />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </section>
+
+        <div>
+          <Link
+            to="/infrastructure"
+            className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
+            data-testid="infra-explore-btn"
+          >
+            Explore Infrastructure <ArrowRight size={16} />
+          </Link>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       <TestimonialsSection />
 
-      <section className="py-16 md:py-24 bg-slate-50" data-testid="infrastructure-preview" ref={infraRef}>
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="grid grid-cols-2 gap-4 reveal-left">
-              <img src={infra1} alt="Factory" className="rounded-xl h-48 w-full object-cover" />
-              <img src={infra2} alt="Machinery" className="rounded-xl h-48 w-full object-cover" />
-              <img src={infra3} alt="Welding" className="rounded-xl h-48 w-full object-cover col-span-2" />
-            </div>
-            <div className="reveal-right">
-              <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Our Facility</span>
-              <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 mb-5 font-['Chivo'] tracking-tight">World-Class Infrastructure</h2>
-              <p className="text-slate-600 leading-relaxed mb-6">
-                Our 7000 sq-ft state-of-the-art facility in Peenya Industrial Area is equipped with advanced machinery and operated by a highly skilled engineering team.
-              </p>
-              <div className="space-y-3 mb-8">
-                {[
-                  "7000 sqft Operating Space with 5 Ton Crane",
-                  "10+ TIG & MIG Welding Machines",
-                  "Conventional Milling & Turning Machines",
-                  "Radial Drilling Machine",
-                  "Advanced Laser Technology",
-                  "Quality Inspection Equipment",
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#0A66C2] shrink-0" />
-                    <span className="text-sm text-slate-700">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <Link
-                to="/infrastructure"
-                className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
-                data-testid="infra-explore-btn"
-              >
-                Explore Infrastructure <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      
+
+      <ClientLogosSection />
 
       <section className="py-16 md:py-24 bg-white" data-testid="instagram-section" ref={instaRef}>
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-10 reveal">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Instagram size={20} className="text-[#0A66C2]" />
-              <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Follow Us</span>
-            </div>
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 font-['Chivo'] tracking-tight">Our Work in Action</h2>
-            <p className="text-slate-600 mt-3">Follow @dfab_stainless on Instagram for the latest updates</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 stagger-children">
+          <SectionHeading
+            eyebrow="Follow Us"
+            title="Our Work in Action"
+            text="Follow @dfab_stainless on Instagram for the latest updates."
+          />
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 stagger-children">
             {[...Array(6)].map((_, i) => (
               <a
                 key={i}
                 href="https://www.instagram.com"
                 target="_blank"
                 rel="noreferrer"
-                className="reveal-scale aspect-square bg-slate-100 rounded-xl overflow-hidden flex items-center justify-center group hover:opacity-90 transition-opacity relative"
+                className="reveal-scale aspect-square bg-slate-100 rounded-2xl overflow-hidden flex items-center justify-center group hover:opacity-90 transition-opacity relative"
                 data-testid={`instagram-placeholder-${i + 1}`}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
@@ -806,7 +1113,10 @@ export default function Home() {
               </a>
             ))}
           </div>
-          <p className="text-center text-sm text-slate-400 mt-6">Instagram posts will appear here once connected</p>
+
+          <p className="text-center text-sm text-slate-400 mt-6">
+            Instagram posts will appear here once connected
+          </p>
         </div>
       </section>
 
@@ -820,14 +1130,19 @@ export default function Home() {
                 <p className="text-blue-200 text-sm">Engineering Excellence from India</p>
               </div>
             </div>
+
             <div className="flex flex-wrap gap-4 items-center justify-center">
-              <div className="flex gap-3">
+              <div className="flex gap-3 flex-wrap justify-center">
                 {["ISO 9001:2015", "ZED Certified", "ADNOC Approved"].map((badge) => (
-                  <span key={badge} className="text-xs font-bold bg-white/15 text-white border border-white/30 px-3 py-1.5 rounded-full">
+                  <span
+                    key={badge}
+                    className="text-xs font-bold bg-white/15 text-white border border-white/30 px-3 py-1.5 rounded-full"
+                  >
                     {badge}
                   </span>
                 ))}
               </div>
+
               <Link
                 to="/quality"
                 className="bg-white text-[#0A66C2] px-6 py-2.5 rounded-sm font-semibold text-sm hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5 whitespace-nowrap"
@@ -844,13 +1159,13 @@ export default function Home() {
           <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4 font-['Chivo'] tracking-tight">
             Ready to Start Your Project?
           </h2>
-          <p className="text-slate-400 max-w-xl mx-auto mb-8">
+          <p className="text-slate-400 max-w-xl mx-auto mb-8 leading-7">
             Contact us today for a free consultation. Our team is ready to bring your fabrication needs to life.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={() => setShowInquire(true)}
-              className="bg-[#0A66C2] text-white px-8 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5 pulse-glow"
+              className="bg-[#0A66C2] text-white px-8 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
               data-testid="cta-inquire-btn"
             >
               Inquire Now
