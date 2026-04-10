@@ -16,7 +16,7 @@ import {
 import { useReveal } from "../hooks/useReveal";
 import InquireModal from "../components/InquireModal";
 import { SERVICES as ALL_SERVICES } from "./Services";
-import { PROJECTS as ALL_PROJECTS } from "./Projects";
+import { getProjects, initializeProjects } from "../data/projectsData";
 
 // Hero
 import hero1 from "../assets/images/hero1.jpg";
@@ -45,10 +45,7 @@ import pharmaProject from "../assets/images/serve/pharma-project.jpg";
 import semiProject from "../assets/images/serve/semi-project.jpg";
 import foodProject from "../assets/images/serve/food-project.jpg";
 import energyProject from "../assets/images/serve/energy-project.jpg";
-import autoProject from "../assets/images/serve/auto-project.jpg";
-import chemicalProject from "../assets/images/serve/chemical-project.jpg";
-import oilProject from "../assets/images/serve/oil-project.jpg";
-import waterProject from "../assets/images/serve/water-project.jpg";
+
 
 // Client logos
 import abb from "../assets/images/clients/abb.png";
@@ -143,55 +140,36 @@ const STATS = [
 
 const WE_SERVE_ITEMS = [
   {
-    title: "Aerospace",
-    text: "Precision machined aircraft parts and jet engine components.",
+    title: "Energy Sector",
+    text: "We have executed a high-pressure welded pipeline for a steam turbine with 100% radiographic joints welded at the 6G position – meeting the most critical energy sector standards.",
     image: aerospaceProject,
   },
   {
-    title: "Defence",
-    text: "Heavy structural steel for tactical vehicles and radar bases.",
+    title: "Pharmaceuticals",
+    text: "We have developed welded stainless steel drug processing equipment and containers qualifying the strict requirements of medical standards for pharmaceutical manufacturing.",
     image: defenceProject,
   },
   {
-    title: "Pharma",
-    text: "Mirror-finish stainless steel laboratory vessels.",
+    title: "Locomotive",
+    text: "We have fabricated train seating and coaches, meeting the stringent locomotive safety standards. Precision fabrication for passenger comfort and safety.",
     image: pharmaProject,
   },
   {
-    title: "Semiconductor",
-    text: "High-precision metal jigs and cleanroom equipment.",
+    title: "Aeronautical",
+    text: "We have developed machined aluminum components for aerospace-grade standards, requiring extremely tight tolerances and advanced machining capabilities.",
     image: semiProject,
   },
   {
-    title: "Food",
-    text: "Large stainless steel milk tanks and conveyor parts.",
+    title: "Food Industries",
+    text: "We have manufactured welded food-grade stainless steel processing equipment and storage containers qualifying food safety standards.",
     image: foodProject,
   },
   {
-    title: "Energy",
-    text: "Turbine parts, wind energy components and power skids.",
+    title: "Automotive Industries",
+    text: "We have developed a precision fixture for an automotive seating assembly line component welding to enable mass production, improved productivity and consistent quality.",
     image: energyProject,
   },
-  {
-    title: "Automotive",
-    text: "Assembly line welding fixtures and engine parts.",
-    image: autoProject,
-  },
-  {
-    title: "Chemical",
-    text: "Industrial reactors and large-scale pressure piping.",
-    image: chemicalProject,
-  },
-  {
-    title: "Oil & Gas",
-    text: "Offshore rig piping, heavy skids and pipeline assemblies.",
-    image: oilProject,
-  },
-  {
-    title: "Water",
-    text: "Water filtration modules and reverse osmosis systems.",
-    image: waterProject,
-  },
+  
 ];
 
 const CLIENT_LOGOS = [
@@ -424,12 +402,12 @@ function WeServeSection() {
   const wrapperRef = useRef(null);
   const frameRef = useRef(null);
 
-  const cardWidth = 240;
-  const gap = 24;
+  const cardWidth = 320;
+  const gap = 32;
   const total = cardWidth + gap;
 
-  const speed = 4;
-  const holdTime = 3000;
+  const speed = 3;
+  const holdTime = 2000;
 
   const items = [...WE_SERVE_ITEMS, ...WE_SERVE_ITEMS, ...WE_SERVE_ITEMS];
   const baseIndex = WE_SERVE_ITEMS.length;
@@ -449,42 +427,35 @@ function WeServeSection() {
       }
 
       const wrapperWidth = wrapperRef.current.offsetWidth;
-      const centerX = offsetRef.current + wrapperWidth / 2;
+      const screenCenter = wrapperWidth / 2;
 
+      const centerX = offsetRef.current + screenCenter;
       const nearestIndex = Math.round((centerX - cardWidth / 2) / total);
       const nearestCenter = nearestIndex * total + cardWidth / 2;
       const distance = Math.abs(nearestCenter - centerX);
 
       if (
         !isPausedRef.current &&
-        distance <= speed + 0.5 &&
+        distance <= speed &&
         nearestIndex !== activeIndexRef.current
       ) {
         activeIndexRef.current = nearestIndex;
         setActiveIndex(nearestIndex);
         isPausedRef.current = true;
         pauseUntilRef.current = time + holdTime;
-
-        offsetRef.current =
-          nearestIndex * total + cardWidth / 2 - wrapperWidth / 2;
+        offsetRef.current = nearestIndex * total + cardWidth / 2 - screenCenter;
       }
 
       if (isPausedRef.current) {
         if (time >= pauseUntilRef.current) {
           setActiveIndex(null);
           isPausedRef.current = false;
-        } else {
-          offsetRef.current =
-            activeIndexRef.current * total +
-            cardWidth / 2 -
-            wrapperWidth / 2;
         }
       } else {
         offsetRef.current += speed;
 
         const resetPoint = WE_SERVE_ITEMS.length * total * 2;
         const resetTo = WE_SERVE_ITEMS.length * total;
-
         if (offsetRef.current >= resetPoint) {
           offsetRef.current = resetTo;
         }
@@ -495,28 +466,19 @@ function WeServeSection() {
     };
 
     frameRef.current = requestAnimationFrame(animate);
-
     return () => cancelAnimationFrame(frameRef.current);
-  }, []);
+  }, [total, cardWidth]);
 
   const move = (dir) => {
     if (!wrapperRef.current) return;
-
-    const wrapperWidth = wrapperRef.current.offsetWidth;
     const nextIndex = activeIndexRef.current + dir;
-
     activeIndexRef.current = nextIndex;
     setActiveIndex(nextIndex);
-
     isPausedRef.current = true;
     pauseUntilRef.current = performance.now() + holdTime;
 
-    offsetRef.current =
-      nextIndex * total + cardWidth / 2 - wrapperWidth / 2;
-
-    if (trackRef.current) {
-      trackRef.current.style.transform = `translateX(-${offsetRef.current}px)`;
-    }
+    const wrapperWidth = wrapperRef.current.offsetWidth;
+    offsetRef.current = nextIndex * total + cardWidth / 2 - wrapperWidth / 2;
   };
 
   return (
@@ -528,19 +490,21 @@ function WeServeSection() {
           text="Precision fabrication solutions across critical industries."
         />
 
-        <div ref={wrapperRef} className="relative overflow-hidden py-6">
+        <div ref={wrapperRef} className="relative py-10">
           <button
             onClick={() => move(-1)}
-            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-30 bg-white border shadow-md rounded-full p-3 hover:scale-110 transition"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-40 bg-white border border-slate-200 shadow-xl rounded-full p-4 hover:bg-blue-50 text-[#0A66C2] transition-all"
+            aria-label="Previous"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={24} />
           </button>
 
           <button
             onClick={() => move(1)}
-            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-30 bg-white border shadow-md rounded-full p-3 hover:scale-110 transition"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-40 bg-white border border-slate-200 shadow-xl rounded-full p-4 hover:bg-blue-50 text-[#0A66C2] transition-all"
+            aria-label="Next"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={24} />
           </button>
 
           <div
@@ -558,31 +522,32 @@ function WeServeSection() {
               return (
                 <div
                   key={`${item.title}-${index}`}
-                  className={`group shrink-0 w-[220px] md:w-[240px] rounded-2xl overflow-hidden bg-white border transition-all duration-500 ${
+                  className={`group shrink-0 rounded-3xl overflow-hidden bg-white border transition-all duration-700 ease-in-out ${
                     isActive
-                      ? "scale-110 shadow-2xl border-[#0A66C2]"
-                      : "scale-95 shadow-sm border-slate-200 opacity-90"
+                      ? "scale-110 shadow-2xl border-[#0A66C2] z-30"
+                      : "scale-90 shadow-sm border-slate-100 opacity-30"
                   }`}
+                  style={{ width: `${cardWidth}px` }}
                 >
-                  <div className="relative overflow-hidden">
+                  <div className="relative h-64 overflow-hidden">
                     <img
                       src={item.image}
                       alt={item.title}
-                      className={`w-full h-36 md:h-40 object-cover transition-transform duration-700 ${
+                      className={`w-full h-full object-cover transition-transform duration-1000 ${
                         isActive ? "scale-110" : "scale-100"
-                      } group-hover:scale-105`}
+                      }`}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                    <div className="absolute bottom-3 left-3 right-3">
-                      <h3 className="text-sm md:text-base font-bold text-white font-['Chivo']">
+                    <div className="absolute bottom-6 left-6 right-6">
+                      <h3 className="text-xl md:text-2xl font-bold text-white font-['Chivo']">
                         {item.title}
                       </h3>
                     </div>
                   </div>
 
-                  <div className="p-3 md:p-4 text-center">
-                    <p className="text-[11px] md:text-xs text-slate-600">
+                  <div className="p-6 text-center bg-white">
+                    <p className="text-sm md:text-base text-slate-600 leading-relaxed">
                       {item.text}
                     </p>
                   </div>
@@ -600,9 +565,12 @@ function ClientLogosSection() {
   const logos = [...CLIENT_LOGOS, ...CLIENT_LOGOS];
 
   return (
-    <section className="py-12 md:py-14 bg-white overflow-hidden" data-testid="client-logos-section">
+    <section
+      className="py-16 md:py-20 bg-white overflow-hidden"
+      data-testid="client-logos-section"
+    >
       <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="text-center mb-8 reveal">
+        <div className="text-center mb-10 reveal">
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.18em]">
             Trusted By
           </span>
@@ -610,18 +578,21 @@ function ClientLogosSection() {
             Leading Companies
           </h3>
         </div>
+        <br />
+        <br />
+        <br />
 
         <div className="overflow-hidden relative">
-          <div className="flex items-center gap-12 md:gap-16 w-max animate-[logoScroll_28s_linear_infinite]">
+          <div className="flex items-center gap-16 md:gap-20 w-max animate-[logoScroll_28s_linear_infinite]">
             {logos.map((logo, i) => (
               <div
                 key={i}
-                className="flex items-center justify-center min-w-[140px] md:min-w-[170px] opacity-75 hover:opacity-100 transition-opacity duration-300"
+                className="flex items-center justify-center min-w-[180px] md:min-w-[220px]"
               >
                 <img
                   src={logo.src}
                   alt={logo.alt}
-                  className="h-10 md:h-14 object-contain grayscale hover:grayscale-0 transition-all duration-300"
+                  className="h-16 md:h-20 object-contain mx-auto transition-all duration-300 hover:scale-110"
                 />
               </div>
             ))}
@@ -744,6 +715,7 @@ function TestimonialsSection() {
 
 export default function Home() {
   const [showInquire, setShowInquire] = useState(false);
+  const [featuredProjects, setFeaturedProjects] = useState([]);
   const aboutRef = useReveal();
   const servicesRef = useReveal();
   const whyRef = useReveal();
@@ -752,6 +724,27 @@ export default function Home() {
   const infraRef = useReveal();
   const instaRef = useReveal();
   const ctaRef = useReveal();
+
+  useEffect(() => {
+    initializeProjects();
+
+    const loadProjects = () => {
+      const allProjects = getProjects();
+      const featured = allProjects.filter((p) => p.featured).slice(0, 3);
+      const fallback = allProjects.slice(0, 3);
+      setFeaturedProjects(featured.length ? featured : fallback);
+    };
+
+    loadProjects();
+
+    window.addEventListener("storage", loadProjects);
+    window.addEventListener("focus", loadProjects);
+
+    return () => {
+      window.removeEventListener("storage", loadProjects);
+      window.removeEventListener("focus", loadProjects);
+    };
+  }, []);
 
   return (
     <main className="bg-white">
@@ -775,8 +768,8 @@ export default function Home() {
 
       <section className="py-16 md:py-24 bg-white" data-testid="about-preview" ref={aboutRef}>
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div className="reveal-left">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16 items-stretch">
+            <div className="reveal-left md:col-span-5 flex flex-col justify-center">
               <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.18em]">
                 About DFAB
               </span>
@@ -809,21 +802,22 @@ export default function Home() {
 
               <Link
                 to="/about"
-                className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5 w-fit"
                 data-testid="about-learn-more"
               >
                 Learn More <ArrowRight size={16} />
               </Link>
             </div>
 
-            <div className="relative reveal-right">
+            <div className="md:col-span-7 relative">
               <img
                 src={aboutFactory}
                 alt="DFAB Factory"
-                className="rounded-2xl w-full h-96 object-cover shadow-2xl"
+                className="rounded-2xl w-full h-full object-cover shadow-3xl"
               />
-              <div className="absolute -bottom-5 -left-5 bg-[#0A66C2] text-white p-5 rounded-2xl shadow-2xl hidden md:block">
-                <div className="text-3xl font-bold font-['Chivo']">8+</div>
+
+              <div className="absolute -bottom-0 -left-0 bg-[#0A66C2] text-white p-6 rounded-2xl shadow-2xl hidden md:block">
+                <div className="text-4xl font-bold font-['Chivo']">8+</div>
                 <div className="text-sm text-blue-100">Years of Excellence</div>
               </div>
             </div>
@@ -865,12 +859,12 @@ export default function Home() {
 
           <div className="text-center mt-10 reveal">
             <Link
-  to="/projects#services"
-  className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
-  data-testid="services-view-all"
->
-  View All Services <ArrowRight size={16} />
-</Link>
+              to="/projects#services"
+              className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
+              data-testid="services-view-all"
+            >
+              View All Services <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
       </section>
@@ -939,158 +933,141 @@ export default function Home() {
       <WeServeSection />
 
       <section className="py-16 md:py-24 bg-slate-50" data-testid="projects-preview" ref={projectsRef}>
-  <div className="max-w-7xl mx-auto px-4 md:px-8">
-    <SectionHeading
-      eyebrow="Our Portfolio"
-      title="Featured Projects"
-      text="Delivering precision fabrication across diverse industrial sectors."
-    />
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <SectionHeading
+            eyebrow="Our Portfolio"
+            title="Featured Projects"
+            text="Delivering precision fabrication across diverse industrial sectors."
+          />
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {ALL_PROJECTS.slice(0, 3).map((p) => (
-        <div
-          key={p.title}
-          className="reveal group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-[#0A66C2]/30 transition-all duration-500"
-          data-testid={`project-card-${p.title.replace(/\s/g, "-").toLowerCase()}`}
-        >
-          <div className="overflow-hidden relative">
-            <img
-              src={p.img}
-              alt={p.title}
-              className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700"
-            />
-            {p.tag && (
-              <span className="absolute top-4 left-4 bg-[#0A66C2] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-                {p.tag}
-              </span>
-            )}
-          </div>
-
-          <div className="p-6">
-            <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo']">
-              {p.title}
-            </h3>
-            <p className="text-sm text-slate-600 leading-6 line-clamp-3 mb-4">
-              {p.desc}
-            </p>
-
-            <Link
-  to="/projects#projects"
-  className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
-  data-testid="projects-view-all"
->
-  View All Projects <ArrowRight size={16} />
-</Link>
-          </div>
-        </div>
-      ))}
-    </div>
-
-    <div className="text-center mt-10 reveal">
-      <Link
-        to="/projects"
-        className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
-        data-testid="projects-view-all"
-      >
-        View All Projects <ArrowRight size={16} />
-      </Link>
-    </div>
-  </div>
-</section>
-
-      <section className="py-16 md:py-24 bg-slate-50" data-testid="infrastructure-preview" ref={infraRef}>
-  <div className="max-w-7xl mx-auto px-4 md:px-8">
-    <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-stretch">
-      
-      {/* LEFT SIDE IMAGES */}
-      <div className="reveal-left h-full">
-        <div className="grid grid-rows-[1fr_1.15fr] gap-5 h-full min-h-[620px]">
-          
-          {/* TOP 2 IMAGES */}
-          <div className="grid grid-cols-2 gap-5 h-full">
-            <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
-              <img
-                src={infra1}
-                alt="Factory"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-
-            <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
-              <img
-                src={infra2}
-                alt="Machinery"
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-          </div>
-
-          {/* BOTTOM 1 IMAGE */}
-          <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
-            <img
-              src={infra3}
-              alt="Welding"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* RIGHT SIDE CONTENT */}
-      <div className="reveal-right h-full flex flex-col justify-between">
-        <div>
-          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.18em]">
-            Our Facility
-          </span>
-          <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-3 mb-5 font-['Chivo'] tracking-tight">
-            World-Class Infrastructure
-          </h2>
-          <p className="text-slate-600 leading-7 mb-6">
-            Our 7000 sq-ft state-of-the-art facility in Peenya Industrial Area is equipped with advanced machinery and operated by a highly skilled engineering team.
-          </p>
-
-          <div className="space-y-3 mb-8">
-            {[
-              "7000 sqft Operating Space with 5 Ton Crane",
-              "10+ TIG & MIG Welding Machines",
-              "Conventional Milling & Turning Machines",
-              "Radial Drilling Machine",
-              "Advanced Laser Technology",
-              "Quality Inspection Equipment",
-            ].map((item) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredProjects.map((p) => (
               <div
-                key={item}
-                className="flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-3"
+                key={p.id}
+                className="reveal group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-[#0A66C2]/30 transition-all duration-500"
+                data-testid={`project-card-${String(p.title).replace(/\s/g, "-").toLowerCase()}`}
               >
-                <div className="w-1.5 h-1.5 rounded-full bg-[#0A66C2] shrink-0" />
-                <span className="text-sm text-slate-700">{item}</span>
+                <div className="overflow-hidden relative">
+                  <img
+                    src={p.img}
+                    alt={p.title}
+                    className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  {p.tag && (
+                    <span className="absolute top-4 left-4 bg-[#0A66C2] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+                      {p.tag}
+                    </span>
+                  )}
+                </div>
+
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo']">
+                    {p.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-6 line-clamp-3 mb-4">
+                    {p.desc}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
-        </div>
 
-        <div>
-          <Link
-            to="/infrastructure"
-            className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
-            data-testid="infra-explore-btn"
-          >
-            Explore Infrastructure <ArrowRight size={16} />
-          </Link>
+          <div className="text-center mt-10 reveal">
+            <Link
+              to="/projects"
+              className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
+              data-testid="projects-view-all"
+            >
+              View All Projects <ArrowRight size={16} />
+            </Link>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
+
+      <section className="py-16 md:py-24 bg-white" data-testid="infrastructure-preview" ref={infraRef}>
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-stretch">
+            <div className="reveal-left h-full">
+              <div className="grid grid-rows-[1fr_1.15fr] gap-5 h-full min-h-[620px]">
+                <div className="grid grid-cols-2 gap-5 h-full">
+                  <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
+                    <img
+                      src={infra1}
+                      alt="Factory"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+
+                  <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
+                    <img
+                      src={infra2}
+                      alt="Machinery"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
+                  <img
+                    src={infra3}
+                    alt="Welding"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="reveal-right h-full flex flex-col justify-center">
+              <div>
+                <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.18em]">
+                  Our Facility
+                </span>
+                <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-3 mb-5 font-['Chivo'] tracking-tight">
+                  World-Class Infrastructure
+                </h2>
+                <p className="text-slate-600 leading-7 mb-6">
+                  Our 7000 sq-ft state-of-the-art facility in Peenya Industrial Area is equipped with advanced machinery and operated by a highly skilled engineering team.
+                </p>
+
+                <div className="space-y-3 mb-8">
+                  {[
+                    "7000 sqft Operating Space with 5 Ton Crane",
+                    "10+ TIG & MIG Welding Machines",
+                    "Conventional Milling & Turning Machines",
+                    "Radial Drilling Machine",
+                    "Advanced Laser Technology",
+                    "Quality Inspection Equipment",
+                  ].map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-3"
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#0A66C2] shrink-0" />
+                      <span className="text-sm text-slate-700">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Link
+                  to="/infrastructure"
+                  className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5 w-fit"
+                  data-testid="infra-explore-btn"
+                >
+                  Explore Infrastructure <ArrowRight size={16} />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <TestimonialsSection />
 
-      
-
       <ClientLogosSection />
 
-      <section className="py-16 md:py-24 bg-white" data-testid="instagram-section" ref={instaRef}>
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
+<section className="pt-16 pb-6 md:pt-20 md:pb-8 bg-white">        <div className="max-w-7xl mx-auto px-4 md:px-8">
           <SectionHeading
             eyebrow="Follow Us"
             title="Our Work in Action"

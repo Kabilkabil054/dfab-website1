@@ -1,60 +1,35 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { SERVICES as ALL_SERVICES } from "./Services";
-
-import project1 from "../assets/images/project1.jpg";
-import project2 from "../assets/images/project2.jpg";
-import project3 from "../assets/images/project3.jpg";
-import project4 from "../assets/images/project4.jpg";
-import project5 from "../assets/images/project5.jpg";
-import project6 from "../assets/images/project6.jpg";
-
-export const PROJECTS = [
-  {
-    img: project1,
-    title: "Energy Sector",
-    tag: "Pipeline & Welding",
-    desc: "We have executed a high-pressure welded pipeline for a steam turbine with 100% radiographic joints welded at the 6G position — meeting the most critical energy sector standards.",
-  },
-  {
-    img: project2,
-    title: "Pharmaceuticals",
-    tag: "Pressure Vessels",
-    desc: "We have developed welded stainless steel drug processing equipment and containers qualifying the strict requirements of medical standards for pharmaceutical manufacturing.",
-  },
-  {
-    img: project3,
-    title: "Locomotive",
-    tag: "Structural Fabrication",
-    desc: "We have fabricated train seating and coaches, meeting the stringent locomotive safety standards. Precision fabrication for passenger comfort and safety.",
-  },
-  {
-    img: project4,
-    title: "Aeronautical",
-    tag: "Precision Machining",
-    desc: "We have developed machined aluminum components for aerospace-grade standards, requiring extremely tight tolerances and advanced machining capabilities.",
-  },
-  {
-    img: project5,
-    title: "Food & Dairy Industries",
-    tag: "Food-Grade Fabrication",
-    desc: "We have manufactured welded food-grade stainless steel processing equipment and storage containers qualifying food safety standards.",
-  },
-  {
-    img: project6,
-    title: "Automotive Industries",
-    tag: "Jig & Fixture",
-    desc: "We have developed a precision fixture for an automotive seating assembly line component welding to enable mass production, improved productivity and consistent quality.",
-  },
-];
+import { getProjects, initializeProjects } from "../data/projectsData";
 
 export default function Projects() {
   const location = useLocation();
+  const [projects, setProjects] = useState([]);
 
   const isProjectsOnly = location.hash === "#projects";
   const isServicesOnly = location.hash === "#services";
   const isFullPage = !location.hash;
+
+  useEffect(() => {
+    initializeProjects();
+    setProjects(getProjects());
+  }, []);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setProjects(getProjects());
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("focus", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("focus", handleStorageChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (location.hash === "#projects") {
@@ -112,15 +87,17 @@ export default function Projects() {
                 </h2>
 
                 <p className="text-slate-600 mt-3 max-w-2xl mx-auto">
-                  From critical energy infrastructure to food safety equipment, DFAB has consistently delivered world-class fabrication solutions.
+                  From critical energy infrastructure to food safety equipment,
+                  DFAB has consistently delivered world-class fabrication
+                  solutions.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {PROJECTS.map((p) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
+                {projects.map((p) => (
                   <div
-                    key={p.title}
-                    className="group bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+                    key={p.id}
+                    className="group bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col"
                   >
                     <div className="relative overflow-hidden h-56">
                       <img
@@ -138,12 +115,12 @@ export default function Projects() {
                       </div>
                     </div>
 
-                    <div className="p-6">
+                    <div className="p-6 flex flex-col flex-1">
                       <h3 className="text-xl font-bold text-slate-900 mb-3 font-['Chivo']">
                         {p.title}
                       </h3>
 
-                      <p className="text-sm text-slate-600 leading-relaxed">
+                      <p className="text-sm text-slate-600 leading-relaxed flex-1">
                         {p.desc}
                       </p>
                     </div>
@@ -157,7 +134,8 @@ export default function Projects() {
                 </h2>
 
                 <p className="text-blue-100 mb-6">
-                  Let us help you achieve your fabrication goals with precision and quality.
+                  Let us help you achieve your fabrication goals with precision
+                  and quality.
                 </p>
 
                 <Link
@@ -165,6 +143,16 @@ export default function Projects() {
                   className="inline-flex items-center gap-2 bg-white text-[#0A66C2] px-7 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-colors"
                 >
                   Discuss Your Project <ArrowRight size={16} />
+                </Link>
+              </div>
+
+              {/* Admin Panel link */}
+              <div className="mt-14 flex justify-end">
+                <Link
+                  to="/admin/projects"
+                  className="text-lg text-slate-400 hover:text-[#0A66C2] transition-colors"
+                >
+                  Admin Panel
                 </Link>
               </div>
             </div>
@@ -185,7 +173,8 @@ export default function Projects() {
               </h2>
 
               <p className="mt-4 max-w-2xl text-slate-300 text-sm md:text-base leading-7">
-                Explore the fabrication, machining, and engineering services that support our project execution.
+                Explore the fabrication, machining, and engineering services
+                that support our project execution.
               </p>
 
               <div className="flex items-center gap-2 mt-5 text-sm text-slate-400">
@@ -210,7 +199,8 @@ export default function Projects() {
                 </h2>
 
                 <p className="mt-4 max-w-2xl mx-auto text-sm md:text-base text-slate-600 leading-7">
-                  Explore the fabrication, machining, and engineering services that support our execution.
+                  Explore the fabrication, machining, and engineering services
+                  that support our execution.
                 </p>
               </div>
 
@@ -246,14 +236,16 @@ export default function Projects() {
                 </h3>
 
                 <p className="text-slate-600 max-w-2xl mx-auto mb-6">
-                  Our team supports fabrication, machining, welding, and engineering requirements across multiple industries with precision and consistency.
+                  Our team supports fabrication, machining, welding, and
+                  engineering requirements across multiple industries with
+                  precision and consistency.
                 </p>
 
                 <Link
                   to="/contact"
                   className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-7 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-colors"
                 >
-                  Discuss Your Requirement <ArrowRight size={16} />
+                  Discuss Your Requirement
                 </Link>
               </div>
             </div>

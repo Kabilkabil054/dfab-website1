@@ -12,6 +12,7 @@ import Quality from "./pages/Quality";
 import Careers from "./pages/Careers";
 import CareerAdmin from "./pages/CareerAdmin";
 import Projects from "./pages/Projects";
+import AdminProjects from "./pages/AdminProjects";
 import Infrastructure from "./pages/Infrastructure";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
@@ -71,6 +72,7 @@ function App() {
             <Route path="/careers" element={<Careers />} />
             <Route path="/careers/admin" element={<CareerAdmin />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/infrastructure" element={<Infrastructure />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:id" element={<BlogPost />} />
