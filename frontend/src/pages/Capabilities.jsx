@@ -11,6 +11,9 @@ import {
   Settings,
   FlaskConical,
   Microscope,
+  Code2,
+  Box,
+  Compass,
 } from "lucide-react";
 import { useState } from "react";
 import InquireModal from "../components/InquireModal";
@@ -27,10 +30,7 @@ const CAPABILITIES = [
       "High accuracy for thin and medium thickness sheets",
       "Burr-free edges minimizing secondary finishing operations",
     ],
-    applications: [
-      "Precision sheet metal components",
-      "Structural fabrication parts",
-    ],
+    applications: ["Precision sheet metal components", "Structural fabrication parts"],
   },
   {
     id: "cnc-bending",
@@ -41,6 +41,9 @@ const CAPABILITIES = [
     keyCapabilities: [
       "CNC controlled bending",
       "Complex multi-bend components",
+      "Multi-axis machining for complex geometries",
+      "High-speed production with consistent repeatability",
+      "Advanced surface finishes and secondary processing",
     ],
     applications: ["Industrial equipment housings", "Structural assemblies"],
   },
@@ -57,11 +60,7 @@ const CAPABILITIES = [
       "Orbital welding for pipes and tubular systems",
       "Arc welding for heavy-duty industrial applications",
     ],
-    applications: [
-      "Stainless steel fabrication",
-      "Pressure equipment components",
-      "Process industry equipment",
-    ],
+    applications: ["Stainless steel fabrication", "Pressure equipment components", "Process industry equipment"],
   },
   {
     id: "cnc-machining",
@@ -75,11 +74,7 @@ const CAPABILITIES = [
       "Tight tolerance manufacturing",
       "Custom machined components",
     ],
-    applications: [
-      "Precision mechanical components",
-      "Industrial equipment parts",
-      "Custom machined solutions",
-    ],
+    applications: ["Precision mechanical components", "Industrial equipment parts", "Custom machined solutions"],
   },
   {
     id: "heavy-fabrication",
@@ -93,11 +88,7 @@ const CAPABILITIES = [
       "Industrial equipment structures",
       "Heavy-duty fabricated components",
     ],
-    applications: [
-      "Industrial machinery frames",
-      "Process equipment structures",
-      "Custom engineered fabrication solutions",
-    ],
+    applications: ["Industrial machinery frames", "Process equipment structures", "Custom engineered fabrication solutions"],
   },
   {
     id: "assembly-testing",
@@ -111,81 +102,46 @@ const CAPABILITIES = [
       "Dimensional verification",
       "Functional testing",
     ],
-    applications: [
-      "Industrial equipment systems",
-      "Process equipment modules",
-      "Precision engineered assemblies",
-    ],
+    applications: ["Industrial equipment systems", "Process equipment modules", "Precision engineered assemblies"],
   },
 ];
 
-const TEAM_MEMBERS = [
-  {
-    name: "[Name 1]",
-    department: "[Department / Role 1]",
-  },
-  {
-    name: "[Name 2]",
-    department: "[Department / Role 2]",
-  },
-  {
-    name: "[Name 3]",
-    department: "[Department / Role 3]",
-  },
-  {
-    name: "[Name 4]",
-    department: "[Department / Role 4]",
-  },
+const RD_ROLES = [
+  { title: "Designing", dept: "CAD/CAM & 3D Prototyping", icon: <Compass size={20} /> },
+  { title: "Research", dept: "Material Science & Analysis", icon: <Microscope size={20} /> },
+  { title: "Product Development", dept: "Lifecycle & Strategy", icon: <Box size={20} /> },
+  { title: "Software Engineer", dept: "Digital Systems & IoT", icon: <Code2 size={20} /> },
 ];
 
 function CapabilityCard({ cap }) {
   return (
-    <div className="bg-white border border-slate-200 rounded-md p-7 hover:border-[#0A66C2] hover:shadow-md transition-all reveal h-full flex flex-col">
+    <div className="bg-white border border-slate-200 rounded-2xl p-7 hover:border-[#0A66C2] hover:shadow-xl transition-all reveal h-full flex flex-col group">
       <div className="flex items-start gap-5 mb-5">
-        <div className="w-16 h-16 bg-blue-50 rounded-md flex items-center justify-center text-[#0A66C2] shrink-0">
+        <div className="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center text-[#0A66C2] shrink-0 group-hover:bg-[#0A66C2] group-hover:text-white transition-colors duration-300">
           {cap.icon}
         </div>
         <div>
-          <h3 className="text-xl font-bold text-slate-900 font-['Chivo']animate-fade-up">
-            {cap.title}
-          </h3>
-          <p className="text-xs text-[#0A66C2] uppercase tracking-wide mt-1">
-            {cap.subtitle}
-          </p>
+          <h3 className="text-xl font-bold text-slate-900 font-['Chivo'] tracking-tight">{cap.title}</h3>
+          <p className="text-[10px] font-black text-[#0A66C2] uppercase tracking-widest mt-1">{cap.subtitle}</p>
         </div>
       </div>
-
-      <p className="text-sm text-slate-600 mb-4 leading-relaxed">{cap.desc}</p>
-
-      <div className="mb-5">
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
-          Key Capabilities
-        </p>
-        <ul className="space-y-1.5">
+      <p className="text-sm text-slate-600 mb-6 leading-relaxed flex-grow">{cap.desc}</p>
+      <div className="mb-6">
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Key Capabilities</p>
+        <ul className="space-y-2">
           {cap.keyCapabilities.map((k) => (
-            <li key={k} className="flex gap-2 text-sm text-slate-700">
-              <CheckCircle
-                size={14}
-                className="text-[#0A66C2] shrink-0 mt-0.5"
-              />
+            <li key={k} className="flex gap-2 text-sm text-slate-700 font-medium">
+              <CheckCircle size={14} className="text-[#0A66C2] shrink-0 mt-0.5" />
               {k}
             </li>
           ))}
         </ul>
       </div>
-
-      <div className="mt-auto">
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
-          Applications
-        </p>
+      <div className="mt-auto pt-5 border-t border-slate-50">
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Applications</p>
         <div className="flex flex-wrap gap-2">
           {cap.applications.map((a) => (
-            <span
-              key={a}
-              className="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full"
-            >
-              {a}
-            </span>
+            <span key={a} className="text-[10px] font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full uppercase">{a}</span>
           ))}
         </div>
       </div>
@@ -196,69 +152,47 @@ function CapabilityCard({ cap }) {
 export default function Capabilities() {
   const [showInquire, setShowInquire] = useState(false);
   const capRef = useReveal();
+  const rdRef = useReveal();
 
   return (
     <main className="bg-white">
-      {/* HEADER */}
-      <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
+      {/* HEADER SECTION */}
+      <section className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full">
-          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
-            What We Do
-          </span>
-
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
-            Manufacturing Capabilities
-          </h1>
-
-          <p className="text-slate-400 mt-3 max-w-2xl">
-            Precision-driven manufacturing capabilities for global standards.
+          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">What We Do</span>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo'] animate-fade-in">Manufacturing Capabilities</h1>
+          <p className="text-slate-400 mt-3 max-w-2xl text-sm md:text-base leading-relaxed">
+            Precision-driven manufacturing capabilities built on global standards, featuring advanced fiber laser cutting and specialized welding.
           </p>
-
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
-            <Link to="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
+            <Link to="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
             <span className="text-white">Capabilities</span>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* UPDATED NAVIGATION */}
-      <div className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-5">
-          <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+      {/* STICKY QUICK NAVIGATION */}
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm backdrop-blur-md bg-white/90">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 overflow-x-auto no-scrollbar">
+          <div className="flex gap-3 whitespace-nowrap justify-center md:justify-start">
             {CAPABILITIES.map((c) => (
-              <a
-                key={c.id}
-                href={`#${c.id}`}
-                className="px-4 py-2 text-sm bg-slate-100 text-slate-700 rounded-full hover:bg-[#0A66C2] hover:text-white transition"
-              >
-                {c.title}
-              </a>
+              <a key={c.id} href={`#${c.id}`} className="px-5 py-2 text-[10px] font-black uppercase tracking-widest bg-slate-50 text-slate-500 rounded-full hover:bg-[#0A66C2] hover:text-white transition-all border border-slate-100">{c.title}</a>
             ))}
           </div>
         </div>
       </div>
 
-      {/* CARDS */}
-      <section className="py-16 md:py-24" ref={capRef}>
+      {/* DETAILED CAPABILITIES CARDS */}
+      <section className="py-20 md:py-28" ref={capRef}>
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-14 reveal">
-            <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
-              Detailed Capabilities
-            </span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 font-['Chivo']">
-              End-to-End Manufacturing Solutions
-            </h2>
-            <p className="text-slate-600 mt-3 max-w-2xl mx-auto">
-              Each capability is backed by qualified engineers, calibrated equipment, and strict quality procedures.
-            </p>
+          <div className="text-center mb-16 reveal">
+            <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.2em]">Expertise</span>
+            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 font-['Chivo']">End-to-End Manufacturing Solutions</h2>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {CAPABILITIES.map((cap) => (
-              <div key={cap.id} id={cap.id} className="h-full">
+              <div key={cap.id} id={cap.id} className="h-full scroll-mt-28">
                 <CapabilityCard cap={cap} />
               </div>
             ))}
@@ -266,75 +200,97 @@ export default function Capabilities() {
         </div>
       </section>
 
-      {/* CLEAN R&D AND INNOVATION TEAM SECTION */}
-      <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          
-          {/* Top Title Area */}
-          <div className="text-center mb-14 reveal">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-[#0A66C2] rounded-full text-xs font-bold uppercase tracking-wider mb-4 border border-blue-100">
-              <Microscope size={14} />
-              In-House Expertise
-            </div>
+      {/* ✅ UNIQUE R&D AND INNOVATION SECTION (With Elevator Boxes & Custom Roles) */}
+      <section className="py-28 bg-[#0F172A] relative overflow-hidden" ref={rdRef}>
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#0A66C2]/10 rounded-full blur-[120px]"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-16 items-center">
             
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4 font-['Chivo']">
-              Research & Development
-            </h2>
-            
-            <p className="text-slate-600 leading-relaxed max-w-3xl mx-auto">
-              Innovation is at the core of DFAB Stainless System. Our dedicated engineering team works closely with clients to transition complex ideas from initial concept to full-scale production. By leveraging advanced prototyping and rigorous testing, we continuously develop custom engineering solutions that reduce cost without compromising quality.
-            </p>
-          </div>
-
-          {/* Clean Animated Team Grid (No Images) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
-            {TEAM_MEMBERS.map((member, index) => (
-              <div 
-                key={index} 
-                className="group relative bg-white border border-slate-200 p-8 rounded-md overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-[#0A66C2]"
-              >
-                {/* Animated Left Accent Line */}
-                <div className="absolute top-0 left-0 w-1.5 h-0 bg-[#0A66C2] transition-all duration-300 ease-out group-hover:h-full"></div>
-                
-                {/* Content */}
-                <div className="pl-2">
-                  <h4 className="text-xl font-bold text-slate-900 font-['Chivo'] group-hover:text-[#0A66C2] transition-colors duration-300">
-                    {member.name}
-                  </h4>
-                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-2">
-                    {member.department}
-                  </p>
-                </div>
+            {/* LEFT CONTENT AREA */}
+            <div className="lg:w-1/2 reveal">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#0A66C2]/10 text-[#0A66C2] rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-[#0A66C2]/20">
+                <Microscope size={14} className="animate-bounce-slow" />
+                Technical Innovation Hub
               </div>
-            ))}
-          </div>
+              
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 font-['Chivo'] leading-tight">
+                Research & <span className="text-[#0A66C2]">Development</span>
+              </h2>
+              
+              <p className="text-slate-400 text-lg leading-relaxed mb-10">
+                Innovation is the bridge between complex concepts and industrial reality. Our R&D division focuses on value engineering to reduce cost while enhancing structural integrity.
+              </p>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+                {[
+                  { label: "Simulated Stress Analysis", icon: <Settings size={18} /> },
+                  { label: "Rapid Prototype Cycles", icon: <Zap size={18} /> },
+                  { label: "Design for Manufacturing", icon: <Compass size={18} /> },
+                  { label: "Digital Monitoring", icon: <Code2 size={18} /> }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-3 group">
+                    <div className="w-10 h-10 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-[#0A66C2] group-hover:bg-[#0A66C2] group-hover:text-white transition-all duration-300">
+                      {item.icon}
+                    </div>
+                    <span className="text-slate-300 font-bold text-sm tracking-tight">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* RIGHT SIDE: FOUR UNIQUE ROLE BOXES (Elevator Animation) */}
+            <div className="lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full reveal">
+              {RD_ROLES.map((role, index) => (
+                <div 
+                  key={index} 
+                  className="group relative bg-white/5 border border-white/10 p-8 rounded-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden"
+                >
+                  <div className="absolute top-0 left-0 w-[4px] h-full bg-[#0A66C2] shadow-[0_0_20px_#0A66C2] transition-transform duration-700 -translate-y-full group-hover:translate-y-0"></div>
+                  <div className="absolute top-0 left-0 w-[4px] h-[20%] bg-white/20"></div>
+
+                  <div className="text-[#0A66C2] mb-4 group-hover:scale-110 transition-transform duration-500">
+                    {role.icon}
+                  </div>
+                  <h3 className="text-white font-bold text-xl mb-1 group-hover:text-[#0A66C2] transition-colors duration-300">
+                    {role.title}
+                  </h3>
+                  <p className="text-slate-500 text-[9px] font-black uppercase tracking-[0.2em]">
+                    {role.dept}
+                  </p>
+                  <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-[#0A66C2]/5 rounded-full blur-xl group-hover:bg-[#0A66C2]/20 transition-all"></div>
+                </div>
+              ))}
+            </div>
+
+          </div>
         </div>
+
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+          }
+          .animate-bounce-slow { animation: bounce-slow 3s ease-in-out infinite; }
+          .no-scrollbar::-webkit-scrollbar { display: none; }
+        `}} />
       </section>
 
-      {/* CTA */}
-      <section className="py-16 bg-white text-center border-t border-slate-200">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold mb-3 text-slate-900 font-['Chivo']">
-            Need a Custom Manufacturing Solution?
-          </h2>
-
-          <p className="text-slate-600 mb-8 max-w-xl mx-auto">
-            Tell us your requirements and our team will help engineer the right solution.
+      {/* CALL TO ACTION */}
+      <section className="py-24 bg-white text-center border-t border-slate-100">
+        <div className="max-w-4xl mx-auto px-4 reveal">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900 font-['Chivo']">Build with Precision</h2>
+          <p className="text-slate-500 mb-10 max-w-xl mx-auto text-lg leading-relaxed">
+            Partner with an engineering team that understands the intersection of quality, durability, and digital innovation.
           </p>
-
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={() => setShowInquire(true)}
-              className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-colors"
+              className="px-8 py-4 bg-[#0A66C2] text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#084e96] transition-all shadow-xl shadow-blue-100 flex items-center gap-3"
             >
-              Inquire Now <ArrowRight size={16} />
+              Start Inquiry <ArrowRight size={18} />
             </button>
-
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-colors"
-            >
+            <Link to="/contact" className="px-8 py-4 border-2 border-slate-200 text-slate-700 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-slate-50 transition-all">
               Contact Us
             </Link>
           </div>
@@ -345,3 +301,5 @@ export default function Capabilities() {
     </main>
   );
 }
+
+// Add the missing imports for the icons used in the grid

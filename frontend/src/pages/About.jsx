@@ -45,6 +45,11 @@ export default function About() {
             Who We Are
           </h1>
 
+          <p className="text-slate-400 mt-3 max-w-2xl leading-relaxed"> 
+            We combine decades of engineering expertise with advanced manufacturing 
+            technology to deliver high-integrity solutions for global sectors.
+          </p>
+
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
             <Link to="/" className="hover:text-white transition-colors">
               Home

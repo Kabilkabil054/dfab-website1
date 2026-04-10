@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useMemo } from "react";
 import { useReveal } from "../hooks/useReveal";
 
-import { MapPin, Mail, Phone, CheckCircle, ArrowRight, Users, Award, Zap } from "lucide-react";
+import { MapPin, Mail, Phone, CheckCircle, ArrowRight, Users, Award, Zap, Settings } from "lucide-react";
 
 const DEFAULT_OPENINGS = [
   {
@@ -97,7 +97,20 @@ export default function Careers() {
   }, []);
 
   return (
-    <main className="bg-white">
+    <main className="bg-white relative">
+      
+      {/* ✅ LIGHTER VISIBLE CORNER ADMIN BUTTON (Matches Projects & Blog) */}
+      <div className="absolute top-4 right-4 z-50 opacity-50 hover:opacity-100 transition-all duration-300">
+        <Link
+          to="/careers/admin"
+          className="flex items-center gap-1.5 px-3 py-2 bg-white/20 text-white/70 hover:text-white hover:bg-[#0A66C2] rounded-lg border border-white/20 hover:border-[#0A66C2] transition-all shadow-lg hover:shadow-blue-500/20 backdrop-blur-sm"
+          title="Careers Admin Console"
+        >
+          <Settings size={14} className="animate-pulse-slow" />
+          <span className="text-[10px] font-black uppercase tracking-widest">Admin</span>
+        </Link>
+      </div>
+
       {/* Page Header */}
       <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full">
@@ -108,7 +121,7 @@ export default function Careers() {
           <p className="text-slate-400 mt-3 max-w-2xl">
             Be part of a precision manufacturing team that builds components for the world's most demanding industries.
           </p>
-          <div className="flex items-center gap-2 mt-4 text-sm text-slate-400 animate-fade-in delay-200">
+          <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
             <Link to="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
             <span className="text-white">Careers</span>
@@ -124,7 +137,7 @@ export default function Careers() {
             <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 font-['Chivo']">
               Why Work With Us
             </h2>
-            <p className="text-slate-400 mt-3 max-w-2xl">
+            <p className="text-slate-400 mt-3 max-w-2xl mx-auto">
               We invest in our people the same way we invest in quality — with purpose, precision, and commitment.
             </p>
           </div>
@@ -229,31 +242,8 @@ export default function Careers() {
             </div>
           )}
 
-          {/* General Application */}
-          <div className="mt-12 bg-slate-50 border border-slate-200 rounded-md p-10 text-center reveal">
-            <h3 className="text-xl font-bold text-slate-900 mb-3 font-['Chivo']">Don't See Your Role?</h3>
-            <p className="text-slate-600 mb-6 max-w-lg mx-auto text-sm">
-              We're always interested in talented fabricators, engineers, and quality professionals. Send us your CV and we'll reach out when the right opportunity arises.
-            </p>
-            <a
-              href="mailto:info@dfab.in?subject=General Application - DFAB Careers"
-              className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-7 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-colors"
-              data-testid="general-apply-btn"
-            >
-              <Mail size={16} /> Send Your CV
-            </a>
-          </div>
-
-          {/* Admin Panel Link */}
-          <div className="mt-6 flex justify-end">
-            <Link
-              to="/careers/admin"
-              className="text-slate-400 hover:text-[#0A66C2] text-sm font-medium transition-colors"
-              data-testid="careers-admin-panel-link"
-            >
-              Admin Panel
-            </Link>
-          </div>
+          {/* Action Footer Spacer */}
+          <div className="mt-20 border-t border-slate-100"></div>
         </div>
       </section>
 

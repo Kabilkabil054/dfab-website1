@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Calendar, User, Tag, ArrowRight } from "lucide-react";
+import { Calendar, User, Tag, ArrowRight, Settings } from "lucide-react";
 import axios from "axios";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -68,18 +68,35 @@ export default function Blog() {
     });
 
   return (
-    <main className="bg-white">
+    <main className="bg-white relative">
+      
+      {/* ✅ LIGHTER VISIBLE CORNER ADMIN BUTTON (Matches Projects) */}
+      <div className="absolute top-4 right-4 z-50 opacity-50 hover:opacity-100 transition-all duration-300">
+        <Link
+          to="/blog/admin"
+          className="flex items-center gap-1.5 px-3 py-2 bg-white/20 text-white/70 hover:text-white hover:bg-[#0A66C2] rounded-lg border border-white/20 hover:border-[#0A66C2] transition-all shadow-lg hover:shadow-blue-500/20 backdrop-blur-sm"
+          title="Blog Admin Console"
+        >
+          <Settings size={14} className="animate-pulse-slow" />
+          <span className="text-[10px] font-black uppercase tracking-widest">Admin</span>
+        </Link>
+      </div>
 
-      {/* ✅ UPDATED HEADER (FIXED SIZE) */}
+      {/* HEADER (FIXED SIZE) */}
       <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full">
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
             Knowledge Hub
           </span>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']animate-fade-up">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
             Our Blog
           </h1>
+
+          <p className="text-slate-400 mt-3 max-w-2xl leading-relaxed">
+            Stay updated with the latest insights in industrial fabrication, specialized 
+            welding techniques, and engineering innovations directly from the DFAB technical team.
+          </p>
 
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
             <Link to="/" className="hover:text-white transition-colors">
@@ -180,14 +197,8 @@ export default function Blog() {
             </div>
           )}
 
-          <div className="mt-12 text-right">
-            <Link
-              to="/blog/admin"
-              className="text-sm text-slate-400 hover:text-[#0A66C2]"
-            >
-              Admin Panel
-            </Link>
-          </div>
+          {/* Action Footer Spacer */}
+          <div className="mt-20 border-t border-slate-100"></div>
 
         </div>
       </section>

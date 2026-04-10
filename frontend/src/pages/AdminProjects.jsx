@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Trash2, Star, StarOff, LogOut, PlusCircle, ImagePlus } from "lucide-react";
+import { Link } from "react-router-dom"; // Import Link for navigation
+import { Trash2, Star, StarOff, LogOut, PlusCircle, ImagePlus, LayoutGrid, ArrowLeft } from "lucide-react";
 import { getProjects, saveProjects, initializeProjects } from "../data/projectsData";
 
-const ADMIN_PASSWORD = "dfab@admin 2026";
+const ADMIN_PASSWORD = "dfab@admin2026";
 const ADMIN_SESSION_KEY = "dfab_admin_logged_in";
 
 const EMPTY_FORM = {
@@ -26,14 +27,8 @@ export default function AdminProjects() {
     setIsLoggedIn(localStorage.getItem(ADMIN_SESSION_KEY) === "true");
   }, []);
 
-  const featuredProjects = useMemo(
-    () => projects.filter((p) => p.featured),
-    [projects]
-  );
-
   const handleLogin = (e) => {
     e.preventDefault();
-
     if (password === ADMIN_PASSWORD) {
       localStorage.setItem(ADMIN_SESSION_KEY, "true");
       setIsLoggedIn(true);
@@ -59,33 +54,20 @@ export default function AdminProjects() {
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      alert("Please upload a valid image file.");
-      return;
-    }
-
     const reader = new FileReader();
-
     reader.onloadend = () => {
-      setForm((prev) => ({
-        ...prev,
-        img: reader.result,
-      }));
+      setForm((prev) => ({ ...prev, img: reader.result }));
       setImageName(file.name);
     };
-
     reader.readAsDataURL(file);
   };
 
   const handleAddProject = (e) => {
     e.preventDefault();
-
     if (!form.title || !form.tag || !form.desc || !form.img) {
-      alert("Please fill all fields and upload an image.");
+      alert("Please fill all fields.");
       return;
     }
-
     const newProject = {
       id: Date.now(),
       title: form.title,
@@ -94,282 +76,240 @@ export default function AdminProjects() {
       img: form.img,
       featured: form.featured,
     };
-
-    let updatedProjects = [newProject, ...projects];
-
-    updatedProjects = [
-      ...updatedProjects.filter((p) => p.featured),
-      ...updatedProjects.filter((p) => !p.featured),
-    ];
-
-    setProjects(updatedProjects);
-    saveProjects(updatedProjects);
-
+    const updated = [newProject, ...projects];
+    setProjects(updated);
+    saveProjects(updated);
     setForm(EMPTY_FORM);
     setImageName("");
-
-    alert("Project added successfully.");
+    alert("Project Published Successfully!");
   };
 
   const handleDelete = (id) => {
-    const updatedProjects = projects.filter((p) => p.id !== id);
-    setProjects(updatedProjects);
-    saveProjects(updatedProjects);
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      const updated = projects.filter((p) => p.id !== id);
+      setProjects(updated);
+      saveProjects(updated);
+    }
   };
 
   const toggleFeatured = (id) => {
-    let updatedProjects = projects.map((p) =>
+    const updated = projects.map((p) =>
       p.id === id ? { ...p, featured: !p.featured } : p
     );
-
-    updatedProjects = [
-      ...updatedProjects.filter((p) => p.featured),
-      ...updatedProjects.filter((p) => !p.featured),
-    ];
-
-    setProjects(updatedProjects);
-    saveProjects(updatedProjects);
+    setProjects(updated);
+    saveProjects(updated);
   };
 
   if (!isLoggedIn) {
     return (
-      <main className="min-h-screen bg-slate-100 flex items-center justify-center px-4 py-10">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
-          <div className="text-center mb-6">
-            <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
-              DFAB Admin
-            </span>
-            <h1 className="text-3xl font-bold text-slate-900 mt-2 font-['Chivo']">
-              Projects Admin Panel
-            </h1>
-            <p className="text-sm text-slate-600 mt-2">
-              Enter password to manage projects
-            </p>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter admin password"
-                className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#0A66C2]"
-              />
+      <main className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 border border-slate-200">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-blue-50 text-[#0A66C2] rounded-full flex items-center justify-center mx-auto mb-4">
+               <LayoutGrid size={32} />
             </div>
-
-            <button
-              type="submit"
-              className="w-full bg-[#0A66C2] text-white py-3 rounded-xl font-semibold hover:bg-[#084e96] transition-colors"
-            >
-              Login
+            <h1 className="text-2xl font-bold font-['Chivo'] text-slate-900">Admin Authentication</h1>
+          </div>
+          
+          <form onSubmit={handleLogin} className="space-y-4">
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter Admin Password"
+              className="w-full border border-slate-300 rounded-xl px-4 py-4 outline-none focus:ring-2 focus:ring-[#0A66C2] transition-all"
+            />
+            <button type="submit" className="w-full bg-[#0A66C2] text-white py-4 rounded-xl font-bold hover:bg-[#084e96] transition-all">
+              Login to Dashboard
             </button>
           </form>
+
+          {/* BACK TO PROJECTS BUTTON */}
+          <div className="mt-6 pt-6 border-t border-slate-100 text-center">
+            <Link 
+              to="/projects" 
+              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-[#0A66C2] transition-colors"
+            >
+              <ArrowLeft size={16} /> Back to Projects Portfolio
+            </Link>
+          </div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <section className="bg-[#0F172A] py-14 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <main className="min-h-screen bg-slate-50 pb-20">
+      <section className="bg-[#0F172A] py-10 px-4 mb-10">
+        <div className="max-w-[1400px] mx-auto flex justify-between items-center">
           <div>
-            <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
-              Admin
-            </span>
-            <h1 className="text-4xl font-bold text-white mt-2 font-['Chivo']">
-              Manage Projects
-            </h1>
-            <p className="text-slate-300 mt-3">
-              Add new projects and control what appears on the home page.
-            </p>
+            <h1 className="text-3xl font-bold text-white font-['Chivo'] tracking-tight">System Console</h1>
+            <p className="text-blue-300/60 text-sm font-medium uppercase tracking-[0.2em] mt-1">Project Management</p>
           </div>
-
-          <button
-            onClick={handleLogout}
-            className="inline-flex items-center gap-2 bg-white text-slate-900 px-5 py-3 rounded-xl font-semibold hover:bg-slate-100 transition-colors"
-          >
-            <LogOut size={18} />
-            Logout
+          <button onClick={handleLogout} className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-2.5 rounded-xl font-semibold flex items-center gap-2 transition-all">
+            <LogOut size={18} /> Logout Session
           </button>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[420px_minmax(0,1fr)] gap-8">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 h-fit">
-            <h2 className="text-2xl font-bold text-slate-900 font-['Chivo']">
-              Add New Project
-            </h2>
-            <p className="text-sm text-slate-600 mt-2">
-              Upload image from your device and add project details.
-            </p>
+      <section className="max-w-[1400px] mx-auto px-4 md:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
+          
+          {/* LEFT SIDE: IDLE FORM */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[850px]">
+            <div className="p-8 border-b border-slate-100 bg-white">
+              <div className="flex items-center gap-3 mb-1">
+                <div className="p-2 bg-blue-50 rounded-lg text-[#0A66C2]">
+                   <PlusCircle size={20} />
+                </div>
+                <h2 className="text-2xl font-bold text-slate-900 font-['Chivo']">Project Creator</h2>
+              </div>
+              <p className="text-sm text-slate-500">Draft and publish new project entries.</p>
+            </div>
 
-            <form onSubmit={handleAddProject} className="mt-6 space-y-4">
-              <input
-                type="text"
-                name="title"
-                value={form.title}
-                onChange={handleChange}
-                placeholder="Project title"
-                className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#0A66C2]"
-              />
+            <form onSubmit={handleAddProject} className="p-8 space-y-6 flex-grow">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block">Project Identity</label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={form.title}
+                    onChange={handleChange}
+                    placeholder="Title"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3.5 text-sm outline-none focus:ring-2 focus:ring-[#0A66C2] bg-slate-50/50"
+                  />
+                </div>
 
-              <input
-                type="text"
-                name="tag"
-                value={form.tag}
-                onChange={handleChange}
-                placeholder="Project tag"
-                className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#0A66C2]"
-              />
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block">Classification</label>
+                  <input
+                    type="text"
+                    name="tag"
+                    value={form.tag}
+                    onChange={handleChange}
+                    placeholder="Category"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3.5 text-sm outline-none focus:ring-2 focus:ring-[#0A66C2] bg-slate-50/50"
+                  />
+                </div>
 
-              <textarea
-                name="desc"
-                value={form.desc}
-                onChange={handleChange}
-                placeholder="Project description"
-                rows="5"
-                className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#0A66C2]"
-              />
-
-              <div className="border border-dashed border-slate-300 rounded-xl p-4 bg-slate-50">
-                <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-3">
-                  <ImagePlus size={18} className="text-[#0A66C2]" />
-                  Upload Project Image
-                </label>
-
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#0A66C2] file:text-white file:font-semibold hover:file:bg-[#084e96]"
-                />
-
-                {imageName && (
-                  <p className="text-sm text-slate-500 mt-3">
-                    Selected file: <span className="font-medium">{imageName}</span>
-                  </p>
-                )}
-
-                {form.img && (
-                  <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white">
-                    <img
-                      src={form.img}
-                      alt="Preview"
-                      className="w-full h-52 object-cover"
-                    />
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block">Narrative</label>
+                  <textarea
+                    name="desc"
+                    value={form.desc}
+                    onChange={handleChange}
+                    placeholder="Description..."
+                    rows="4"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3.5 text-sm outline-none focus:ring-2 focus:ring-[#0A66C2] bg-slate-50/50 resize-none"
+                  />
+                </div>
+                
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block">Visual Asset</label>
+                  <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 bg-slate-50/50 text-center relative group">
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 opacity-0 cursor-pointer" />
+                    <ImagePlus size={24} className="text-slate-300 group-hover:text-[#0A66C2] mx-auto mb-2 transition-colors" />
+                    <span className="text-xs font-bold text-slate-600 block">Upload Media</span>
                   </div>
-                )}
+                  {imageName && <p className="text-[10px] text-[#0A66C2] mt-2 font-black truncate text-center">{imageName}</p>}
+                </div>
+
+                <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 mt-2">
+                  <input type="checkbox" id="f-check" name="featured" checked={form.featured} onChange={handleChange} className="w-5 h-5 accent-[#0A66C2] cursor-pointer" />
+                  <label htmlFor="f-check" className="text-xs font-black text-slate-700 uppercase tracking-tighter cursor-pointer">Pin to Homepage Featured</label>
+                </div>
               </div>
 
-              <label className="flex items-center gap-3 text-sm font-medium text-slate-700">
-                <input
-                  type="checkbox"
-                  name="featured"
-                  checked={form.featured}
-                  onChange={handleChange}
-                  className="w-4 h-4 accent-[#0A66C2]"
-                />
-                Show this project in Home page featured section
-              </label>
-
-              <button
-                type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 bg-[#0A66C2] text-white py-3 rounded-xl font-semibold hover:bg-[#084e96] transition-colors"
-              >
-                <PlusCircle size={18} />
-                Add Project
+              <button type="submit" className="w-full bg-[#0A66C2] text-white py-5 rounded-xl font-black uppercase tracking-[0.2em] text-xs hover:bg-[#084e96] transition-all shadow-xl shadow-blue-100 mt-4">
+                Publish Entry
               </button>
             </form>
-
-            <div className="mt-6 rounded-xl bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700">
-              <p className="font-semibold">Home Page Update Logic</p>
-              <p className="mt-2">
-                The first <span className="font-bold text-[#0A66C2]">3 featured projects</span> will be shown on the Home page.
-              </p>
-              <p className="mt-1">
-                Current featured count:{" "}
-                <span className="font-bold text-[#0A66C2]">
-                  {featuredProjects.length}
-                </span>
-              </p>
-            </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-            <h2 className="text-2xl font-bold text-slate-900 font-['Chivo']">
-              Existing Projects
-            </h2>
-            <p className="text-sm text-slate-600 mt-2">
-              Added projects appear here and align automatically in the Projects page.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
-              {projects.map((project) => (
-                <div
-                  key={project.id}
-                  className="rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm hover:shadow-lg transition-all"
-                >
-                  <div className="h-52 bg-slate-100 overflow-hidden">
-                    <img
-                      src={project.img}
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
+          {/* RIGHT SIDE: SCROLLABLE DATABASE */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[850px]">
+            <div className="p-8 border-b border-slate-100 bg-white flex justify-between items-center">
+              <div>
+                <div className="flex items-center gap-3 mb-1">
+                  <div className="p-2 bg-amber-50 rounded-lg text-amber-600">
+                    <LayoutGrid size={20} />
                   </div>
+                  <h2 className="text-2xl font-bold text-slate-900 font-['Chivo']">Project Database</h2>
+                </div>
+                <p className="text-sm text-slate-500">Manage all active portfolios.</p>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-black text-[#0A66C2]">{projects.length}</div>
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Units</div>
+              </div>
+            </div>
 
-                  <div className="p-5">
-                    <span className="inline-block bg-[#0A66C2] text-white text-xs px-3 py-1 rounded-full mb-3">
-                      {project.tag}
-                    </span>
-
-                    <h3 className="text-lg font-bold text-slate-900 font-['Chivo']">
-                      {project.title}
-                    </h3>
-
-                    <p className="text-sm text-slate-600 mt-3 leading-6 line-clamp-4">
-                      {project.desc}
-                    </p>
-
-                    <div className="flex items-center gap-3 mt-5 flex-wrap">
-                      <button
-                        onClick={() => toggleFeatured(project.id)}
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                          project.featured
-                            ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
-                            : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                        }`}
-                      >
-                        {project.featured ? <Star size={16} /> : <StarOff size={16} />}
-                        {project.featured ? "Featured" : "Make Featured"}
-                      </button>
-
-                      <button
-                        onClick={() => handleDelete(project.id)}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
-                      >
-                        <Trash2 size={16} />
-                        Delete
-                      </button>
+            <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 custom-scrollbar">
+              <div className="grid grid-cols-1 gap-8">
+                {projects.map((project) => (
+                  <div key={project.id} className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-md transition-all hover:shadow-xl group">
+                    <div className="h-56 relative bg-slate-200 overflow-hidden">
+                      <img src={project.img} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                      <div className="absolute top-4 left-4 flex gap-2">
+                        <span className="bg-white/90 backdrop-blur-md text-slate-900 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">
+                          {project.tag}
+                        </span>
+                        {project.featured && (
+                          <span className="bg-[#0A66C2] text-white text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1 shadow-sm">
+                            <Star size={10} className="fill-white" /> Featured
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-slate-900 font-['Chivo'] mb-2">{project.title}</h3>
+                      <p className="text-sm text-slate-500 leading-relaxed line-clamp-3 mb-6">{project.desc}</p>
+                      
+                      <div className="flex gap-3 border-t border-slate-50 pt-5">
+                        <button
+                          onClick={() => toggleFeatured(project.id)}
+                          className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all border ${
+                            project.featured 
+                            ? "bg-amber-50 text-amber-600 border-amber-200" 
+                            : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
+                          }`}
+                        >
+                          {project.featured ? <Star size={14} className="fill-amber-600" /> : <StarOff size={14} />}
+                          {project.featured ? "Featured" : "Feature"}
+                        </button>
+                        
+                        <button
+                          onClick={() => handleDelete(project.id)}
+                          className="px-6 py-3.5 rounded-xl bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 transition-all flex items-center justify-center"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-
-            {projects.length === 0 && (
-              <div className="text-center py-16 text-slate-500">
-                No projects added yet.
+                ))}
               </div>
-            )}
+
+              {projects.length === 0 && (
+                <div className="h-full flex flex-col items-center justify-center py-20 text-slate-300">
+                  <PlusCircle size={48} className="mb-4 opacity-20" />
+                  <p className="font-bold uppercase tracking-widest text-xs">Database Empty</p>
+                </div>
+              )}
+            </div>
           </div>
+
         </div>
       </section>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 20px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+      `}} />
     </main>
   );
 }
