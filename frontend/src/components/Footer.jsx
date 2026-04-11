@@ -16,7 +16,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-[#020617] text-slate-300 pt-20 pb-10 overflow-hidden border-t border-slate-800/50">
+    <footer className="relative bg-[#020617] text-slate-300 pt-20 pb-10 overflow-hidden border-t border-slate-800/50 font-['Inter',_sans-serif]">
       <style>
         {`
           /* 1. Background Grid */
@@ -43,7 +43,7 @@ export default function Footer() {
             pointer-events: none;
           }
 
-          /* 2. Plasma Cutter Animation */
+          /* 2. Plasma Cutter Top Border Animation */
           .plasma-track {
             position: absolute;
             top: 0;
@@ -72,19 +72,69 @@ export default function Footer() {
             100% { left: 100%; opacity: 0; }
           }
 
-          /* 3. Titanium Blue Text */
-          .titanium-blue-text {
-            background: linear-gradient(to right, #0A66C2 0%, #60A5FA 20%, #E0F2FE 40%, #60A5FA 60%, #0A66C2 100%);
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: blue-metal-shine 2.5s linear infinite;
-            text-shadow: 0 0 30px rgba(10, 102, 194, 0.4);
+          /* 3. AUTOMATIC LOGO SHINE ANIMATION */
+          .logo-shine-container {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            /* Ensures overlay doesn't bleed out during hover scale */
+            border-radius: 4px; 
           }
-          @keyframes blue-metal-shine { to { background-position: 200% center; } }
+          
+          .logo-shine-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+              to right, 
+              transparent 0%, 
+              rgba(255, 255, 255, 0) 20%, 
+              rgba(255, 255, 255, 0.7) 50%, 
+              rgba(255, 255, 255, 0) 80%, 
+              transparent 100%
+            );
+            background-size: 200% 100%;
+            /* Animates automatically every 4 seconds */
+            animation: logo-auto-shine 4s infinite; 
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            z-index: 1;
+          }
+          
+          @keyframes logo-auto-shine {
+            0% { background-position: -200% 0; }
+            30% { background-position: -200% 0; } /* Pause before shine */
+            100% { background-position: 200% 0; }
+          }
 
-          /* 4. SOCIAL MEDIA BOOM EFFECT */
+          /* 4. ANIMATED UNDERLINE */
+          .animated-underline {
+            height: 2px;
+            background: #0A66C2;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(10, 102, 194, 0.7);
+          }
+          
+          .animated-underline::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, #60A5FA, #ffffff, #60A5FA, transparent);
+            animation: underline-pulse 3s infinite;
+          }
+          
+          @keyframes underline-pulse {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+          }
+
+          /* 5. SOCIAL MEDIA BOOM EFFECT */
           .control-btn {
             position: relative;
             background: rgba(15, 23, 42, 0.8);
@@ -100,16 +150,15 @@ export default function Footer() {
             z-index: 30;
           }
 
-          /* 5. WELDING SPARKLE / LIGHTNING BORDER */
+          /* 6. WELDING SPARKLE HOVER FOR CARDS */
           .welding-sparkle-card {
             position: relative;
             border: 1px solid transparent;
             transition: all 0.3s ease;
           }
           .welding-sparkle-card:hover {
-            border-color: #60A5FA;
+            border-color: rgba(96, 165, 250, 0.5);
             background: rgba(10, 102, 194, 0.1);
-            box-shadow: inset 0 0 10px rgba(10, 102, 194, 0.2);
           }
           .welding-sparkle-card:hover::before {
             content: '';
@@ -126,7 +175,7 @@ export default function Footer() {
             100% { opacity: 0.5; filter: brightness(1); }
           }
 
-          /* 6. Navigation Link Animation */
+          /* 7. Navigation Link Animation */
           .precision-link {
             position: relative;
             display: inline-flex;
@@ -136,15 +185,18 @@ export default function Footer() {
           .precision-link:hover { color: #ffffff; transform: translateX(8px); }
           .precision-arrow { color: #0A66C2; margin-right: 8px; font-weight: bold; }
 
+          /* UI Corner Accents */
           .ui-corners { position: relative; }
           .ui-corners::before { content: ''; position: absolute; top: -5px; left: -5px; width: 10px; height: 10px; border-width: 1px 0 0 1px; border-color: #0A66C2; border-style: solid; opacity: 0.5; }
           .ui-corners::after { content: ''; position: absolute; bottom: -5px; right: -5px; width: 10px; height: 10px; border-width: 0 1px 1px 0; border-color: #0A66C2; border-style: solid; opacity: 0.5; }
         `}
       </style>
 
+      {/* Grid Background Layers */}
       <div className="blueprint-grid"></div>
       <div className="grid-mask"></div>
 
+      {/* Plasma Cutter Top Border */}
       <div className="plasma-track">
         <div className="plasma-head"></div>
       </div>
@@ -154,21 +206,33 @@ export default function Footer() {
           
           {/* Brand Column */}
           <div className="md:col-span-5 relative ui-corners p-2">
-            <div className="mb-6 flex flex-col items-start">
-              <span className="font-bold text-5xl titanium-blue-text font-['Chivo'] tracking-tighter cursor-default">
-                DFAB
-              </span>
-              <div className="h-[2px] w-16 bg-[#0A66C2] mt-2 mb-1"></div>
-              <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.3em] mt-1">
+            <div className="mb-6 flex flex-col items-start group">
+              {/* Logo container with automatic shine and hover scale */}
+              <Link to="/" className="logo-shine-container mb-4">
+                <img 
+                  src="/logo.png" 
+                  alt="DFAB Logo" 
+                  /* Increased size from h-16 to h-24 */
+                  className="h-24 w-auto object-contain transition-transform duration-500 group-hover:scale-105 relative z-0" 
+                />
+                {/* Automatic metallic shine overlay */}
+                <div className="logo-shine-overlay"></div>
+              </Link>
+              
+              {/* Animated Underline - Width matches image aspect naturally in flex layout */}
+              <div className="w-full animated-underline mb-2"></div>
+
+              <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.3em] mt-2 pl-1">
                 Stainless System Pvt Ltd <sup className="text-[8px] text-[#0A66C2] ml-0.5">&trade;</sup> 
               </p>
             </div>
             
-            <p className="text-slate-400 leading-relaxed mb-6 pr-4 text-sm">
+            <p className="text-slate-400 leading-relaxed mb-6 pr-4 text-sm pl-1">
               From complex CNC machining to heavy structural fabrication, we engineer precision solutions that drive global industries forward.
             </p>
 
-            <div className="flex flex-wrap gap-2 mb-8">
+            {/* Certifications Tags */}
+            <div className="flex flex-wrap gap-2 mb-8 pl-1">
               {["ISO 9001:2015", "ZED CERTIFIED", "ADNOC APPROVED"].map(tag => (
                 <span key={tag} className="px-2.5 py-1 bg-[#020617] border border-slate-700/80 rounded-md text-[9px] font-bold text-slate-300 tracking-widest shadow-inner">
                   {tag}
@@ -176,8 +240,8 @@ export default function Footer() {
               ))}
             </div>
             
-            {/* SOCIAL MEDIA BOOM LINKS */}
-            <div className="flex flex-wrap gap-5 pt-2">
+            {/* Social Links */}
+            <div className="flex flex-wrap gap-5 pt-2 pl-1">
               {[
                 { Icon: Facebook, url: "https://www.facebook.com" },
                 { Icon: Instagram, url: "https://www.instagram.com" },
@@ -202,7 +266,7 @@ export default function Footer() {
           {/* Site Navigation */}
           <div className="md:col-span-3 pt-2">
             <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-6 flex items-center">
-              <span className="w-2 h-2 bg-[#0A66C2] mr-3 rounded-sm"></span>
+              <span className="w-2 h-2 bg-[#0A66C2] mr-3 rounded-sm shadow-[0_0_5px_#0A66C2]"></span>
               Navigation
             </h4>
             <ul className="space-y-4">
@@ -221,43 +285,39 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact (With Sparkle Hover) */}
+          {/* HQ & Contact */}
           <div className="md:col-span-4 pt-2">
             <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-6 flex items-center">
-              <span className="w-2 h-2 bg-[#0A66C2] mr-3 rounded-sm"></span>
+              <span className="w-2 h-2 bg-[#0A66C2] mr-3 rounded-sm shadow-[0_0_5px_#0A66C2]"></span>
               Global HQ
             </h4>
-            
             <ul className="space-y-3">
-              <li className="flex gap-4 items-start welding-sparkle-card p-3 rounded-lg">
-                <div className="mt-1 p-2 rounded bg-slate-800/80 text-[#0A66C2]">
+              <li className="flex gap-4 items-start welding-sparkle-card p-3 rounded-lg cursor-default">
+                <div className="mt-1 p-2 rounded bg-slate-800/80 text-[#0A66C2] border border-slate-700/50">
                   <MapPin size={18} />
                 </div>
                 <span className="text-sm text-slate-300 leading-relaxed pt-1">
                   No: 3B/415, No-8 KIADB Main Road, 1st Stage, 2nd Phase, Peenya Industrial Area, Bengaluru – 560058
                 </span>
               </li>
-              
               <li className="flex gap-4 items-center welding-sparkle-card p-3 rounded-lg group">
-                <div className="p-2 rounded bg-slate-800/80 text-[#0A66C2]">
+                <div className="p-2 rounded bg-slate-800/80 text-[#0A66C2] border border-slate-700/50">
                   <Phone size={18} />
                 </div>
-                <a href="tel:+918043748186" className="text-sm text-slate-300 font-bold tracking-wide text-lg outline-none">
+                <a href="tel:+918043748186" className="text-sm text-slate-300 font-bold tracking-wide outline-none group-hover:text-white transition-colors">
                   080 43748186
                 </a>
               </li>
-              
               <li className="flex gap-4 items-center welding-sparkle-card p-3 rounded-lg group">
-                <div className="p-2 rounded bg-slate-800/80 text-[#0A66C2]">
+                <div className="p-2 rounded bg-slate-800/80 text-[#0A66C2] border border-slate-700/50">
                   <Mail size={18} />
                 </div>
-                <a href="mailto:info@dfab.in" className="text-sm text-slate-300 font-medium outline-none">
+                <a href="mailto:info@dfab.in" className="text-sm text-slate-300 font-medium outline-none group-hover:text-white transition-colors">
                   info@dfab.in
                 </a>
               </li>
-
-              <li className="flex gap-4 items-center welding-sparkle-card p-3 rounded-lg group">
-                <div className="p-2 rounded bg-slate-800/80 text-[#0A66C2]">
+              <li className="flex gap-4 items-center welding-sparkle-card p-3 rounded-lg cursor-default">
+                <div className="p-2 rounded bg-slate-800/80 text-[#0A66C2] border border-slate-700/50">
                   <Clock size={18} />
                 </div>
                 <span className="text-sm text-slate-300 font-medium tracking-wide">
@@ -268,15 +328,16 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Footer Bottom */}
         <div className="pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold tracking-[0.15em] text-slate-500 uppercase">
           <p>© {currentYear} DFAB STAINLESS SYSTEM PVT LTD. ALL RIGHTS RESERVED.</p>
-          <div className="flex items-center gap-4 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800">
+          <div className="flex items-center gap-4 bg-slate-900/50 px-4 py-2 rounded-full border border-slate-800 shadow-inner">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e] animate-pulse"></span>
               <p className="text-slate-400 uppercase">System: Operational</p>
             </div>
             <span className="text-slate-700">|</span>
-            <p className="text-[#0A66C2]">Secured</p>
+            <p className="text-[#0A66C2] tracking-widest">Secured</p>
           </div>
         </div>
       </div>

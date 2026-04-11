@@ -108,7 +108,7 @@ const CAPABILITIES = [
 
 const RD_ROLES = [
   { title: "Designing", dept: "CAD/CAM & 3D Prototyping", icon: <Compass size={20} /> },
-  { title: "Research", dept: "Material Science & Analysis", icon: <Microscope size={20} /> },
+  { title: "Research", dept: "Consumer problem solutioning", icon: <Microscope size={20} /> },
   { title: "Product Development", dept: "Lifecycle & Strategy", icon: <Box size={20} /> },
   { title: "Software Engineer", dept: "Digital Systems & IoT", icon: <Code2 size={20} /> },
 ];
@@ -219,14 +219,14 @@ export default function Capabilities() {
               </h2>
               
               <p className="text-slate-400 text-lg leading-relaxed mb-10">
-                Innovation is the bridge between complex concepts and industrial reality. Our R&D division focuses on value engineering to reduce cost while enhancing structural integrity.
+              At DFAB, we bridge traditional craftsmanship with digital innovation by integrating AI-driven quality analysis into our fabrication workflows. Our R&D focuses on developing 'Smart Systems' that pair physical robustness with real-time digital traceability and safety compliance.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
                 {[
-                  { label: "Simulated Stress Analysis", icon: <Settings size={18} /> },
-                  { label: "Rapid Prototype Cycles", icon: <Zap size={18} /> },
-                  { label: "Design for Manufacturing", icon: <Compass size={18} /> },
+                  { label: "Consumer Safety Solutions", icon: <Settings size={18} /> },
+                  { label: "Air filtration Solutions", icon: <Zap size={18} /> },
+                  { label: "Industrial Automation", icon: <Compass size={18} /> },
                   { label: "Digital Monitoring", icon: <Code2 size={18} /> }
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3 group">

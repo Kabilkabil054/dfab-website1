@@ -1067,35 +1067,7 @@ export default function Home() {
 
       <ClientLogosSection />
 
-<section className="pt-16 pb-6 md:pt-20 md:pb-8 bg-white">        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <SectionHeading
-            eyebrow="Follow Us"
-            title="Our Work in Action"
-            text="Follow @dfab_stainless on Instagram for the latest updates."
-          />
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 stagger-children">
-            {[...Array(6)].map((_, i) => (
-              <a
-                key={i}
-                href="https://www.instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="reveal-scale aspect-square bg-slate-100 rounded-2xl overflow-hidden flex items-center justify-center group hover:opacity-90 transition-opacity relative"
-                data-testid={`instagram-placeholder-${i + 1}`}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
-                  <Instagram size={32} className="text-slate-400 group-hover:text-[#0A66C2] transition-colors" />
-                </div>
-              </a>
-            ))}
-          </div>
-
-          <p className="text-center text-sm text-slate-400 mt-6">
-            Instagram posts will appear here once connected
-          </p>
-        </div>
-      </section>
 
       <section className="py-10 bg-[#0A66C2]" data-testid="export-banner">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
