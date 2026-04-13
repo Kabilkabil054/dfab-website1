@@ -338,11 +338,6 @@ async def submit_contact(
     except Exception as e:
         logger.error(f"Contact submission failed: {e}")
         raise HTTPException(status_code=500, detail="Failed to submit contact form")
-    
-@api_router.get("/ping")
-async def ping():
-    """Lightweight endpoint for Cron-job.org to keep Render awake"""
-    return {"status": "success", "message": "Server is awake"}    
 
 
 @api_router.post("/chat")
@@ -478,4 +473,3 @@ else:
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
-    
