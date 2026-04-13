@@ -22,7 +22,11 @@ export default function BlogPost() {
   }, [id, post]);
 
   const formatDate = (d) =>
-    new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+    new Date(d).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
 
   if (loading) {
     return (
@@ -43,15 +47,19 @@ export default function BlogPost() {
 
   return (
     <main className="bg-white">
-      {/* Header */}
+      {/* Visual Header */}
       {post.image_url && (
         <div className="relative h-72 md:h-96">
           <img src={post.image_url} alt={post.title} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/50" />
           <div className="absolute inset-0 flex items-end">
             <div className="max-w-4xl mx-auto px-4 md:px-8 pb-10 w-full">
-              <span className="inline-block bg-[#0A66C2] text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">{post.category}</span>
-              <h1 className="text-3xl md:text-4xl font-bold text-white font-['Chivo']">{post.title}</h1>
+              <span className="inline-block bg-[#0A66C2] text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                {post.category}
+              </span>
+              <h1 className="text-3xl md:text-4xl font-bold text-white font-['Chivo']">
+                {post.title}
+              </h1>
             </div>
           </div>
         </div>
@@ -59,7 +67,7 @@ export default function BlogPost() {
 
       <section className="py-12">
         <div className="max-w-4xl mx-auto px-4 md:px-8">
-          {/* Meta */}
+          {/* Metadata Bar */}
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500 mb-8 pb-6 border-b border-slate-200">
             <Link to="/blog" className="flex items-center gap-1 text-[#0A66C2] hover:underline font-medium">
               <ArrowLeft size={16} /> Back to Blog
@@ -68,8 +76,7 @@ export default function BlogPost() {
             <span className="flex items-center gap-1"><User size={14} /> {post.author}</span>
             <button
               onClick={() => navigator.share?.({ title: post.title, url: window.location.href })}
-              className="flex items-center gap-1 ml-auto hover:text-[#0A66C2] transition-colors"
-              data-testid="blog-share-btn"
+              className="flex items-center gap-1 ml-auto hover:text-[#0A66C2] transition-colors font-semibold"
             >
               <Share2 size={14} /> Share
             </button>
@@ -79,43 +86,74 @@ export default function BlogPost() {
             <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 font-['Chivo']">{post.title}</h1>
           )}
 
-          {/* Excerpt */}
+          {/* Intro Excerpt */}
           <p className="text-xl text-slate-600 leading-relaxed mb-8 font-medium border-l-4 border-[#0A66C2] pl-5">
             {post.excerpt}
           </p>
 
-          {/* Content */}
-          <div
-            className="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap"
-            data-testid="blog-post-content"
-          >
-            {post.content}
+          {/* FIXED IDLE BOX WITH INTERNAL SCROLL */}
+          <div className="border border-slate-200 rounded-2xl bg-slate-50 p-2 shadow-xl">
+            <div
+              className="h-[700px] overflow-y-auto p-6 md:p-12 bg-white rounded-xl custom-scrollbar prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap"
+              style={{ textAlign: 'justify' }}
+            >
+              {post.content}
+            </div>
           </div>
 
-          {/* Tags */}
+          {/* Tags Footer */}
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-10 pt-8 border-t border-slate-200">
               <Tag size={16} className="text-slate-400 mt-0.5" />
               {post.tags.map((tag) => (
-                <span key={tag} className="text-sm bg-slate-100 text-slate-600 px-3 py-1 rounded-full">{tag}</span>
+                <span key={tag} className="text-sm bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">
+                  {tag}
+                </span>
               ))}
             </div>
           )}
 
-          {/* Back CTA */}
-          <div className="mt-12 text-center bg-slate-50 rounded-md p-8">
-            <h3 className="font-bold text-slate-900 mb-2 font-['Chivo']">Have a Project in Mind?</h3>
-            <p className="text-sm text-slate-600 mb-4">Contact DFAB for a free consultation and quote.</p>
+          {/* Final Call to Action */}
+          <div className="mt-12 text-center bg-[#0F172A] rounded-2xl p-10 text-white">
+            <h3 className="text-2xl font-bold mb-3 font-['Chivo'] tracking-tight">
+              Ready to Start Your Project?
+            </h3>
+            <p className="text-slate-400 mb-6 max-w-md mx-auto">
+              Contact DFAB today for high-precision fabrication and expert engineering services tailored to your needs.
+            </p>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-2.5 rounded-sm font-semibold hover:bg-[#084e96] transition-colors"
-              data-testid="blog-post-contact-btn"
+              className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-8 py-3 rounded-sm font-bold hover:bg-[#084e96] transition-all shadow-lg"
             >
-              Contact Us
+              Get a Free Quote
             </Link>
           </div>
         </div>
       </section>
+
+      {/* Scoped Styling for the Fixed Content Box */}
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f8fafc;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 10px;
+          border: 2px solid #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #0A66C2;
+        }
+        
+        /* Ensures whitespace preservation and paragraph spacing */
+        .prose {
+          font-family: 'Inter', sans-serif;
+        }
+      `}</style>
     </main>
   );
 }

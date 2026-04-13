@@ -4,6 +4,21 @@ import { ArrowRight, Settings } from "lucide-react";
 import { SERVICES as ALL_SERVICES } from "./Services";
 import { getProjects, initializeProjects } from "../data/projectsData";
 
+/**
+ * Add this CSS to your global stylesheet (e.g., index.css) 
+ * to make the internal scrollbar look professional:
+ * * .custom-scrollbar::-webkit-scrollbar {
+ * width: 4px;
+ * }
+ * .custom-scrollbar::-webkit-scrollbar-track {
+ * background: transparent;
+ * }
+ * .custom-scrollbar::-webkit-scrollbar-thumb {
+ * background: #cbd5e1;
+ * border-radius: 10px;
+ * }
+ */
+
 export default function Projects() {
   const location = useLocation();
   const [projects, setProjects] = useState([]);
@@ -52,7 +67,7 @@ export default function Projects() {
   return (
     <main className="bg-white relative">
       
-      {/* ✅ LIGHTER VISIBLE CORNER ADMIN BUTTON */}
+      {/* ADMIN BUTTON */}
       <div className="absolute top-4 right-4 z-50 opacity-50 hover:opacity-100 transition-all duration-300">
         <Link
           to="/admin/projects"
@@ -102,13 +117,15 @@ export default function Projects() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
+              {/* Grid with fixed height cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {projects.map((p) => (
                   <div
                     key={p.id}
-                    className="group bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col"
+                    className="group bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-500 flex flex-col h-[520px]"
                   >
-                    <div className="relative overflow-hidden h-56">
+                    {/* Fixed Image Area */}
+                    <div className="relative overflow-hidden h-48 shrink-0">
                       <img
                         src={p.img}
                         alt={p.title}
@@ -116,19 +133,24 @@ export default function Projects() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-900/10 to-transparent" />
                       <div className="absolute top-4 left-4">
-                        <span className="bg-[#0A66C2] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+                        <span className="bg-[#0A66C2] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md uppercase tracking-wider">
                           {p.tag}
                         </span>
                       </div>
                     </div>
 
-                    <div className="p-6 flex flex-col flex-1">
-                      <h3 className="text-xl font-bold text-slate-900 mb-3 font-['Chivo']">
+                    {/* Document-style Content Area */}
+                    <div className="p-6 flex flex-col flex-grow overflow-hidden bg-slate-50/30">
+                      <h3 className="text-xl font-bold text-slate-900 mb-3 font-['Chivo'] border-b border-slate-200 pb-2 shrink-0">
                         {p.title}
                       </h3>
-                      <p className="text-sm text-slate-600 leading-relaxed flex-1">
-                        {p.desc}
-                      </p>
+                      
+                      {/* Scrollable Description */}
+                      <div className="text-sm text-slate-600 leading-relaxed overflow-y-auto pr-2 custom-scrollbar flex-grow">
+                        <p className="text-justify whitespace-pre-line">
+                          {p.desc}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -192,26 +214,29 @@ export default function Projects() {
                 </p>
               </div>
 
+              {/* Services Grid updated for same document alignment */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {ALL_SERVICES.map((service) => (
                   <div
                     key={service.title}
-                    className="group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-[#0A66C2]/30 transition-all duration-500"
+                    className="group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 h-[420px] flex flex-col"
                   >
-                    <div className="overflow-hidden">
+                    <div className="overflow-hidden h-48 shrink-0">
                       <img
                         src={service.image}
                         alt={service.title}
-                        className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                     </div>
-                    <div className="p-6">
-                      <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo']">
+                    <div className="p-6 flex flex-col flex-grow overflow-hidden">
+                      <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo'] shrink-0 border-b border-slate-100 pb-1">
                         {service.title}
                       </h3>
-                      <p className="text-sm text-slate-600 leading-6 line-clamp-3">
-                        {service.desc}
-                      </p>
+                      <div className="overflow-y-auto custom-scrollbar flex-grow">
+                        <p className="text-sm text-slate-600 leading-6 text-justify">
+                          {service.desc}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}

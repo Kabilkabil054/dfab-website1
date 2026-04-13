@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom"; // Import Link for navigation
-import { Trash2, Star, StarOff, LogOut, PlusCircle, ImagePlus, LayoutGrid, ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Trash2, Star, StarOff, LogOut, PlusCircle, ImagePlus, LayoutGrid, ArrowLeft, Pencil, X } from "lucide-react";
 import { getProjects, saveProjects, initializeProjects } from "../data/projectsData";
 
 const ADMIN_PASSWORD = "dfab@admin2026";
@@ -20,6 +20,7 @@ export default function AdminProjects() {
   const [projects, setProjects] = useState([]);
   const [form, setForm] = useState(EMPTY_FORM);
   const [imageName, setImageName] = useState("");
+  const [editingId, setEditingId] = useState(null); // Track which project is being edited
 
   useEffect(() => {
     initializeProjects();
@@ -62,26 +63,53 @@ export default function AdminProjects() {
     reader.readAsDataURL(file);
   };
 
-  const handleAddProject = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.title || !form.tag || !form.desc || !form.img) {
       alert("Please fill all fields.");
       return;
     }
-    const newProject = {
-      id: Date.now(),
-      title: form.title,
-      tag: form.tag,
-      desc: form.desc,
-      img: form.img,
-      featured: form.featured,
-    };
-    const updated = [newProject, ...projects];
-    setProjects(updated);
-    saveProjects(updated);
+
+    if (editingId) {
+      // UPDATE EXISTING PROJECT
+      const updated = projects.map((p) =>
+        p.id === editingId ? { ...form, id: editingId } : p
+      );
+      setProjects(updated);
+      saveProjects(updated);
+      setEditingId(null);
+      alert("Project Updated Successfully!");
+    } else {
+      // ADD NEW PROJECT
+      const newProject = { ...form, id: Date.now() };
+      const updated = [newProject, ...projects];
+      setProjects(updated);
+      saveProjects(updated);
+      alert("Project Published Successfully!");
+    }
+
     setForm(EMPTY_FORM);
     setImageName("");
-    alert("Project Published Successfully!");
+  };
+
+  const startEdit = (project) => {
+    setForm({
+      title: project.title,
+      tag: project.tag,
+      desc: project.desc,
+      img: project.img,
+      featured: project.featured,
+    });
+    setEditingId(project.id);
+    setImageName("Current Image (Click to change)");
+    // Scroll to form on mobile
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+    setImageName("");
   };
 
   const handleDelete = (id) => {
@@ -89,6 +117,7 @@ export default function AdminProjects() {
       const updated = projects.filter((p) => p.id !== id);
       setProjects(updated);
       saveProjects(updated);
+      if (editingId === id) cancelEdit();
     }
   };
 
@@ -124,12 +153,8 @@ export default function AdminProjects() {
             </button>
           </form>
 
-          {/* BACK TO PROJECTS BUTTON */}
           <div className="mt-6 pt-6 border-t border-slate-100 text-center">
-            <Link 
-              to="/projects" 
-              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-[#0A66C2] transition-colors"
-            >
+            <Link to="/projects" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-[#0A66C2] transition-colors">
               <ArrowLeft size={16} /> Back to Projects Portfolio
             </Link>
           </div>
@@ -155,19 +180,28 @@ export default function AdminProjects() {
       <section className="max-w-[1400px] mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
           
-          {/* LEFT SIDE: IDLE FORM */}
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[850px]">
-            <div className="p-8 border-b border-slate-100 bg-white">
-              <div className="flex items-center gap-3 mb-1">
-                <div className="p-2 bg-blue-50 rounded-lg text-[#0A66C2]">
-                   <PlusCircle size={20} />
+          {/* LEFT SIDE: FORM (ADD/EDIT) */}
+          <div className={`bg-white rounded-3xl border transition-all duration-500 shadow-sm overflow-hidden flex flex-col h-[850px] ${editingId ? 'border-amber-400 ring-2 ring-amber-100' : 'border-slate-200'}`}>
+            <div className="p-8 border-b border-slate-100 bg-white flex justify-between items-center">
+              <div>
+                <div className="flex items-center gap-3 mb-1">
+                  <div className={`p-2 rounded-lg ${editingId ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-[#0A66C2]'}`}>
+                     {editingId ? <Pencil size={20} /> : <PlusCircle size={20} />}
+                  </div>
+                  <h2 className="text-2xl font-bold text-slate-900 font-['Chivo']">
+                    {editingId ? "Edit Project" : "Project Creator"}
+                  </h2>
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900 font-['Chivo']">Project Creator</h2>
+                <p className="text-sm text-slate-500">{editingId ? "Modify the details of your existing project." : "Draft and publish new project entries."}</p>
               </div>
-              <p className="text-sm text-slate-500">Draft and publish new project entries.</p>
+              {editingId && (
+                <button onClick={cancelEdit} className="p-2 hover:bg-slate-100 rounded-full text-slate-400 transition-colors">
+                  <X size={24} />
+                </button>
+              )}
             </div>
 
-            <form onSubmit={handleAddProject} className="p-8 space-y-6 flex-grow">
+            <form onSubmit={handleSubmit} className="p-8 space-y-6 flex-grow overflow-y-auto custom-scrollbar">
               <div className="space-y-4">
                 <div>
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block">Project Identity</label>
@@ -200,7 +234,7 @@ export default function AdminProjects() {
                     value={form.desc}
                     onChange={handleChange}
                     placeholder="Description..."
-                    rows="4"
+                    rows="6"
                     className="w-full border border-slate-200 rounded-xl px-4 py-3.5 text-sm outline-none focus:ring-2 focus:ring-[#0A66C2] bg-slate-50/50 resize-none"
                   />
                 </div>
@@ -221,9 +255,16 @@ export default function AdminProjects() {
                 </div>
               </div>
 
-              <button type="submit" className="w-full bg-[#0A66C2] text-white py-5 rounded-xl font-black uppercase tracking-[0.2em] text-xs hover:bg-[#084e96] transition-all shadow-xl shadow-blue-100 mt-4">
-                Publish Entry
-              </button>
+              <div className="flex gap-4">
+                {editingId && (
+                  <button type="button" onClick={cancelEdit} className="flex-1 bg-slate-200 text-slate-600 py-5 rounded-xl font-black uppercase tracking-[0.2em] text-xs hover:bg-slate-300 transition-all mt-4">
+                    Discard
+                  </button>
+                )}
+                <button type="submit" className={`flex-[2] text-white py-5 rounded-xl font-black uppercase tracking-[0.2em] text-xs transition-all shadow-xl mt-4 ${editingId ? 'bg-amber-500 hover:bg-amber-600 shadow-amber-100' : 'bg-[#0A66C2] hover:bg-[#084e96] shadow-blue-100'}`}>
+                  {editingId ? "Update Project" : "Publish Entry"}
+                </button>
+              </div>
             </form>
           </div>
 
@@ -248,43 +289,45 @@ export default function AdminProjects() {
             <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50 custom-scrollbar">
               <div className="grid grid-cols-1 gap-8">
                 {projects.map((project) => (
-                  <div key={project.id} className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-md transition-all hover:shadow-xl group">
-                    <div className="h-56 relative bg-slate-200 overflow-hidden">
+                  <div key={project.id} className={`bg-white rounded-3xl overflow-hidden border transition-all hover:shadow-xl group ${editingId === project.id ? 'border-amber-400 ring-2 ring-amber-50 shadow-lg' : 'border-slate-200 shadow-md'}`}>
+                    <div className="h-48 relative bg-slate-200 overflow-hidden">
                       <img src={project.img} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                       <div className="absolute top-4 left-4 flex gap-2">
                         <span className="bg-white/90 backdrop-blur-md text-slate-900 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">
                           {project.tag}
                         </span>
-                        {project.featured && (
-                          <span className="bg-[#0A66C2] text-white text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1 shadow-sm">
-                            <Star size={10} className="fill-white" /> Featured
-                          </span>
-                        )}
                       </div>
                     </div>
                     
                     <div className="p-6">
-                      <h3 className="text-xl font-bold text-slate-900 font-['Chivo'] mb-2">{project.title}</h3>
-                      <p className="text-sm text-slate-500 leading-relaxed line-clamp-3 mb-6">{project.desc}</p>
+                      <h3 className="text-lg font-bold text-slate-900 font-['Chivo'] mb-1">{project.title}</h3>
+                      <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 mb-4">{project.desc}</p>
                       
-                      <div className="flex gap-3 border-t border-slate-50 pt-5">
+                      <div className="flex gap-2 border-t border-slate-50 pt-4">
                         <button
                           onClick={() => toggleFeatured(project.id)}
-                          className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all border ${
+                          className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all border ${
                             project.featured 
                             ? "bg-amber-50 text-amber-600 border-amber-200" 
                             : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
                           }`}
                         >
-                          {project.featured ? <Star size={14} className="fill-amber-600" /> : <StarOff size={14} />}
-                          {project.featured ? "Featured" : "Feature"}
+                          {project.featured ? <Star size={12} className="fill-amber-600" /> : <StarOff size={12} />}
+                        </button>
+
+                        {/* EDIT BUTTON */}
+                        <button
+                          onClick={() => startEdit(project)}
+                          className="flex-1 bg-blue-50 text-[#0A66C2] border border-blue-100 hover:bg-blue-100 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+                        >
+                          <Pencil size={12} /> Edit
                         </button>
                         
                         <button
                           onClick={() => handleDelete(project.id)}
-                          className="px-6 py-3.5 rounded-xl bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 transition-all flex items-center justify-center"
+                          className="px-4 py-2.5 rounded-lg bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 transition-all flex items-center justify-center"
                         >
-                          <Trash2 size={18} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </div>
