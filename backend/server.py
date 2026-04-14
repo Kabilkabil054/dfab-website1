@@ -198,12 +198,12 @@ Answer as DFAB AI Assistant.
 def get_fallback_response(latest_message: str) -> str:
     lower_msg = latest_message.lower()
 
-    if any(term in lower_msg for term in ["service", "offer", "do you do", "capabilit"]):
+    if any(term in lower_msg for term in ["service", "services", "offer", "do you do", "capabilit", "capability", "capabilities"]):
         return (
-            "DFAB offers sheet metal fabrication, pressure vessels, pipeline fabrication, "
-            "stellite welding, die welding, custom fabrication, jigs and fixtures, precision "
-            "machining, and new product development. For project-specific details, call "
-            "8428866121 or email info@dfab.in."
+            "DFAB offers sheet metal fabrication, pressure vessel fabrication, pipeline fabrication, "
+            "stellite welding, die welding, custom fabrication, jig and fixture development, "
+            "precision machining, and new product development. "
+            "For project-specific details, call 8428866121 or email info@dfab.in."
         )
 
     if any(term in lower_msg for term in ["contact", "phone", "email", "address", "location", "whatsapp"]):
@@ -212,45 +212,66 @@ def get_fallback_response(latest_message: str) -> str:
             "The facility is in Peenya Industrial Area, Bengaluru."
         )
 
-    if any(term in lower_msg for term in ["quote", "pricing", "price", "cost", "estimate"]):
+    if any(term in lower_msg for term in ["quote", "pricing", "price", "cost", "estimate", "quotation"]):
         return (
             "For pricing or a quotation, please contact DFAB directly at 8428866121 or "
             "WhatsApp +91 8428866121 so the team can review your fabrication requirement."
         )
 
-    if any(term in lower_msg for term in ["industry", "industries", "sector"]):
+    if any(term in lower_msg for term in ["industry", "industries", "sector", "sectors"]):
         return (
             "DFAB serves energy, pharmaceuticals, locomotive, aeronautical, food and dairy, "
             "and automotive industries."
         )
 
+    if any(term in lower_msg for term in ["material", "materials", "stainless steel", "aluminium", "aluminum", "carbon steel", "ss"]):
+        return (
+            "DFAB works with stainless steel, aluminum, and carbon steel for fabrication, "
+            "machining, and welding applications."
+        )
+
+    if any(term in lower_msg for term in ["welding", "tig", "mig", "arc welding", "pipeline", "pressure vessel"]):
+        return (
+            "DFAB provides TIG, MIG, arc welding, pipeline fabrication, pressure vessel fabrication, "
+            "and custom industrial welding solutions."
+        )
+
     return (
-        "DFAB specializes in stainless steel fabrication, machining, welding, and industrial "
-        "project support. Tell me what you need help with, or contact DFAB directly at "
-        "8428866121 for a quotation."
+        "DFAB specializes in stainless steel fabrication, machining, welding, pressure vessels, "
+        "pipeline work, and custom industrial project support. "
+        "Tell us your requirement, or contact DFAB directly at 8428866121 for a quotation."
     )
 
 
 def get_gemini_response(previous_messages, latest_message):
     if not gemini_client:
-        logger.warning("Gemini client unavailable. Using fallback response.")
+        logger.warning("Gemini client unavailable. Using fallback.")
         return get_fallback_response(latest_message)
 
     try:
         prompt = build_chat_prompt(previous_messages, latest_message)
+
         response = gemini_client.models.generate_content(
             model="gemini-2.5-flash",
             contents=prompt,
         )
 
         if not response or not getattr(response, "text", None):
-            logger.warning("Gemini returned empty response. Using fallback.")
+            logger.warning("Empty Gemini response. Using fallback.")
             return get_fallback_response(latest_message)
 
         return response.text.strip()
 
     except Exception as e:
+        error_text = str(e)
         logger.error(f"Gemini response failed: {e}", exc_info=True)
+
+        if "429" in error_text or "RESOURCE_EXHAUSTED" in error_text or "quota" in error_text.lower():
+            return (
+                "Our AI assistant is temporarily busy. Here is a quick DFAB response:\n\n"
+                + get_fallback_response(latest_message)
+            )
+
         return get_fallback_response(latest_message)
 
 
@@ -265,8 +286,23 @@ def build_admin_email_html(name, email, phone, subject, message):
         <p><strong>Phone:</strong> {safe_phone}</p>
         <p><strong>Subject:</strong> {subject}</p>
         <p><strong>Message:</strong><br>{safe_message}</p>
+        <hr style="margin:20px 0;">
+        <p><strong>Reply directly to customer:</strong> {email}</p>
     </div>
     """
+
+
+def build_admin_email_text(name, email, phone, subject, message):
+    safe_phone = phone if phone else "Not provided"
+    return (
+        f"New Contact Inquiry - DFAB Website\n\n"
+        f"Name: {name}\n"
+        f"Email: {email}\n"
+        f"Phone: {safe_phone}\n"
+        f"Subject: {subject}\n\n"
+        f"Message:\n{message}\n\n"
+        f"Reply directly to customer: {email}"
+    )
 
 
 def build_user_email_html(name, subject):
@@ -279,8 +315,20 @@ def build_user_email_html(name, subject):
         <br>
         <p>Best Regards,</p>
         <p><strong>DFAB Stainless System Pvt Ltd</strong></p>
+        <p>Email: {RECEIVER_EMAIL}</p>
     </div>
     """
+
+
+def build_user_email_text(name, subject):
+    return (
+        f"Hi {name},\n\n"
+        f"We have successfully received your inquiry regarding \"{subject}\".\n"
+        f"Our team is reviewing your message and will get back to you shortly.\n\n"
+        f"Best Regards,\n"
+        f"DFAB Stainless System Pvt Ltd\n"
+        f"Email: {RECEIVER_EMAIL}"
+    )
 
 
 def send_emails(name, email, phone, subject, message, attachment=None):
@@ -301,13 +349,13 @@ def send_emails(name, email, phone, subject, message, attachment=None):
             logger.warning("RECEIVER_EMAIL is missing")
             return False
 
-        # Admin email
         admin_payload = {
             "from": f"DFAB <{SENDER_EMAIL}>",
             "to": [RECEIVER_EMAIL],
             "subject": f"New Inquiry: {subject} - {name}",
-            "reply_to": email,
+            "reply_to": [email],
             "html": build_admin_email_html(name, email, phone, subject, message),
+            "text": build_admin_email_text(name, email, phone, subject, message),
         }
 
         if attachment:
@@ -316,12 +364,13 @@ def send_emails(name, email, phone, subject, message, attachment=None):
         admin_result = resend.Emails.send(admin_payload)
         logger.info(f"Admin email sent successfully: {admin_result}")
 
-        # User confirmation email
         user_payload = {
             "from": f"DFAB <{SENDER_EMAIL}>",
             "to": [email],
             "subject": "Thank you for contacting DFAB",
+            "reply_to": [RECEIVER_EMAIL],
             "html": build_user_email_html(name, subject),
+            "text": build_user_email_text(name, subject),
         }
 
         user_result = resend.Emails.send(user_payload)
@@ -541,14 +590,14 @@ if CORS_ORIGINS == "*":
         allow_headers=["*"],
     )
 else:
-    allowed_origins = [origin.strip() for origin in CORS_ORIGINS.split(",") if origin.strip()]
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=allowed_origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+        allowed_origins = [origin.strip() for origin in CORS_ORIGINS.split(",") if origin.strip()]
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=allowed_origins,
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
 
 
 @app.on_event("shutdown")
