@@ -334,52 +334,46 @@ def build_user_email_text(name, subject):
 def send_emails(name, email, phone, subject, message, attachment=None):
     try:
         if not resend:
-            logger.warning("Resend package is not installed")
+            print("Resend not installed")
             return False
 
-        if not RESEND_API_KEY:
-            logger.warning("RESEND_API_KEY is missing")
-            return False
-
-        if not SENDER_EMAIL:
-            logger.warning("SENDER_EMAIL is missing")
-            return False
-
-        if not RECEIVER_EMAIL:
-            logger.warning("RECEIVER_EMAIL is missing")
-            return False
-
-        admin_payload = {
+        # ===== ADMIN MAIL =====
+        admin = resend.Emails.send({
             "from": f"DFAB <{SENDER_EMAIL}>",
             "to": [RECEIVER_EMAIL],
-            "subject": f"New Inquiry: {subject} - {name}",
+            "subject": f"New Inquiry: {subject}",
             "reply_to": [email],
-            "html": build_admin_email_html(name, email, phone, subject, message),
-            "text": build_admin_email_text(name, email, phone, subject, message),
-        }
+            "html": f"""
+            <h2>New Inquiry</h2>
+            <p><b>Name:</b> {name}</p>
+            <p><b>Email:</b> {email}</p>
+            <p><b>Phone:</b> {phone}</p>
+            <p><b>Message:</b><br>{message}</p>
+            """
+        })
 
-        if attachment:
-            admin_payload["attachments"] = [attachment]
+        print("ADMIN MAIL:", admin)
 
-        admin_result = resend.Emails.send(admin_payload)
-        logger.info(f"Admin email sent successfully: {admin_result}")
-
-        user_payload = {
+        # ===== USER MAIL =====
+        user = resend.Emails.send({
             "from": f"DFAB <{SENDER_EMAIL}>",
             "to": [email],
-            "subject": "Thank you for contacting DFAB",
-            "reply_to": [RECEIVER_EMAIL],
-            "html": build_user_email_html(name, subject),
-            "text": build_user_email_text(name, subject),
-        }
+            "subject": "We received your inquiry",
+            "html": f"""
+            <h3>Hi {name},</h3>
+            <p>Thank you for contacting DFAB.</p>
+            <p>We received your request and will respond shortly.</p>
+            <br>
+            <p>DFAB Team</p>
+            """
+        })
 
-        user_result = resend.Emails.send(user_payload)
-        logger.info(f"User confirmation email sent successfully: {user_result}")
+        print("USER MAIL:", user)
 
         return True
 
     except Exception as e:
-        logger.error(f"Email sending failed: {e}", exc_info=True)
+        print("❌ EMAIL ERROR:", e)
         return False
 
 
