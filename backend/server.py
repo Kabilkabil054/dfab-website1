@@ -5,8 +5,9 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 import re
+import base64
 from pathlib import Path
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
@@ -22,15 +23,30 @@ try:
 except ImportError:
     genai = None
 
+
+# =================== LOAD ENV ===================
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
 
-# =================== ENV / CLIENTS ===================
+# =================== LOGGING ===================
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-MONGO_URL = os.environ.get("MONGO_URL")
-DB_NAME = os.environ.get("DB_NAME")
-RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+# =================== ENV ===================
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+MONGO_URL = os.getenv("MONGO_URL", "").strip()
+DB_NAME = os.getenv("DB_NAME", "").strip()
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
+SENDER_EMAIL = os.getenv("SENDER_EMAIL", "").strip()
+RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL", "").strip()
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "dfab@admin2026").strip()
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*").strip()
 
 if not MONGO_URL:
     raise RuntimeError("MONGO_URL is missing in backend/.env")
@@ -38,21 +54,35 @@ if not MONGO_URL:
 if not DB_NAME:
     raise RuntimeError("DB_NAME is missing in backend/.env")
 
+# =================== INIT CLIENTS ===================
+
 client = AsyncIOMotorClient(MONGO_URL)
 db = client[DB_NAME]
 
-gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY and genai else None
+gemini_client = None
+if GEMINI_API_KEY and genai:
+    try:
+        gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+        logger.info("Gemini client initialized successfully")
+    except Exception as e:
+        logger.warning(f"Gemini client initialization failed: {e}")
+        gemini_client = None
+else:
+    logger.warning("Gemini not enabled. Missing package or API key.")
+
 if resend and RESEND_API_KEY:
-    resend.api_key = RESEND_API_KEY
+    try:
+        resend.api_key = RESEND_API_KEY
+        logger.info("Resend initialized successfully")
+    except Exception as e:
+        logger.warning(f"Resend initialization failed: {e}")
+else:
+    logger.warning("Resend not enabled. Missing package or API key.")
+
+# =================== APP ===================
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
-logger = logging.getLogger(__name__)
 
 DFAB_SYSTEM_MSG = """You are an expert AI assistant for DFAB Stainless System Pvt Ltd, an ISO 9001:2015 certified precision fabrication company in Bengaluru, India.
 
@@ -86,7 +116,6 @@ Rules:
 """
 
 # =================== MODELS ===================
-# Note: ContactForm is removed because FastAPI handles multipart forms directly via function arguments.
 
 class BlogPostCreate(BaseModel):
     title: str
@@ -97,6 +126,7 @@ class BlogPostCreate(BaseModel):
     image_url: Optional[str] = None
     tags: List[str] = []
     published: bool = True
+
 
 class BlogPost(BaseModel):
     id: str
@@ -111,96 +141,39 @@ class BlogPost(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+
 class AdminLogin(BaseModel):
     password: str
+
 
 class ChatMessage(BaseModel):
     session_id: str
     message: str
 
+
 # =================== HELPERS ===================
 
-def get_admin_token_value():
-    password = os.environ.get("ADMIN_PASSWORD", "dfab@admin2026")
-    return hashlib.sha256(f"dfab-secret-{password}".encode()).hexdigest()
+def get_admin_token_value() -> str:
+    return hashlib.sha256(f"dfab-secret-{ADMIN_PASSWORD}".encode()).hexdigest()
+
 
 async def verify_admin(authorization: Optional[str] = Header(None)):
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Unauthorized")
-    token = authorization.split(" ")[1]
+
+    token = authorization.split(" ", 1)[1].strip()
     if token != get_admin_token_value():
         raise HTTPException(status_code=401, detail="Invalid token")
+
     return token
 
-def parse_post(p):
-    if isinstance(p.get("created_at"), str):
-        p["created_at"] = datetime.fromisoformat(p["created_at"])
-    if isinstance(p.get("updated_at"), str):
-        p["updated_at"] = datetime.fromisoformat(p["updated_at"])
-    return p
 
-# Updated to accept an optional attachment parameter
-def send_emails(name, email, phone, subject, message, attachment=None):
-    try:
-        sender_email = os.environ.get("SENDER_EMAIL")       # Must be verified in Resend (e.g., no-reply@dfab.in)
-        receiver_email = os.environ.get("RECEIVER_EMAIL")   # Company email (e.g., info@dfab.in)
-
-        if not resend or not RESEND_API_KEY or not sender_email or not receiver_email:
-            logger.warning("Missing Resend config. Skipping emails.")
-            return False
-
-        # ==========================================
-        # EMAIL 1: TO THE COMPANY (DFAB ADMIN)
-        # ==========================================
-        admin_payload = {
-            "from": sender_email,
-            "to": [receiver_email],
-            "subject": f"New Inquiry: {subject} - {name}",
-            "reply_to": email, 
-            "html": f"""
-            <div style="font-family:Arial,sans-serif;max-width:600px">
-                <h2 style="color:#0A66C2">New Contact Inquiry - DFAB Website</h2>
-                <p><strong>Name:</strong> {name}</p>
-                <p><strong>Email:</strong> {email}</p>
-                <p><strong>Phone:</strong> {phone or 'Not provided'}</p>
-                <p><strong>Subject:</strong> {subject}</p>
-                <p><strong>Message:</strong><br>{message}</p>
-            </div>
-            """
-        }
-
-        # If a file is uploaded, attach it to the email going to the company
-        if attachment:
-            admin_payload["attachments"] = [attachment]
-
-        resend.Emails.send(admin_payload)
-
-        # ==========================================
-        # EMAIL 2: CONFIRMATION TO THE USER
-        # ==========================================
-        resend.Emails.send({
-            "from": sender_email, 
-            "to": [email], 
-            "subject": "Thank you for contacting DFAB",
-            "html": f"""
-            <div style="font-family:Arial,sans-serif;max-width:600px">
-                <h2 style="color:#0A66C2">Thank you for reaching out to DFAB!</h2>
-                <p>Hi {name},</p>
-                <p>We have successfully received your inquiry regarding <strong>"{subject}"</strong>.</p>
-                <p>Our team is reviewing your message and will get back to you shortly.</p>
-                <br>
-                <p>Best Regards,</p>
-                <p><strong>DFAB Stainless System Pvt Ltd</strong></p>
-            </div>
-            """,
-        })
-
-        logger.info(f"Emails successfully sent to Company and User ({email})")
-        return True
-
-    except Exception as e:
-        logger.error(f"Email sending failed: {e}")
-        return False
+def parse_post(post: dict):
+    if isinstance(post.get("created_at"), str):
+        post["created_at"] = datetime.fromisoformat(post["created_at"])
+    if isinstance(post.get("updated_at"), str):
+        post["updated_at"] = datetime.fromisoformat(post["updated_at"])
+    return post
 
 
 def build_chat_prompt(previous_messages, latest_message):
@@ -210,7 +183,7 @@ def build_chat_prompt(previous_messages, latest_message):
         content = msg.get("content", "")
         history_text += f"{role}: {content}\n"
 
-    prompt = f"""
+    return f"""
 {DFAB_SYSTEM_MSG}
 
 Conversation history:
@@ -220,10 +193,9 @@ USER: {latest_message}
 
 Answer as DFAB AI Assistant.
 """
-    return prompt
 
 
-def get_fallback_response(latest_message):
+def get_fallback_response(latest_message: str) -> str:
     lower_msg = latest_message.lower()
 
     if any(term in lower_msg for term in ["service", "offer", "do you do", "capabilit"]):
@@ -261,20 +233,106 @@ def get_fallback_response(latest_message):
 
 def get_gemini_response(previous_messages, latest_message):
     if not gemini_client:
-        logger.warning("GEMINI_API_KEY is missing, using fallback chat response")
+        logger.warning("Gemini client unavailable. Using fallback response.")
         return get_fallback_response(latest_message)
 
-    prompt = build_chat_prompt(previous_messages, latest_message)
+    try:
+        prompt = build_chat_prompt(previous_messages, latest_message)
+        response = gemini_client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+        )
 
-    response = gemini_client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt,
-    )
+        if not response or not getattr(response, "text", None):
+            logger.warning("Gemini returned empty response. Using fallback.")
+            return get_fallback_response(latest_message)
 
-    if not response or not getattr(response, "text", None):
-        return "I'm sorry, I couldn't generate a response right now. Please contact DFAB at 8428866121."
+        return response.text.strip()
 
-    return response.text.strip()
+    except Exception as e:
+        logger.error(f"Gemini response failed: {e}", exc_info=True)
+        return get_fallback_response(latest_message)
+
+
+def build_admin_email_html(name, email, phone, subject, message):
+    safe_phone = phone if phone else "Not provided"
+    safe_message = message.replace("\n", "<br>")
+    return f"""
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
+        <h2 style="color:#0A66C2;margin-bottom:16px;">New Contact Inquiry - DFAB Website</h2>
+        <p><strong>Name:</strong> {name}</p>
+        <p><strong>Email:</strong> {email}</p>
+        <p><strong>Phone:</strong> {safe_phone}</p>
+        <p><strong>Subject:</strong> {subject}</p>
+        <p><strong>Message:</strong><br>{safe_message}</p>
+    </div>
+    """
+
+
+def build_user_email_html(name, subject):
+    return f"""
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
+        <h2 style="color:#0A66C2;margin-bottom:16px;">Thank you for contacting DFAB</h2>
+        <p>Hi {name},</p>
+        <p>We have successfully received your inquiry regarding <strong>{subject}</strong>.</p>
+        <p>Our team is reviewing your message and will get back to you shortly.</p>
+        <br>
+        <p>Best Regards,</p>
+        <p><strong>DFAB Stainless System Pvt Ltd</strong></p>
+    </div>
+    """
+
+
+def send_emails(name, email, phone, subject, message, attachment=None):
+    try:
+        if not resend:
+            logger.warning("Resend package is not installed")
+            return False
+
+        if not RESEND_API_KEY:
+            logger.warning("RESEND_API_KEY is missing")
+            return False
+
+        if not SENDER_EMAIL:
+            logger.warning("SENDER_EMAIL is missing")
+            return False
+
+        if not RECEIVER_EMAIL:
+            logger.warning("RECEIVER_EMAIL is missing")
+            return False
+
+        # Admin email
+        admin_payload = {
+            "from": f"DFAB <{SENDER_EMAIL}>",
+            "to": [RECEIVER_EMAIL],
+            "subject": f"New Inquiry: {subject} - {name}",
+            "reply_to": email,
+            "html": build_admin_email_html(name, email, phone, subject, message),
+        }
+
+        if attachment:
+            admin_payload["attachments"] = [attachment]
+
+        admin_result = resend.Emails.send(admin_payload)
+        logger.info(f"Admin email sent successfully: {admin_result}")
+
+        # User confirmation email
+        user_payload = {
+            "from": f"DFAB <{SENDER_EMAIL}>",
+            "to": [email],
+            "subject": "Thank you for contacting DFAB",
+            "html": build_user_email_html(name, subject),
+        }
+
+        user_result = resend.Emails.send(user_payload)
+        logger.info(f"User confirmation email sent successfully: {user_result}")
+
+        return True
+
+    except Exception as e:
+        logger.error(f"Email sending failed: {e}", exc_info=True)
+        return False
+
 
 # =================== ROUTES ===================
 
@@ -282,7 +340,21 @@ def get_gemini_response(previous_messages, latest_message):
 async def root():
     return {"message": "DFAB API Running"}
 
-# Updated to use Form and File for multipart data
+
+@api_router.get("/health")
+async def health():
+    return {
+        "status": "ok",
+        "mongo": bool(MONGO_URL),
+        "db_name": DB_NAME,
+        "gemini_enabled": bool(gemini_client),
+        "resend_enabled": bool(resend and RESEND_API_KEY and SENDER_EMAIL and RECEIVER_EMAIL),
+        "sender_email": SENDER_EMAIL,
+        "receiver_email": RECEIVER_EMAIL,
+        "cors_origins": CORS_ORIGINS,
+    }
+
+
 @api_router.post("/contact")
 async def submit_contact(
     name: str = Form(...),
@@ -290,25 +362,22 @@ async def submit_contact(
     subject: str = Form(...),
     message: str = Form(...),
     phone: Optional[str] = Form(None),
-    file: Optional[UploadFile] = File(None)
+    file: Optional[UploadFile] = File(None),
 ):
     try:
-        # Validate email manually
         if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
             raise HTTPException(status_code=422, detail="Invalid email address")
 
         attachment = None
         filename = None
 
-        # Check if a file was uploaded and read its bytes
         if file and file.filename:
             file_bytes = await file.read()
             filename = file.filename
-            
-            # Format the attachment specifically for the Resend Python SDK
+
             attachment = {
                 "filename": filename,
-                "content": list(file_bytes) 
+                "content": base64.b64encode(file_bytes).decode("utf-8"),
             }
 
         doc = {
@@ -320,23 +389,33 @@ async def submit_contact(
             "message": message,
             "has_attachment": bool(attachment),
             "filename": filename,
-            "created_at": datetime.now(timezone.utc).isoformat()
+            "created_at": datetime.now(timezone.utc).isoformat(),
         }
 
         await db.contacts.insert_one(doc)
-        
-        # Pass the attachment variable to the email function
-        send_emails(name, email, phone, subject, message, attachment=attachment)
+
+        email_sent = send_emails(
+            name=name,
+            email=email,
+            phone=phone,
+            subject=subject,
+            message=message,
+            attachment=attachment,
+        )
+
+        if not email_sent:
+            logger.warning("Contact saved in DB, but email sending failed")
 
         return {
             "status": "success",
-            "message": "Your inquiry has been submitted. We'll be in touch soon!"
+            "message": "Your inquiry has been submitted. We'll be in touch soon!",
+            "email_sent": email_sent,
         }
 
-    except HTTPException as he:
-        raise he
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Contact submission failed: {e}")
+        logger.error(f"Contact submission failed: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to submit contact form")
 
 
@@ -376,8 +455,8 @@ async def chat_endpoint(msg: ChatMessage):
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Chat error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Chat error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Chat service failed")
 
 
 @api_router.get("/blog/posts", response_model=List[BlogPost])
@@ -402,8 +481,7 @@ async def get_blog_post(post_id: str):
 
 @api_router.post("/admin/login")
 async def admin_login(credentials: AdminLogin):
-    expected = os.environ.get("ADMIN_PASSWORD", "dfab@admin2026")
-    if credentials.password != expected:
+    if credentials.password != ADMIN_PASSWORD:
         raise HTTPException(status_code=401, detail="Invalid password")
     return {"token": get_admin_token_value()}
 
@@ -421,7 +499,7 @@ async def create_blog_post(post: BlogPostCreate, token: str = Depends(verify_adm
         "id": str(uuid.uuid4()),
         **post.model_dump(),
         "created_at": now.isoformat(),
-        "updated_at": now.isoformat()
+        "updated_at": now.isoformat(),
     }
     await db.blog_posts.insert_one(blog_post)
     blog_post["created_at"] = now
@@ -434,8 +512,10 @@ async def update_blog_post(post_id: str, post: BlogPostCreate, token: str = Depe
     now = datetime.now(timezone.utc)
     updated = {**post.model_dump(), "updated_at": now.isoformat()}
     result = await db.blog_posts.update_one({"id": post_id}, {"$set": updated})
+
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Post not found")
+
     updated_post = await db.blog_posts.find_one({"id": post_id}, {"_id": 0})
     return parse_post(updated_post)
 
@@ -448,11 +528,11 @@ async def delete_blog_post(post_id: str, token: str = Depends(verify_admin)):
     return {"status": "deleted"}
 
 
+# =================== APP SETUP ===================
+
 app.include_router(api_router)
 
-cors_origins_env = os.environ.get("CORS_ORIGINS", "*").strip()
-
-if cors_origins_env == "*":
+if CORS_ORIGINS == "*":
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -461,7 +541,7 @@ if cors_origins_env == "*":
         allow_headers=["*"],
     )
 else:
-    allowed_origins = [origin.strip() for origin in cors_origins_env.split(",") if origin.strip()]
+    allowed_origins = [origin.strip() for origin in CORS_ORIGINS.split(",") if origin.strip()]
     app.add_middleware(
         CORSMiddleware,
         allow_origins=allowed_origins,
@@ -469,6 +549,7 @@ else:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
