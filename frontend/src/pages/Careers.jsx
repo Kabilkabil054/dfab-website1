@@ -111,16 +111,13 @@ export default function Careers() {
         </Link>
       </div>
 
-      {/* Page Header */}
+      {/* HEADER SECTION - Standardized */}
       <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full">
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Join Our Team</span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
-            Careers at DFAB
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Careers at DFAB</h1>
           <p className="text-slate-400 mt-3 max-w-2xl">
-            Be part of a precision manufacturing team that builds components for the world's most demanding industries.
-          </p>
+Be part of a precision manufacturing team that builds components for the world's most demanding industries.          </p>
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
             <Link to="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>

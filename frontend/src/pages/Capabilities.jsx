@@ -156,21 +156,20 @@ export default function Capabilities() {
 
   return (
     <main className="bg-white">
-      {/* HEADER SECTION */}
-      <section className="bg-[#0F172A] h-[260px] flex items-center px-4">
+      {/* HEADER SECTION - Standardized */}
+      <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full">
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">What We Do</span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo'] animate-fade-in">Manufacturing Capabilities</h1>
-          <p className="text-slate-400 mt-3 max-w-2xl text-sm md:text-base leading-relaxed">
-            Precision-driven manufacturing capabilities built on global standards, featuring advanced fiber laser cutting and specialized welding.
-          </p>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Manufacturing Capabilities</h1>
+          <p className="text-slate-400 mt-3 max-w-2xl">
+Precision-driven manufacturing capabilities built on global standards, featuring advanced fiber laser cutting and specialized welding.          </p>
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
             <Link to="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
             <span className="text-white">Capabilities</span>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* STICKY QUICK NAVIGATION */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm backdrop-blur-md bg-white/90">

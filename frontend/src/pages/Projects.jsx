@@ -66,18 +66,21 @@ export default function Projects() {
 
       {(isFullPage || isProjectsOnly) && (
         <>
-          {/* HEADER */}
-          <section className="bg-[#0F172A] h-[260px] flex items-center px-4">
-            <div className="max-w-7xl mx-auto w-full">
-              <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Portfolio</span>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Our Projects</h1>
-              <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
-                <Link to="/" className="hover:text-white transition-colors">Home</Link>
-                <span>/</span>
-                <span className="text-white">Projects</span>
-              </div>
-            </div>
-          </section>
+          {/* HEADER SECTION - Standardized */}
+      <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
+        <div className="max-w-7xl mx-auto w-full">
+          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Portfolio</span>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Our Projects</h1>
+          <p className="text-slate-400 mt-3 max-w-2xl">
+Explore our portfolio of completed projects showcasing precision fabrication, 
+  advanced welding, and engineering excellence across multiple industrial sectors.          </p>
+          <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
+            <Link to="/" className="hover:text-white transition-colors">Home</Link>
+            <span>/</span>
+            <span className="text-white">Projects</span>
+          </div>
+        </div>
+      </div>
 
           {/* PROJECTS GRID */}
           <section id="projects-section" className="py-16 md:py-24 bg-white">

@@ -79,20 +79,22 @@ export default function Blog() {
         </Link>
       </div>
 
-      {/* HEADER */}
-      <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
+      {/* HEADER SECTION */}
+      <section className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full">
-          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
-            Knowledge Hub
-          </span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
-            Technical Blog
-          </h1>
-          <p className="text-slate-400 mt-3 max-w-2xl leading-relaxed">
-            Direct insights into industrial fabrication and engineering from our technical desk.
+          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Knowledge Hub</span>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo'] animate-fade-in">Technical Blog</h1>
+          <p className="text-slate-400 mt-3 max-w-2xl text-sm md:text-base leading-relaxed">
+            Explore insights, industry trends, and expert knowledge in fabrication, welding, 
+  machining, and manufacturing technologies from the DFAB team.
           </p>
+          <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
+            <Link to="/" className="hover:text-white transition-colors">Home</Link>
+            <span>/</span>
+            <span className="text-white">Blog</span>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* BLOG CONTENT */}
       <section className="py-16 md:py-24">

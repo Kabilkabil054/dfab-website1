@@ -1103,34 +1103,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-[#0F172A]" data-testid="cta-banner" ref={ctaRef}>
-        <div className="max-w-7xl mx-auto px-4 md:px-8 text-center reveal">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4 font-['Chivo'] tracking-tight">
-            Ready to Start Your Project?
-          </h2>
-          <p className="text-slate-400 max-w-xl mx-auto mb-8 leading-7">
-            Contact us today for a free consultation. Our team is ready to bring your fabrication needs to life.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <button
-              onClick={() => setShowInquire(true)}
-              className="bg-[#0A66C2] text-white px-8 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
-              data-testid="cta-inquire-btn"
-            >
-              Inquire Now
-            </button>
-            <a
-              href="https://wa.me/918043748186"
-              target="_blank"
-              rel="noreferrer"
-              className="border border-slate-600 text-slate-300 px-8 py-3 rounded-sm font-semibold hover:border-white hover:text-white transition-all duration-300 hover:-translate-y-0.5"
-              data-testid="cta-whatsapp-btn"
-            >
-              Chat on WhatsApp
-            </a>
-          </div>
-        </div>
-      </section>
+      
 
       {showInquire && <InquireModal onClose={() => setShowInquire(false)} />}
     </main>
