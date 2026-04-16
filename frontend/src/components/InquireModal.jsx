@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { X, Phone, Calendar, Mail, MessageSquare } from "lucide-react";
 
-const WHATSAPP_NUM = "918428866121";
+const WHATSAPP_NUM = "919187638186";
 const EMPTY_FORM = { date: "", email: "", phone: "", message: "" };
 
 export default function InquireModal({ onClose }) {

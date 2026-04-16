@@ -127,7 +127,7 @@ Reach out to our team today. We are ready to help you engineer high-precision so
                   <div className="text-[#0A66C2] shrink-0 mt-1"><MessageCircle size={20} /></div>
                   <div>
                     <h4 className="font-semibold text-slate-900">WhatsApp</h4>
-                    <a href="https://api.whatsapp.com/send?phone=9187638186" target="_blank" rel="noreferrer" className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block">+9187638186</a>
+                    <a href="https://api.whatsapp.com/send?phone=9187638186" target="_blank" rel="noreferrer" className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block">+91 9187638186</a>
                   </div>
                 </div>
               </div>

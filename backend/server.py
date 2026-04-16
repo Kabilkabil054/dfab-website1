@@ -200,46 +200,60 @@ def get_fallback_response(latest_message: str) -> str:
 
     if any(term in lower_msg for term in ["service", "services", "offer", "do you do", "capabilit", "capability", "capabilities"]):
         return (
-            "DFAB offers sheet metal fabrication, pressure vessel fabrication, pipeline fabrication, "
-            "stellite welding, die welding, custom fabrication, jig and fixture development, "
+            "DFAB offers sheet metal fabrication, "
+            "pressure vessel fabrication, "
+            "pipeline fabrication, "
+            "stellite welding, "
+            "die welding, "
+            "custom fabrication, "
+            "jig and fixture development, "
             "precision machining, and new product development. "
-            "For project-specific details, call 8428866121 or email info@dfab.in."
+            "For project-specific details, call 9187638186 or email info@dfab.in."
         )
 
     if any(term in lower_msg for term in ["contact", "phone", "email", "address", "location", "whatsapp"]):
         return (
-            "You can reach DFAB at 8428866121, info@dfab.in, or WhatsApp +91 8428866121. "
+            "You can reach DFAB at 9187638186, info@dfab.in, or WhatsApp +919187638186. "
             "The facility is in Peenya Industrial Area, Bengaluru."
         )
 
     if any(term in lower_msg for term in ["quote", "pricing", "price", "cost", "estimate", "quotation"]):
         return (
-            "For pricing or a quotation, please contact DFAB directly at 8428866121 or "
-            "WhatsApp +91 8428866121 so the team can review your fabrication requirement."
+            "For pricing or a quotation, please contact DFAB directly at 9187638186 or "
+            "WhatsApp +91 9187638186 so the team can review your fabrication requirement."
         )
 
     if any(term in lower_msg for term in ["industry", "industries", "sector", "sectors"]):
         return (
-            "DFAB serves energy, pharmaceuticals, locomotive, aeronautical, food and dairy, "
+            "DFAB serves energy, "
+            "pharmaceuticals, "
+            "locomotive, "
+            "aeronautical, "
+            "food and dairy, "
             "and automotive industries."
         )
 
     if any(term in lower_msg for term in ["material", "materials", "stainless steel", "aluminium", "aluminum", "carbon steel", "ss"]):
         return (
-            "DFAB works with stainless steel, aluminum, and carbon steel for fabrication, "
+            "DFAB works with stainless steel, "
+            "aluminum, and carbon steel for fabrication, "
             "machining, and welding applications."
         )
 
     if any(term in lower_msg for term in ["welding", "tig", "mig", "arc welding", "pipeline", "pressure vessel"]):
         return (
-            "DFAB provides TIG, MIG, arc welding, pipeline fabrication, pressure vessel fabrication, "
+            "DFAB provides TIG, MIG, arc welding, "
+            "pipeline fabrication, "
+            "pressure vessel fabrication, "
             "and custom industrial welding solutions."
         )
 
     return (
-        "DFAB specializes in stainless steel fabrication, machining, welding, pressure vessels, "
+        "DFAB specializes in stainless steel fabrication, "
+        "machining, welding, "
+        "pressure vessels, "
         "pipeline work, and custom industrial project support. "
-        "Tell us your requirement, or contact DFAB directly at 8428866121 for a quotation."
+        "Tell us your requirement, or contact DFAB directly at 9187638186 for a quotation."
     )
 
 
