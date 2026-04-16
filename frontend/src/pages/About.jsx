@@ -1,26 +1,29 @@
 import { Link } from "react-router-dom";
 import { CheckCircle, Award, Linkedin, Mail } from "lucide-react";
 import { useReveal } from "../hooks/useReveal";
+import jithedraImg from "../assets/images/leaders/Jithendra.jpg";
+import sureshImg from "../assets/images/leaders/Suresh.jpg";
+import pramodImg from "../assets/images/leaders/pramod.jpg";
 
 const LEADERS = [
   {
-    name: "Rajesh Venkataraman",
+    name: "Jthendra Babu",
     role: "Founder & Managing Director",
-    img: "https://images.unsplash.com/photo-1733348137468-90b917d2ebf1?crop=entropy&cs=srgb&fm=jpg&q=85",
+    img: jithedraImg,
     bio: "With over 20 years in the fabrication and engineering industry, Rajesh founded DFAB with a vision to deliver world-class stainless steel fabrication solutions to industrial clients across India.",
     expertise: ["Strategic Leadership", "Business Development", "Client Relations"],
   },
   {
-    name: "Sunil Kumar",
+    name: "Suresh Kumar",
     role: "Technical Director & Chief Engineer",
-    img: "https://images.unsplash.com/flagged/photo-1567347611511-a8db7dce144f?crop=entropy&cs=srgb&fm=jpg&q=85",
+    img: sureshImg,
     bio: "Sunil brings 18 years of hands-on expertise in precision welding and fabrication. He oversees all technical operations, ensuring every project meets the highest quality standards and engineering specifications.",
     expertise: ["Welding Engineering", "6G Qualification", "Process Optimization"],
   },
   {
-    name: "Priya Nair",
+    name: "Pramod Shetty",
     role: "Quality Assurance Manager",
-    img: "https://images.pexels.com/photos/34690642/pexels-photo-34690642.jpeg?auto=compress&cs=tinysrgb&dpr=2",
+    img: pramodImg,
     bio: "Priya leads DFAB's ISO 9001:2015 quality management system. With a background in metallurgy and quality engineering, she ensures every component delivered meets customer requirements and industry standards.",
     expertise: ["ISO 9001:2015", "NDT & Inspection", "Quality Systems"],
   },
@@ -189,59 +192,7 @@ export default function About() {
             ))}
           </div>
 
-          {/* Facilities */}
-          <div className="mb-20" ref={facilRef}>
-            <div className="text-center mb-10 reveal">
-              <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
-                Infrastructure
-              </span>
-              <h2 className="text-3xl font-bold text-slate-900 mt-2 font-['Chivo']">
-                Our Facilities
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
-              {[
-                {
-                  title: "7000 sqft Operating Space",
-                  desc: "Large, well-organized workspace for heavy fabrication work.",
-                },
-                {
-                  title: "5 Ton EOT Crane",
-                  desc: "Heavy lifting capability for large fabrication assemblies.",
-                },
-                {
-                  title: "10+ Welding Machines",
-                  desc: "TIG, MIG welding machines for all types of welding requirements.",
-                },
-                {
-                  title: "Advanced Laser Technology",
-                  desc: "State-of-the-art laser cutting and welding equipment.",
-                },
-                {
-                  title: "CNC & Manual Machines",
-                  desc: "Conventional milling, turning, and radial drilling machines.",
-                },
-                {
-                  title: "Quality Inspection",
-                  desc: "Dedicated quality inspectors ensuring every product meets standards.",
-                },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  className="reveal flex gap-4 p-5 border border-slate-200 rounded-md bg-white hover:border-[#0A66C2] transition-colors"
-                >
-                  <CheckCircle size={20} className="text-[#0A66C2] shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">
-                      {item.title}
-                    </h4>
-                    <p className="text-sm text-slate-600">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          
 
           {/* Leadership Team */}
           <div ref={leaderRef}>
@@ -310,6 +261,59 @@ export default function About() {
                 </div>
               ))}
             </div>
+            {/* Facilities */}
+          <div className="mb-20" ref={facilRef}>
+            <div className="text-center mb-10 reveal">
+              <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
+                Infrastructure
+              </span>
+              <h2 className="text-3xl font-bold text-slate-900 mt-2 font-['Chivo']">
+                Our Facilities
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
+              {[
+                {
+                  title: "7000 sqft Operating Space",
+                  desc: "Large, well-organized workspace for heavy fabrication work.",
+                },
+                {
+                  title: "5 Ton EOT Crane",
+                  desc: "Heavy lifting capability for large fabrication assemblies.",
+                },
+                {
+                  title: "10+ Welding Machines",
+                  desc: "TIG, MIG welding machines for all types of welding requirements.",
+                },
+                {
+                  title: "Advanced Laser Technology",
+                  desc: "State-of-the-art laser cutting and welding equipment.",
+                },
+                {
+                  title: "CNC & Manual Machines",
+                  desc: "Conventional milling, turning, and radial drilling machines.",
+                },
+                {
+                  title: "Quality Inspection",
+                  desc: "Dedicated quality inspectors ensuring every product meets standards.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="reveal flex gap-4 p-5 border border-slate-200 rounded-md bg-blue hover:border-[#0A66C2] transition-colors"
+                >
+                  <CheckCircle size={20} className="text-[#0A66C2] shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-1">
+                      {item.title}
+                    </h4>
+                    <p className="text-sm text-slate-600">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
             {/* CTA */}
             <div className="bg-[#0A66C2] rounded-md p-10 text-center reveal">

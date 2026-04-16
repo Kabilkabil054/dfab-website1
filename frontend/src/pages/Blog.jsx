@@ -71,11 +71,12 @@ export default function Blog() {
       {/* ADMIN BUTTON */}
       <div className="absolute top-4 right-4 z-50 opacity-50 hover:opacity-100 transition-all duration-300">
         <Link
-          to="/blog/admin"
-          className="flex items-center gap-1.5 px-3 py-2 bg-white/20 text-white/70 hover:text-white hover:bg-[#0A66C2] rounded-lg border border-white/20 hover:border-[#0A66C2] transition-all shadow-lg backdrop-blur-sm"
+          to="/careers/admin"
+          className="flex items-center gap-1.5 px-3 py-2 bg-white/20 text-white/70 hover:text-white hover:bg-[#0A66C2] rounded-lg border border-white/20 hover:border-[#0A66C2] transition-all shadow-lg hover:shadow-blue-500/20 backdrop-blur-sm"
+          title="Careers Admin Console"
         >
-          <Settings size={14} />
-          <span className="text-[10px] font-black uppercase tracking-widest ml-1">Admin</span>
+          <Settings size={14} className="animate-pulse-slow" />
+          <span className="text-[10px] font-black uppercase tracking-widest">Admin</span>
         </Link>
       </div>
 

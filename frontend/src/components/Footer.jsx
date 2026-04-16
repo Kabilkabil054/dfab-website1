@@ -248,7 +248,7 @@ export default function Footer() {
                 { Icon: Youtube, url: "https://www.youtube.com/channel/UClfxW0cBkQMjoU3VdhVv-cg" },
                 { Icon: Linkedin, url: "https://www.linkedin.com" },
                 { Icon: Twitter, url: "https://twitter.com" },
-                { Icon: MessageCircle, url: "https://wa.me/918428866121" }
+                { Icon: MessageCircle, url: "https://wa.me/919187638186" }
               ].map((item, idx) => (
                 <a 
                   key={idx} 
@@ -304,8 +304,8 @@ export default function Footer() {
                 <div className="p-2 rounded bg-slate-800/80 text-[#0A66C2] border border-slate-700/50">
                   <Phone size={18} />
                 </div>
-                <a href="tel:+918043748186" className="text-sm text-slate-300 font-bold tracking-wide outline-none group-hover:text-white transition-colors">
-                  080 43748186
+                <a href="tel:+919187638186" className="text-sm text-slate-300 font-bold tracking-wide outline-none group-hover:text-white transition-colors">
+                  9187638186
                 </a>
               </li>
               <li className="flex gap-4 items-center welding-sparkle-card p-3 rounded-lg group">

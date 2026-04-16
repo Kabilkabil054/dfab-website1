@@ -259,10 +259,10 @@ Be part of a precision manufacturing team that builds components for the world's
               <Mail size={15} /> info@dfab.in
             </a>
             <a
-              href="tel:+918043748186"
+              href="tel:+919187638186"
               className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-sm text-sm font-medium transition-colors"
             >
-              <Phone size={15} /> 080 43748186
+              <Phone size={15} /> 9187638186
             </a>
           </div>
         </div>

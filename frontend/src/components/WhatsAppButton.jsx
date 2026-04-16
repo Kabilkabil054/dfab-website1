@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 
 export default function WhatsAppButton() {
-  const location = useLocation();
+  return null;
 
   // Only show on the Contact page
   if (location.pathname !== "/contact") return null;

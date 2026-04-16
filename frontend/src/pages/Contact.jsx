@@ -111,7 +111,7 @@ Reach out to our team today. We are ready to help you engineer high-precision so
                   <div className="text-[#0A66C2] shrink-0 mt-1"><Phone size={20} /></div>
                   <div>
                     <h4 className="font-semibold text-slate-900">Call Us</h4>
-                    <a href="tel:+918428866121" className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block">8428866121</a>
+                    <a href="tel:+919187638186" className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block">9187638186</a>
                   </div>
                 </div>
 
@@ -127,13 +127,13 @@ Reach out to our team today. We are ready to help you engineer high-precision so
                   <div className="text-[#0A66C2] shrink-0 mt-1"><MessageCircle size={20} /></div>
                   <div>
                     <h4 className="font-semibold text-slate-900">WhatsApp</h4>
-                    <a href="https://api.whatsapp.com/send?phone=918428866121" target="_blank" rel="noreferrer" className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block">+91 8428866121</a>
+                    <a href="https://api.whatsapp.com/send?phone=9187638186" target="_blank" rel="noreferrer" className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block">+9187638186</a>
                   </div>
                 </div>
               </div>
 
               <div className="mt-8">
-                <a href="https://api.whatsapp.com/send?phone=918428866121" target="_blank" rel="noreferrer" className="block text-center bg-[#25D366] hover:bg-[#1fb457] text-white py-3 rounded-md font-semibold transition-colors">Chat on WhatsApp</a>
+                <a href="https://api.whatsapp.com/send?phone=919187638186" target="_blank" rel="noreferrer" className="block text-center bg-[#25D366] hover:bg-[#1fb457] text-white py-3 rounded-md font-semibold transition-colors">Chat on WhatsApp</a>
               </div>
             </div>
 
@@ -152,8 +152,22 @@ Reach out to our team today. We are ready to help you engineer high-precision so
                 <div className="space-y-4">
                   <input name="name" value={form.name} onChange={onChange} required placeholder="Name" className="w-full border border-slate-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#0A66C2]" />
                   <input type="email" name="email" value={form.email} onChange={onChange} required placeholder="Email" className="w-full border border-slate-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#0A66C2]" />
-                  <input type="tel" name="phone" value={form.phone} onChange={onChange} placeholder="Phone" className="w-full border border-slate-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#0A66C2]" />
-                  <input name="subject" value={form.subject} onChange={onChange} required placeholder="Subject" className="w-full border border-slate-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#0A66C2]" />
+<input
+  type="tel"
+  name="phone"
+  value={form.phone}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      phone: e.target.value.replace(/\D/g, ""), // allows only numbers
+    })
+  }
+  placeholder="Phone"
+  maxLength={10}
+  inputMode="numeric"
+  pattern="[0-9]*"
+  className="w-full border border-slate-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#0A66C2]"
+/>                  <input name="subject" value={form.subject} onChange={onChange} required placeholder="Subject" className="w-full border border-slate-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#0A66C2]" />
                   <textarea name="message" value={form.message} onChange={onChange} required rows={5} placeholder="Message" className="w-full border border-slate-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#0A66C2] resize-none" />
 
                   <div className="relative">
