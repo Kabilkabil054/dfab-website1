@@ -243,10 +243,10 @@ export default function Footer() {
             {/* Social Links */}
             <div className="flex flex-wrap gap-5 pt-2 pl-1">
               {[
-                { Icon: Facebook, url: "https://www.facebook.com" },
-                { Icon: Instagram, url: "https://www.instagram.com" },
-                { Icon: Youtube, url: "https://www.youtube.com/channel/UClfxW0cBkQMjoU3VdhVv-cg" },
-                { Icon: Linkedin, url: "https://www.linkedin.com" },
+                { Icon: Facebook, url: "https://m.facebook.com/dfabsspl/" },
+                { Icon: Instagram, url: "https://www.instagram.com/dfabstainlesssystempvtltd_?igsh=MTZucXJ0c2d6YTJoMA==" },
+                { Icon: Youtube, url: "https://www.youtube.com/@dfabstainlesssystempvtltd8581" },
+                { Icon: Linkedin, url: "https://www.linkedin.com/company/dfab-stainless-system-pvt-ltd/" },
                 { Icon: Twitter, url: "https://twitter.com" },
                 { Icon: MessageCircle, url: "https://wa.me/919187638186" }
               ].map((item, idx) => (
