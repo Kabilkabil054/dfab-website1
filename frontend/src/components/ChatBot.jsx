@@ -318,7 +318,7 @@ export default function ChatBot() {
               {loading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
             </button>
           </div>
-          <p className="text-center text-[11px] text-slate-400 mt-2">DFAB AI · For urgent matters call 080 43748186</p>
+          <p className="text-center text-[11px] text-slate-400 mt-2">DFAB AI · For urgent matters call 9187638186</p>
         </div>
       </div>
     </>
