@@ -1,5 +1,9 @@
 import { Link } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
+import img1 from "../assets/images/factory1.jpg";
+import img2 from "../assets/images/factory2.jpg";
+import img3 from "../assets/images/welding.jpg";
+import img4 from "../assets/images/fabrication.jpg";
 
 const MACHINES = [
   { name: "TIG Welding Machines", count: "6+", desc: "For precision stainless steel welding" },
@@ -76,27 +80,30 @@ export default function Infrastructure() {
 
             {/* Right Images - Balanced Alignment */}
             <div className="grid grid-cols-2 gap-4 h-full content-center">
-              <img
-                src="https://images.unsplash.com/photo-1747999060057-89b7a533f347?crop=entropy&cs=srgb&fm=jpg&q=85"
-                alt="Factory Overview"
-                className="rounded-xl h-48 md:h-64 w-full object-cover shadow-sm"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1764114441097-6a475eca993d?crop=entropy&cs=srgb&fm=jpg&q=85"
-                alt="Machinery"
-                className="rounded-xl h-48 md:h-64 w-full object-cover shadow-sm mt-8" // Offset for visual interest
-              />
-              <img
-                src="https://images.pexels.com/photos/22717514/pexels-photo-22717514.jpeg?auto=compress&cs=tinysrgb&dpr=2"
-                alt="Welding"
-                className="rounded-xl h-48 md:h-64 w-full object-cover shadow-sm -mt-8" // Offset for visual interest
-              />
-              <img
-                src="https://images.pexels.com/photos/32200451/pexels-photo-32200451.jpeg?auto=compress&cs=tinysrgb&dpr=2"
-                alt="Steel Fabrication"
-                className="rounded-xl h-48 md:h-64 w-full object-cover shadow-sm"
-              />
-            </div>
+  <img
+    src={img1}
+    alt="Factory Overview"
+    className="rounded-xl h-48 md:h-64 w-full object-cover shadow-sm"
+  />
+
+  <img
+    src={img2}
+    alt="Machinery"
+    className="rounded-xl h-48 md:h-64 w-full object-cover shadow-sm mt-8"
+  />
+
+  <img
+    src={img3}
+    alt="Welding"
+    className="rounded-xl h-48 md:h-64 w-full object-cover shadow-sm -mt-8"
+  />
+
+  <img
+    src={img4}
+    alt="Steel Fabrication"
+    className="rounded-xl h-48 md:h-64 w-full object-cover shadow-sm"
+  />
+</div>
           </div>
 
           {/* Machines Section */}

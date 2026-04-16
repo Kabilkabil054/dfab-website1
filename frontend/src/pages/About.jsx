@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CheckCircle, Award, Linkedin, Mail } from "lucide-react";
 import { useReveal } from "../hooks/useReveal";
+import factoryImg from "../assets/images/abtfac.jpg";
 import jithedraImg from "../assets/images/leaders/Jithendra.jpg";
 import sureshImg from "../assets/images/leaders/Suresh.jpg";
 import pramodImg from "../assets/images/leaders/pramod.jpg";
@@ -145,14 +146,14 @@ export default function About() {
             </div>
 
             <div className="reveal-right h-full flex">
-              <div className="w-full h-full overflow-hidden rounded-md shadow-lg">
-                <img
-                  src="https://images.unsplash.com/photo-1730584475652-d55a2021bae8?crop=entropy&cs=srgb&fm=jpg&q=85"
-                  alt="DFAB Factory"
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                />
-              </div>
-            </div>
+  <div className="w-full h-full overflow-hidden rounded-md shadow-lg">
+    <img
+      src={factoryImg}
+      alt="DFAB Factory"
+      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+    />
+  </div>
+</div>
           </div>
 
           {/* Vision, Mission, Quality Policy */}
