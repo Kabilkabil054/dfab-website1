@@ -190,7 +190,7 @@ const TESTIMONIALS = [
     role: "Procurement Manager",
     company: "Pharma Corp India",
     sector: "Pharmaceuticals",
-    rating: 5,
+    rating: 4,
     text: "DFAB delivered our pressure vessels exactly to spec, on time and within budget. Their welding quality passed all our strict pharmaceutical standards without a single rework. Highly recommend for any critical fabrication work.",
   },
   {
@@ -206,7 +206,7 @@ const TESTIMONIALS = [
     role: "VP Operations",
     company: "DairyCo Foods",
     sector: "Food & Dairy",
-    rating: 5,
+    rating: 4,
     text: "DFAB fabricated our stainless steel food processing tanks to FSSAI standards. The finish quality and hygiene compliance were top-notch. Their team was professional and responsive throughout the project.",
   },
   {
@@ -214,7 +214,7 @@ const TESTIMONIALS = [
     role: "Engineering Head",
     company: "AutoTech Manufacturing",
     sector: "Automotive",
-    rating: 5,
+    rating: 4,
     text: "The jig and fixture system DFAB built for our assembly line improved our production efficiency by 30%. Excellent precision, great team coordination, and they genuinely understood our manufacturing requirements.",
   },
   {
@@ -766,64 +766,98 @@ export default function Home() {
         </div>
       </div>
 
-      <section className="py-16 md:py-24 bg-white" data-testid="about-preview" ref={aboutRef}>
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16 items-stretch">
-            <div className="reveal-left md:col-span-5 flex flex-col justify-center">
-              <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.18em]">
-                About DFAB
-              </span>
-              <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-3 mb-5 font-['Chivo'] tracking-tight">
-                Fabricating Your Vision with Precision
-              </h2>
-              <p className="text-slate-600 leading-7 mb-5">
-                DFAB Stainless System Pvt Ltd is an <strong>ISO 9001:2015 certified</strong> fabrication company established in 2018, located in the prime Peenya Industrial Area, Bengaluru.
-              </p>
-              <p className="text-slate-600 leading-7 mb-8">
-                With a 7000 sq-ft facility, a 5-ton crane, 10+ welding machines (TIG, MIG), and a highly skilled team, we provide end-to-end solutions in equipment fabrication, high-pressure pipeline welding, and precision machining.
-              </p>
+      <section
+  className="py-16 md:py-24 bg-white"
+  data-testid="about-preview"
+  ref={aboutRef}
+>
+  <div className="max-w-7xl mx-auto px-4 md:px-8">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16 items-stretch">
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                {[
-                  "7000 sqft Operating Space",
-                  "5 Ton Crane Facility",
-                  "10+ Welding Machines",
-                  "Skilled 6G Welders",
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3"
-                  >
-                    <CheckCircle size={16} className="text-[#0A66C2] shrink-0" />
-                    <span className="text-sm text-slate-700">{item}</span>
-                  </div>
-                ))}
-              </div>
+      {/* LEFT CONTENT */}
+      <div className="reveal-left md:col-span-5 flex flex-col justify-center">
+        <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.18em]">
+          About DFAB
+        </span>
 
-              <Link
-                to="/about"
-                className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5 w-fit"
-                data-testid="about-learn-more"
-              >
-                Learn More <ArrowRight size={16} />
-              </Link>
+        <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-3 mb-5 font-['Chivo'] tracking-tight">
+          Fabricating Your Vision with Precision
+        </h2>
+
+        <p className="text-slate-600 leading-7 mb-5">
+          DFAB Stainless System Pvt Ltd is an{" "}
+          <strong>ISO 9001:2015 certified</strong> fabrication company
+          established in 2018, located in the prime Peenya Industrial Area,
+          Bengaluru.
+        </p>
+
+        <p className="text-slate-600 leading-7 mb-8">
+          With a 7000 sq-ft facility, a 5-ton crane, 10+ welding machines (TIG,
+          MIG), and a highly skilled team, we provide end-to-end solutions in
+          equipment fabrication, high-pressure pipeline welding, and precision
+          machining.
+        </p>
+
+        {/* FEATURES */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          {[
+            "7000 sqft Operating Space",
+            "5 Ton Crane Facility",
+            "10+ Welding Machines",
+            "Skilled 6G Welders",
+          ].map((item) => (
+            <div
+              key={item}
+              className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3"
+            >
+              <CheckCircle size={16} className="text-[#0A66C2] shrink-0" />
+              <span className="text-sm text-slate-700">{item}</span>
             </div>
-
-            <div className="md:col-span-7 relative">
-              <img
-                src={aboutFactory}
-                alt="DFAB Factory"
-                className="rounded-2xl w-full h-full object-cover shadow-3xl"
-              />
-
-              <div className="absolute -bottom-0 -left-0 bg-[#0A66C2] text-white p-6 rounded-2xl shadow-2xl hidden md:block">
-                <div className="text-4xl font-bold font-['Chivo']">8+</div>
-                <div className="text-sm text-blue-100">Years of Excellence</div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
-      </section>
+
+        {/* BUTTON */}
+        <Link
+          to="/about"
+          className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5 w-fit"
+        >
+          Learn More <ArrowRight size={16} />
+        </Link>
+      </div>
+
+      {/* RIGHT IMAGE */}
+      <div className="md:col-span-7 relative">
+
+        {/* IMAGE (UNCHANGED RATIO) */}
+        <img
+          src={aboutFactory}
+          alt="DFAB Factory"
+          className="rounded-2xl w-full h-full object-cover shadow-3xl"
+        />
+
+        {/* 8+ BADGE (OUTSIDE LEFT BOTTOM) */}
+<div className="absolute bottom-3 left-3 sm:bottom-3 sm:left-3 md:bottom-3 md:left-3 z-10 ...">
+
+  <div className="rounded-xl bg-[#0A66C2]/90 backdrop-blur-md text-white px-4 py-3 shadow-[0_10px_25px_rgba(0,0,0,0.25)] border border-white/20">
+
+    <div className="text-2xl sm:text-3xl font-bold font-['Chivo'] leading-none">
+      8+
+    </div>
+
+    <div className="text-[10px] sm:text-xs text-blue-100 mt-1 tracking-wide">
+      Years of Excellence
+    </div>
+
+  </div>
+</div>
+
+        {/* SOFT SHADOW BEHIND BADGE */}
+        <div className="absolute bottom-4 left-4 sm:bottom-5 sm:left-5 md:bottom-6 md:left-6 w-28 h-28 bg-black/20 blur-2xl rounded-full -z-0" />
+
+      </div>
+    </div>
+  </div>
+</section>
 
       <section className="py-16 md:py-24 bg-slate-50" data-testid="services-section" ref={servicesRef}>
         <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -932,136 +966,157 @@ export default function Home() {
 
       <WeServeSection />
 
-      <section className="py-16 md:py-24 bg-slate-50" data-testid="projects-preview" ref={projectsRef}>
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <SectionHeading
-            eyebrow="Our Portfolio"
-            title="Featured Projects"
-            text="Delivering precision fabrication across diverse industrial sectors."
+{/* --- Featured Projects Section --- */}
+<section
+  className="py-16 md:py-24 bg-slate-50"
+  data-testid="projects-preview"
+  ref={projectsRef}
+>
+  <div className="max-w-7xl mx-auto px-4 md:px-8">
+    <SectionHeading
+      eyebrow="Our Portfolio"
+      title="Featured Projects"
+      text="Delivering precision fabrication across diverse industrial sectors."
+    />
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+      {featuredProjects.map((p) => (
+        <div
+          key={p.id}
+          className="reveal group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col h-full transition-all duration-700 hover:border-[#0A66C2]/30 hover:shadow-xl [transform-style:preserve-3d] hover:[transform:perspective(1200px)_rotateY(6deg)_rotateX(3deg)_translateY(-10px)_scale(1.02)]"
+          data-testid={`project-card-${String(p.title).replace(/\s/g, "-").toLowerCase()}`}
+        >
+          {/* 1. FIXED IMAGE BOX (Aspect Ratio) */}
+          <div className="aspect-[16/10] w-full overflow-hidden relative bg-slate-100">
+            <img
+              src={p.img}
+              alt={p.title}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            {p.tag && (
+              <span className="absolute top-4 left-4 bg-[#0A66C2] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md z-10">
+                {p.tag}
+              </span>
+            )}
+          </div>
+
+          {/* 2. FLEX-GROW CONTENT (Forces boxes to match height) */}
+          <div className="p-6 flex flex-col flex-grow">
+            <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo']">
+              {p.title}
+            </h3>
+            <p className="text-sm text-slate-600 leading-6 line-clamp-3">
+              {p.desc}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div className="text-center mt-12 reveal">
+      <Link
+        to="/projects"
+        className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-8 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
+      >
+        View All Projects <ArrowRight size={16} />
+      </Link>
+    </div>
+  </div>
+</section>
+
+
+
+
+{/* --- Infrastructure Section --- */}
+<section
+  className="py-16 md:py-24 bg-white"
+  data-testid="infrastructure-preview"
+  ref={infraRef}
+>
+  <div className="max-w-7xl mx-auto px-4 md:px-8">
+    <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+      {/* LEFT: Strict fixed-ratio image grid */}
+      <div className="reveal-left flex flex-col gap-4">
+
+        {/* Row 1: Two equal 1:1 squares side by side */}
+        <div className="grid grid-cols-2 gap-4">
+          <div
+            className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 relative"
+            style={{ aspectRatio: "1/1" }}
+          >
+            <img
+              src={infra1}
+              alt="Factory floor"
+              className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+          <div
+            className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 relative"
+            style={{ aspectRatio: "1/1" }}
+          >
+            <img
+              src={infra2}
+              alt="Machinery"
+              className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+        </div>
+
+        {/* Row 2: Full-width 16:7 cinematic banner */}
+        <div
+          className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 relative w-full"
+          style={{ aspectRatio: "16/7" }}
+        >
+          <img
+            src={infra3}
+            alt="Welding operation"
+            className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-500"
           />
+        </div>
+      </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredProjects.map((p) => (
-              <div
-                key={p.id}
-                className="reveal group bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:-translate-y-2 hover:shadow-xl hover:border-[#0A66C2]/30 transition-all duration-500"
-                data-testid={`project-card-${String(p.title).replace(/\s/g, "-").toLowerCase()}`}
-              >
-                <div className="overflow-hidden relative">
-                  <img
-                    src={p.img}
-                    alt={p.title}
-                    className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  {p.tag && (
-                    <span className="absolute top-4 left-4 bg-[#0A66C2] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-                      {p.tag}
-                    </span>
-                  )}
-                </div>
+      {/* RIGHT: Content */}
+      <div className="reveal-right">
+        <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.2em]">
+          Our Facility
+        </span>
+        <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-3 mb-6 font-['Chivo'] tracking-tight">
+          World-Class Infrastructure
+        </h2>
+        <p className="text-slate-600 leading-7 mb-8 text-lg">
+          Our 7000 sq-ft state-of-the-art facility in Peenya Industrial Area is equipped with advanced machinery and operated by a highly skilled engineering team.
+        </p>
 
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2 font-['Chivo']">
-                    {p.title}
-                  </h3>
-                  <p className="text-sm text-slate-600 leading-6 line-clamp-3 mb-4">
-                    {p.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-10 reveal">
-            <Link
-              to="/projects"
-              className="inline-flex items-center gap-2 border border-[#0A66C2] text-[#0A66C2] px-6 py-3 rounded-sm font-semibold hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
-              data-testid="projects-view-all"
+        <div className="space-y-3 mb-10">
+          {[
+            "7000 sqft Operating Space with 5 Ton Crane",
+            "10+ TIG & MIG Welding Machines",
+            "Conventional Milling & Turning Machines",
+            "Radial Drilling Machine",
+            "Advanced Laser Technology",
+            "Quality Inspection Equipment",
+          ].map((item) => (
+            <div
+              key={item}
+              className="flex items-center gap-4 bg-slate-50 border border-slate-100 rounded-xl px-5 py-3"
             >
-              View All Projects <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 md:py-24 bg-white" data-testid="infrastructure-preview" ref={infraRef}>
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-stretch">
-            <div className="reveal-left h-full">
-              <div className="grid grid-rows-[1fr_1.15fr] gap-5 h-full min-h-[620px]">
-                <div className="grid grid-cols-2 gap-5 h-full">
-                  <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
-                    <img
-                      src={infra1}
-                      alt="Factory"
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-
-                  <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
-                    <img
-                      src={infra2}
-                      alt="Machinery"
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                </div>
-
-                <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm h-full">
-                  <img
-                    src={infra3}
-                    alt="Welding"
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-              </div>
+              <div className="w-2 h-2 rounded-full bg-[#0A66C2] shrink-0" />
+              <span className="text-sm font-medium text-slate-700">{item}</span>
             </div>
-
-            <div className="reveal-right h-full flex flex-col justify-center">
-              <div>
-                <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.18em]">
-                  Our Facility
-                </span>
-                <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-3 mb-5 font-['Chivo'] tracking-tight">
-                  World-Class Infrastructure
-                </h2>
-                <p className="text-slate-600 leading-7 mb-6">
-                  Our 7000 sq-ft state-of-the-art facility in Peenya Industrial Area is equipped with advanced machinery and operated by a highly skilled engineering team.
-                </p>
-
-                <div className="space-y-3 mb-8">
-                  {[
-                    "7000 sqft Operating Space with 5 Ton Crane",
-                    "10+ TIG & MIG Welding Machines",
-                    "Conventional Milling & Turning Machines",
-                    "Radial Drilling Machine",
-                    "Advanced Laser Technology",
-                    "Quality Inspection Equipment",
-                  ].map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-3"
-                    >
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#0A66C2] shrink-0" />
-                      <span className="text-sm text-slate-700">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <Link
-                  to="/infrastructure"
-                  className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-6 py-3 rounded-sm font-semibold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5 w-fit"
-                  data-testid="infra-explore-btn"
-                >
-                  Explore Infrastructure <ArrowRight size={16} />
-                </Link>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
-      </section>
+
+        <Link
+          to="/infrastructure"
+          className="inline-flex items-center gap-2 bg-[#0A66C2] text-white px-10 py-4 rounded-sm font-bold hover:bg-[#084e96] transition-all duration-300 shadow-lg hover:shadow-blue-500/20 hover:-translate-y-0.5"
+        >
+          Explore Infrastructure <ArrowRight size={18} />
+        </Link>
+      </div>
+    </div>
+  </div>
+</section>
 
       <TestimonialsSection />
 
