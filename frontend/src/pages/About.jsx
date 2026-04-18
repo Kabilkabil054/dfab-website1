@@ -10,7 +10,7 @@ import pramodImg from "../assets/images/leaders/pramod.jpg";
 const LEADERS = [
   {
     name: "JITHENDRA BABU K",
-    role: "Founder & Managing Director",
+    role: "Chief Executive Officer",
     img: jithedraImg,
     linkedin: "https://www.linkedin.com/in/jithendrababu-k-48603b77/",
     email: "jithendrababu.dfab@gmail.com",
@@ -25,7 +25,7 @@ const LEADERS = [
   },
   {
     name: "SURESH KUMAR TS",
-    role: "Technical Director",
+    role: "Chief Operating Officer",
     img: sureshImg,
     linkedin: "https://www.linkedin.com/in/sureshkumarts/",
     email: "sureshkumar.dfab@gmail.com",
@@ -40,7 +40,7 @@ const LEADERS = [
   },
   {
     name: "PRAMOD SHETTY",
-    role: "Quality Assurance Manager",
+    role: "Chief Visonary Officer",
     img: pramodImg,
     linkedin: "https://www.linkedin.com/in/pramod-shetty-7086b011/",
     email: "pramod.shetty@dfab.in",
