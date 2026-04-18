@@ -107,23 +107,28 @@ export const SERVICES = [
 export default function Services() {
   return (
     <main className="bg-white">
-      <div className="bg-[#0F172A] py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
-            What We Offer
-          </span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
-            Our Services
-          </h1>
-          <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
-            <Link to="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="text-white">Services</span>
+      {/* HEADER SECTION - Standardized */}
+          <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
+            <div className="max-w-7xl mx-auto w-full">
+              <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
+                Our Services
+              </span>
+              <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
+                What We Do
+              </h1>
+              <p className="text-slate-400 mt-3 max-w-2xl">
+                Delivering precision engineering and fabrication solutions tailored to industry needs.
+                From design to manufacturing, we ensure quality, reliability, and efficiency.
+              </p>
+              <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
+                <Link to="/" className="hover:text-white transition-colors">
+                  Home
+                </Link>
+                <span>/</span>
+                <span className="text-white">Services</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 md:px-8">

@@ -41,38 +41,32 @@ export default function Projects() {
   }, [projects]);
 
   useEffect(() => {
-    const handleRefreshProjects = () => {
-      axios
-        .get(`${API}/projects`)
-        .then((res) => {
-          setProjects(Array.isArray(res.data) ? res.data : []);
-        })
-        .catch((err) => console.error("Failed to refresh projects:", err));
-    };
+  const targetId =
+    location.hash === "#projects"
+      ? "projects-header"
+      : location.hash === "#services"
+      ? "services-header"
+      : null;
 
-    window.addEventListener("focus", handleRefreshProjects);
-    return () => {
-      window.removeEventListener("focus", handleRefreshProjects);
-    };
-  }, []);
+  if (targetId) {
+    const el = document.getElementById(targetId);
+    if (el) {
+      setTimeout(() => {
+        const navbarOffset = 90; // adjust if your navbar is taller/smaller
+        const elementTop = el.getBoundingClientRect().top + window.pageYOffset;
+        const scrollTo = elementTop - navbarOffset;
 
-  useEffect(() => {
-    const targetId =
-      location.hash === "#projects"
-        ? "projects-section"
-        : location.hash === "#services"
-        ? "services"
-        : null;
-
-    if (targetId) {
-      const el = document.getElementById(targetId);
-      if (el) {
-        setTimeout(() => el.scrollIntoView({ behavior: "instant", block: "start" }), 0);
-      }
-    } else {
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        window.scrollTo({
+          top: scrollTo,
+          left: 0,
+          behavior: "instant",
+        });
+      }, 0);
     }
-  }, [location]);
+  } else {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }
+}, [location]);
 
   return (
     <main className="bg-white relative">
@@ -210,8 +204,8 @@ export default function Projects() {
 
       {(isFullPage || isServicesOnly) && (
         <>
-          {/* HEADER SECTION - Standardized */}
-          <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
+          {/* ✅ ADDED ID */}
+          <div id="services-header" className="bg-[#0F172A] h-[260px] flex items-center px-4">
             <div className="max-w-7xl mx-auto w-full">
               <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
                 Our Services
