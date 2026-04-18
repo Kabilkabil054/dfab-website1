@@ -40,7 +40,7 @@ const LEADERS = [
   },
   {
     name: "PRAMOD SHETTY",
-    role: "Chief Visonary Officer",
+    role: "Chief Visionary Officer",
     img: pramodImg,
     linkedin: "https://www.linkedin.com/in/pramod-shetty-7086b011/",
     email: "pramod.shetty@dfab.in",
