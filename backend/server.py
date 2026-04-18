@@ -142,6 +142,27 @@ class BlogPost(BaseModel):
     updated_at: datetime
 
 
+class ProjectCreate(BaseModel):
+    title: str
+    desc: str
+    img: str
+    tag: Optional[str] = None
+    featured: bool = False
+    published: bool = True
+
+
+class Project(BaseModel):
+    id: str
+    title: str
+    desc: str
+    img: str
+    tag: Optional[str] = None
+    featured: bool = False
+    published: bool
+    created_at: datetime
+    updated_at: datetime
+
+
 class AdminLogin(BaseModel):
     password: str
 
@@ -289,105 +310,90 @@ def get_gemini_response(previous_messages, latest_message):
         return get_fallback_response(latest_message)
 
 
-def build_admin_email_html(name, email, phone, subject, message):
-    safe_phone = phone if phone else "Not provided"
-    safe_message = message.replace("\n", "<br>")
-    return f"""
-    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
-        <h2 style="color:#0A66C2;margin-bottom:16px;">New Contact Inquiry - DFAB Website</h2>
-        <p><strong>Name:</strong> {name}</p>
-        <p><strong>Email:</strong> {email}</p>
-        <p><strong>Phone:</strong> {safe_phone}</p>
-        <p><strong>Subject:</strong> {subject}</p>
-        <p><strong>Message:</strong><br>{safe_message}</p>
-        <hr style="margin:20px 0;">
-        <p><strong>Reply directly to customer:</strong> {email}</p>
-    </div>
-    """
-
-
-def build_admin_email_text(name, email, phone, subject, message):
-    safe_phone = phone if phone else "Not provided"
-    return (
-        f"New Contact Inquiry - DFAB Website\n\n"
-        f"Name: {name}\n"
-        f"Email: {email}\n"
-        f"Phone: {safe_phone}\n"
-        f"Subject: {subject}\n\n"
-        f"Message:\n{message}\n\n"
-        f"Reply directly to customer: {email}"
-    )
-
-
-def build_user_email_html(name, subject):
-    return f"""
-    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
-        <h2 style="color:#0A66C2;margin-bottom:16px;">Thank you for contacting DFAB</h2>
-        <p>Hi {name},</p>
-        <p>We have successfully received your inquiry regarding <strong>{subject}</strong>.</p>
-        <p>Our team is reviewing your message and will get back to you shortly.</p>
-        <br>
-        <p>Best Regards,</p>
-        <p><strong>DFAB Stainless System Pvt Ltd</strong></p>
-        <p>Email: {RECEIVER_EMAIL}</p>
-    </div>
-    """
-
-
-def build_user_email_text(name, subject):
-    return (
-        f"Hi {name},\n\n"
-        f"We have successfully received your inquiry regarding \"{subject}\".\n"
-        f"Our team is reviewing your message and will get back to you shortly.\n\n"
-        f"Best Regards,\n"
-        f"DFAB Stainless System Pvt Ltd\n"
-        f"Email: {RECEIVER_EMAIL}"
-    )
-
-
 def send_emails(name, email, phone, subject, message, attachment=None):
     try:
         if not resend:
-            print("Resend not installed")
+            logger.warning("Resend package is not installed")
             return False
 
-        # ===== ADMIN MAIL =====
-        admin = resend.Emails.send({
+        if not RESEND_API_KEY:
+            logger.warning("RESEND_API_KEY is missing")
+            return False
+
+        if not SENDER_EMAIL:
+            logger.warning("SENDER_EMAIL is missing")
+            return False
+
+        if not RECEIVER_EMAIL:
+            logger.warning("RECEIVER_EMAIL is missing")
+            return False
+
+        safe_phone = phone if phone else "Not provided"
+        safe_message = message.replace("\n", "<br>")
+
+        admin_payload = {
             "from": f"DFAB <{SENDER_EMAIL}>",
             "to": [RECEIVER_EMAIL],
             "subject": f"New Inquiry: {subject}",
             "reply_to": [email],
             "html": f"""
-            <h2>New Inquiry</h2>
-            <p><b>Name:</b> {name}</p>
-            <p><b>Email:</b> {email}</p>
-            <p><b>Phone:</b> {phone}</p>
-            <p><b>Message:</b><br>{message}</p>
-            """
-        })
+            <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
+                <h2 style="color:#0A66C2;margin-bottom:16px;">New Contact Inquiry - DFAB Website</h2>
+                <p><strong>Name:</strong> {name}</p>
+                <p><strong>Email:</strong> {email}</p>
+                <p><strong>Phone:</strong> {safe_phone}</p>
+                <p><strong>Subject:</strong> {subject}</p>
+                <p><strong>Message:</strong><br>{safe_message}</p>
+                <hr style="margin:20px 0;">
+                <p><strong>Reply directly to customer:</strong> {email}</p>
+            </div>
+            """,
+            "text": (
+                f"New Contact Inquiry - DFAB Website\n\n"
+                f"Name: {name}\n"
+                f"Email: {email}\n"
+                f"Phone: {safe_phone}\n"
+                f"Subject: {subject}\n\n"
+                f"Message:\n{message}\n\n"
+                f"Reply directly to customer: {email}"
+            ),
+        }
 
-        print("ADMIN MAIL:", admin)
+        if attachment:
+            admin_payload["attachments"] = [attachment]
 
-        # ===== USER MAIL =====
-        user = resend.Emails.send({
+        admin_result = resend.Emails.send(admin_payload)
+        logger.info(f"ADMIN MAIL: {admin_result}")
+
+        user_payload = {
             "from": f"DFAB <{SENDER_EMAIL}>",
             "to": [email],
             "subject": "We received your inquiry",
+            "reply_to": [RECEIVER_EMAIL],
             "html": f"""
-            <h3>Hi {name},</h3>
-            <p>Thank you for contacting DFAB.</p>
-            <p>We received your request and will respond shortly.</p>
-            <br>
-            <p>DFAB Team</p>
-            """
-        })
+            <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
+                <h3>Hi {name},</h3>
+                <p>Thank you for contacting DFAB.</p>
+                <p>We received your request and will respond shortly.</p>
+                <br>
+                <p>DFAB Team</p>
+            </div>
+            """,
+            "text": (
+                f"Hi {name},\n\n"
+                f"Thank you for contacting DFAB.\n"
+                f"We received your request and will respond shortly.\n\n"
+                f"DFAB Team"
+            ),
+        }
 
-        print("USER MAIL:", user)
+        user_result = resend.Emails.send(user_payload)
+        logger.info(f"USER MAIL: {user_result}")
 
         return True
 
     except Exception as e:
-        print("❌ EMAIL ERROR:", e)
+        logger.error(f"EMAIL ERROR: {e}", exc_info=True)
         return False
 
 
@@ -543,7 +549,7 @@ async def admin_login(credentials: AdminLogin):
     return {"token": get_admin_token_value()}
 
 
-@api_router.get("/admin/blog/posts")
+@api_router.get("/admin/blog/posts", response_model=List[BlogPost])
 async def admin_get_posts(token: str = Depends(verify_admin)):
     posts = await db.blog_posts.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
     return [parse_post(p) for p in posts]
@@ -585,6 +591,59 @@ async def delete_blog_post(post_id: str, token: str = Depends(verify_admin)):
     return {"status": "deleted"}
 
 
+# =================== PROJECT ROUTES ===================
+
+@api_router.get("/projects", response_model=List[Project])
+async def get_projects():
+    projects = await db.projects.find(
+        {"published": True},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    return [parse_post(p) for p in projects]
+
+
+@api_router.get("/admin/projects", response_model=List[Project])
+async def admin_get_projects(token: str = Depends(verify_admin)):
+    projects = await db.projects.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return [parse_post(p) for p in projects]
+
+
+@api_router.post("/admin/projects", response_model=Project)
+async def create_project(project: ProjectCreate, token: str = Depends(verify_admin)):
+    now = datetime.now(timezone.utc)
+    new_project = {
+        "id": str(uuid.uuid4()),
+        **project.model_dump(),
+        "created_at": now.isoformat(),
+        "updated_at": now.isoformat(),
+    }
+    await db.projects.insert_one(new_project)
+    new_project["created_at"] = now
+    new_project["updated_at"] = now
+    return new_project
+
+
+@api_router.put("/admin/projects/{project_id}", response_model=Project)
+async def update_project(project_id: str, project: ProjectCreate, token: str = Depends(verify_admin)):
+    now = datetime.now(timezone.utc)
+    updated = {**project.model_dump(), "updated_at": now.isoformat()}
+    result = await db.projects.update_one({"id": project_id}, {"$set": updated})
+
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    updated_project = await db.projects.find_one({"id": project_id}, {"_id": 0})
+    return parse_post(updated_project)
+
+
+@api_router.delete("/admin/projects/{project_id}")
+async def delete_project(project_id: str, token: str = Depends(verify_admin)):
+    result = await db.projects.delete_one({"id": project_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return {"status": "deleted"}
+
+
 # =================== APP SETUP ===================
 
 app.include_router(api_router)
@@ -598,14 +657,14 @@ if CORS_ORIGINS == "*":
         allow_headers=["*"],
     )
 else:
-        allowed_origins = [origin.strip() for origin in CORS_ORIGINS.split(",") if origin.strip()]
-        app.add_middleware(
-            CORSMiddleware,
-            allow_origins=allowed_origins,
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )
+    allowed_origins = [origin.strip() for origin in CORS_ORIGINS.split(",") if origin.strip()]
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=allowed_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 
 @app.on_event("shutdown")
