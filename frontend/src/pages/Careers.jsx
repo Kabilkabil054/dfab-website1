@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useReveal } from "../hooks/useReveal";
+import axios from "axios";
 
 import { MapPin, Mail, Phone, CheckCircle, ArrowRight, Users, Award, Zap, Settings } from "lucide-react";
+
+const API =
+  process.env.REACT_APP_BACKEND_URL
+    ? `${process.env.REACT_APP_BACKEND_URL}/api`
+    : "http://localhost:8000/api";
 
 const DEFAULT_OPENINGS = [
   {
@@ -74,31 +80,53 @@ export default function Careers() {
   const openingsRef = useReveal();
   const whyRef = useReveal();
 
-  const openings = useMemo(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem("careers_data") || "[]");
+  const [jobs, setJobs] = useState([]);
+  const [loadingJobs, setLoadingJobs] = useState(true);
 
-      if (Array.isArray(saved) && saved.length > 0) {
-        return saved.map((job, index) => ({
-          id: job.id || `${job.role || "job"}-${index}`.toLowerCase().replace(/\s+/g, "-"),
-          role: job.role || "Untitled Role",
+  useEffect(() => {
+    const loadCareers = async () => {
+      try {
+        const res = await axios.get(`${API}/careers`);
+        const data = Array.isArray(res.data) ? res.data : [];
+
+        const mapped = data.map((job, index) => ({
+          id: job.id || `${job.title || "job"}-${index}`.toLowerCase().replace(/\s+/g, "-"),
+          role: job.title || job.role || "Untitled Role",
           type: job.type || "Full Time",
           location: job.location || "Peenya, Bengaluru",
           experience: job.experience || "",
-          desc: job.desc || "",
+          desc: job.description || job.desc || "",
           requirements: Array.isArray(job.requirements) ? job.requirements : [],
         }));
-      }
 
-      return DEFAULT_OPENINGS;
-    } catch {
-      return DEFAULT_OPENINGS;
-    }
+        setJobs(mapped);
+      } catch (error) {
+        console.error("Failed to fetch careers:", error);
+        setJobs([]);
+      } finally {
+        setLoadingJobs(false);
+      }
+    };
+
+    loadCareers();
+
+    const handleRefreshCareers = () => {
+      loadCareers();
+    };
+
+    window.addEventListener("focus", handleRefreshCareers);
+    return () => {
+      window.removeEventListener("focus", handleRefreshCareers);
+    };
   }, []);
+
+  const openings = useMemo(() => {
+  if (loadingJobs) return DEFAULT_OPENINGS;
+  return jobs;
+}, [jobs, loadingJobs]);
 
   return (
     <main className="bg-white relative">
-      
       {/* ✅ LIGHTER VISIBLE CORNER ADMIN BUTTON (Matches Projects & Blog) */}
       <div className="absolute top-4 right-4 z-50 opacity-50 hover:opacity-100 transition-all duration-300">
         <Link
@@ -117,7 +145,8 @@ export default function Careers() {
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Join Our Team</span>
           <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Careers at DFAB</h1>
           <p className="text-slate-400 mt-3 max-w-2xl">
-Be part of a precision manufacturing team that builds components for the world's most demanding industries.          </p>
+            Be part of a precision manufacturing team that builds components for the world's most demanding industries.
+          </p>
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
             <Link to="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
@@ -169,7 +198,7 @@ Be part of a precision manufacturing team that builds components for the world's
             </p>
           </div>
 
-          {openings.length === 0 ? (
+          {!loadingJobs && openings.length === 0 ? (
             <div className="bg-slate-50 border border-slate-200 rounded-md p-10 text-center reveal">
               <h3 className="text-xl font-bold text-slate-900 mb-3 font-['Chivo']">No openings right now</h3>
               <p className="text-slate-600 mb-6 max-w-lg mx-auto text-sm">

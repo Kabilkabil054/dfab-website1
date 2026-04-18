@@ -327,7 +327,7 @@ export default function About() {
           </div>
 
           {/* Content */}
-          <div className="px-6 pt-6 pb-6 text-center flex flex-col h-[calc(100%-180px)]">
+          <div className="px-6 pt-6 pb-6 text-center flex flex-col min-h-[300px]">
             <h3 className="text-xl font-bold text-slate-900 font-['Chivo']">
               {leader.name}
             </h3>
@@ -355,7 +355,7 @@ export default function About() {
               </div>
             </div>
 
-            <div className="mt-auto -mt-2 flex justify-center gap-4">
+            <div className="mt-3 flex justify-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
   <a
     href={leader.linkedin}
     target="_blank"

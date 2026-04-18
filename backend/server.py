@@ -171,6 +171,28 @@ class ChatMessage(BaseModel):
     session_id: str
     message: str
 
+# --- Add below your other models ---
+
+class CareerCreate(BaseModel):
+    title: str
+    location: str
+    type: str  # Full-time / Internship / Contract
+    description: str
+    requirements: List[str] = []
+    published: bool = True
+
+
+class Career(BaseModel):
+    id: str
+    title: str
+    location: str
+    type: str
+    description: str
+    requirements: List[str] = []
+    published: bool
+    created_at: datetime
+    updated_at: datetime    
+
 
 # =================== HELPERS ===================
 
@@ -641,6 +663,57 @@ async def delete_project(project_id: str, token: str = Depends(verify_admin)):
     result = await db.projects.delete_one({"id": project_id})
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Project not found")
+    return {"status": "deleted"}
+
+# =================== CAREERS ROUTES ===================
+
+@api_router.get("/careers", response_model=List[Career])
+async def get_careers():
+    items = await db.careers.find({"published": True}, {"_id": 0}) \
+                            .sort("created_at", -1).to_list(100)
+    return [parse_post(i) for i in items]
+
+
+@api_router.get("/admin/careers", response_model=List[Career])
+async def admin_get_careers(token: str = Depends(verify_admin)):
+    items = await db.careers.find({}, {"_id": 0}) \
+                            .sort("created_at", -1).to_list(100)
+    return [parse_post(i) for i in items]
+
+
+@api_router.post("/admin/careers", response_model=Career)
+async def create_career(career: CareerCreate, token: str = Depends(verify_admin)):
+    now = datetime.now(timezone.utc)
+    doc = {
+        "id": str(uuid.uuid4()),
+        **career.model_dump(),
+        "created_at": now.isoformat(),
+        "updated_at": now.isoformat(),
+    }
+    await db.careers.insert_one(doc)
+    doc["created_at"] = now
+    doc["updated_at"] = now
+    return doc
+
+
+@api_router.put("/admin/careers/{career_id}", response_model=Career)
+async def update_career(career_id: str, career: CareerCreate, token: str = Depends(verify_admin)):
+    now = datetime.now(timezone.utc)
+    updated = {**career.model_dump(), "updated_at": now.isoformat()}
+    result = await db.careers.update_one({"id": career_id}, {"$set": updated})
+
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Career not found")
+
+    doc = await db.careers.find_one({"id": career_id}, {"_id": 0})
+    return parse_post(doc)
+
+
+@api_router.delete("/admin/careers/{career_id}")
+async def delete_career(career_id: str, token: str = Depends(verify_admin)):
+    result = await db.careers.delete_one({"id": career_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Career not found")
     return {"status": "deleted"}
 
 
