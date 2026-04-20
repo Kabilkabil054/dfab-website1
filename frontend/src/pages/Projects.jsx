@@ -93,7 +93,7 @@ export default function Projects() {
                 Our Projects
               </h1>
               <p className="text-slate-400 mt-3 max-w-2xl">
-                Explore our portfolio of completed projects showcasing precision fabrication,
+                Explore our portfolio showcasing precision fabrication,
                 advanced welding, and engineering excellence across multiple industrial sectors.
               </p>
               <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
@@ -214,7 +214,7 @@ export default function Projects() {
                 What We Do
               </h1>
               <p className="text-slate-400 mt-3 max-w-2xl">
-                Delivering precision engineering and fabrication solutions tailored to industry needs.
+                Delivering precision fabrication solutions tailored to industry needs.
                 From design to manufacturing, we ensure quality, reliability, and efficiency.
               </p>
               <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">

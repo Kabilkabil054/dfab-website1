@@ -59,7 +59,7 @@ const CERTIFICATIONS = [
       "Qualified WPS per ASME IX and AWS D1.1 standards",
       "WPQ certified welders for multiple processes",
       "6G position welding qualification",
-      "TIG, MIG, Orbital, and Arc process qualifications",
+      "GTAW, GMAW, Orbital, and Arc process qualifications",
     ],
     color: "bg-purple-50 text-purple-700 border-purple-200",
     icon: <CheckCircle size={32} />,
@@ -86,7 +86,7 @@ export default function Quality() {
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Standards & Compliance</span>
           <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Quality & Certifications</h1>
           <p className="text-slate-400 mt-3 max-w-2xl">
-Every product leaving our facility meets stringent quality standards. Our certifications reflect our commitment to global-grade manufacturing excellence.          </p>
+Every product leaving our facility meets stringent quality standards. Our commitment to global-grade manufacturing excellence.          </p>
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
             <Link to="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>

@@ -6,8 +6,8 @@ import img3 from "../assets/images/welding.jpg";
 import img4 from "../assets/images/fabrication.jpg";
 
 const MACHINES = [
-  { name: "TIG Welding Machines", count: "6+", desc: "For precision stainless steel welding" },
-  { name: "MIG Welding Machines", count: "4+", desc: "For production welding applications" },
+  { name: "GTAW Welding Machines", count: "6+", desc: "For precision stainless steel welding" },
+  { name: "GMAW Welding Machines", count: "4+", desc: "For production welding applications" },
   { name: "Conventional Lathe", count: "2", desc: "For turning and machining operations" },
   { name: "Milling Machine", count: "1", desc: "For surface and contour machining" },
   { name: "Radial Drilling Machine", count: "1", desc: "For precision hole-making operations" },

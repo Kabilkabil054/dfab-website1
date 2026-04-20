@@ -242,7 +242,7 @@ export default function Contact() {
                       onChange={onChange}
                       required
                       placeholder="Name"
-                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-[#0A66C2] focus:ring-4 focus:ring-[#0A66C2]/10"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-4 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-[#0A66C2] focus:ring-4 focus:ring-[#0A66C2]/10"
                     />
 
                     <input
@@ -252,7 +252,7 @@ export default function Contact() {
                       onChange={onChange}
                       required
                       placeholder="Email"
-                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-[#0A66C2] focus:ring-4 focus:ring-[#0A66C2]/10"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-4 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-[#0A66C2] focus:ring-4 focus:ring-[#0A66C2]/10"
                     />
 
                     <input
@@ -269,7 +269,7 @@ export default function Contact() {
                       maxLength={10}
                       inputMode="numeric"
                       pattern="[0-9]*"
-                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-[#0A66C2] focus:ring-4 focus:ring-[#0A66C2]/10"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-4 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-[#0A66C2] focus:ring-4 focus:ring-[#0A66C2]/10"
                     />
 
                     <input
@@ -278,7 +278,7 @@ export default function Contact() {
                       onChange={onChange}
                       required
                       placeholder="Subject"
-                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-[#0A66C2] focus:ring-4 focus:ring-[#0A66C2]/10"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-4 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-[#0A66C2] focus:ring-4 focus:ring-[#0A66C2]/10"
                     />
                   </div>
 
@@ -289,7 +289,7 @@ export default function Contact() {
                     required
                     rows={6}
                     placeholder="Message"
-                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 resize-none focus:border-[#0A66C2] focus:ring-4 focus:ring-[#0A66C2]/10"
+                    className="w-full rounded-xl border border-slate-300 bg-white px-4 py-10 text-sm text-slate-900 outline-none transition-all duration-300 placeholder:text-slate-400 resize-none focus:border-[#0A66C2] focus:ring-4 focus:ring-[#0A66C2]/10"
                   />
 
                   <div className="relative">
@@ -301,7 +301,7 @@ export default function Contact() {
                     />
                     <label
                       htmlFor="file-upload"
-                      className="flex min-h-[58px] w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-600 transition-all duration-300 hover:border-[#0A66C2] hover:bg-[#EFF6FF]"
+                      className="flex min-h-[102px] w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-600 transition-all duration-300 hover:border-[#0A66C2] hover:bg-[#EFF6FF]"
                     >
                       <Paperclip size={16} />
                       {file ? (

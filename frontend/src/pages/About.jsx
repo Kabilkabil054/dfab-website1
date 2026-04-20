@@ -402,7 +402,7 @@ export default function About() {
                 },
                 {
                   title: "10+ Welding Machines",
-                  desc: "TIG, MIG welding machines for all types of welding requirements.",
+                  desc: "GTAW, GMAW, MMAW welding machines for all types of welding requirements.",
                 },
                 {
                   title: "Advanced Laser Technology",

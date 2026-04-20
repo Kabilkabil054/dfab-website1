@@ -72,7 +72,7 @@ const HERO_SLIDES = [
     img: hero2,
     tag: "ISO 9001:2015 · ADNOC Approved Vendor",
     heading: "Driving Quality Culture in Meeting the Global Standards",
-    text: "Skilled welders qualified for 6G positions handling TIG, MIG, Laser and Orbital welding for the world's most demanding applications.",
+    text: "Skilled welders qualified for 6G positions handling GTAW, GMAW, MMAW, Laser and Orbital welding for the world's most demanding applications.",
     cta1: { label: "Inquire Now", action: "modal" },
     cta2: { label: "Quality & Certifications", to: "/quality" },
   },
@@ -793,8 +793,7 @@ export default function Home() {
               </p>
 
               <p className="text-slate-600 leading-7 mb-8">
-                With a 14000 sq-ft facility, a 5-ton crane, 10+ welding machines (TIG,
-                MIG), and a highly skilled team, we provide end-to-end solutions in
+                With a 14000 sq-ft facility, a 5-ton crane,(GTAW, GMAW, MMAW) are Processed, and a highly skilled team, we provide end-to-end solutions in
                 equipment fabrication, high-pressure pipeline welding, and precision
                 machining.
               </p>
@@ -1082,7 +1081,7 @@ export default function Home() {
               <div className="space-y-3 mb-10">
                 {[
                   "14000 sqft Operating Space with 5 Ton Crane",
-                  "10+ TIG & MIG Welding Machines",
+                  "GTAW, GMAW, MMAW are processed",
                   "Conventional Milling & Turning Machines",
                   "Radial Drilling Machine",
                   "Advanced Laser Technology",

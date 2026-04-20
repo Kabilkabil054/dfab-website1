@@ -84,8 +84,8 @@ export default function Blog() {
       <section className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full">
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Knowledge Hub</span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo'] animate-fade-in">Technical Blog</h1>
-          <p className="text-slate-400 mt-3 max-w-2xl text-sm md:text-base leading-relaxed">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Technical Blog</h1>
+          <p className="text-slate-400 mt-3 max-w-2xl">
             Explore insights, industry trends, and expert knowledge in fabrication, welding, 
   machining, and manufacturing technologies from the DFAB team.
           </p>
