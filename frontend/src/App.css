@@ -1,13 +1,38 @@
 * { box-sizing: border-box; }
 
-body {
-  font-family: 'Manrope', sans-serif;
-  color: #0F172A;
-  background: #ffffff;
-  scroll-behavior: auto;
+/* ═══════════════════════════════════════════
+   CORE FONTS & RESPONSIVE SETUP
+═══════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Font Families */
+  --font-main: 'Inter', sans-serif;
+  --font-heading: 'Chivo', sans-serif;
+
+  /* Fluid Typography Scale (Min size, Preferred, Max size) */
+  --text-xs: clamp(0.7rem, 0.6rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.25vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1.05rem + 0.4vw, 1.35rem);
+  --text-xl: clamp(1.25rem, 1.1rem + 0.8vw, 1.75rem);
+  --text-2xl: clamp(1.75rem, 1.5rem + 1.5vw, 2.75rem);
+  --text-3xl: clamp(2.25rem, 2rem + 3vw, 4.5rem);
 }
-h1,h2,h3,h4,h5,h6 { font-family: 'Chivo', sans-serif; }
-.App { overflow-x: hidden; }
+
+* { 
+  box-sizing: border-box; 
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: #1e293b;
+  -webkit-font-smoothing: antialiased;
+}
 
 /* ── Carousel ── */
 .embla { overflow: hidden; width: 100%; }

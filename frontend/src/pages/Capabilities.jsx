@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-
 import { useReveal } from "../hooks/useReveal";
 import {
   ArrowRight,
@@ -115,34 +114,62 @@ const RD_ROLES = [
 
 function CapabilityCard({ cap }) {
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-7 hover:border-[#0A66C2] hover:shadow-xl transition-all reveal h-full flex flex-col group">
-      <div className="flex items-start gap-5 mb-5">
-        <div className="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center text-[#0A66C2] shrink-0 group-hover:bg-[#0A66C2] group-hover:text-white transition-colors duration-300">
-          {cap.icon}
+    <div className="h-full bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-xl hover:border-[#0A66C2]/30 transition-all duration-300 flex flex-col overflow-hidden reveal group">
+      <div className="p-7 lg:p-8 flex flex-col flex-grow space-y-4">
+        <div className="flex items-start gap-5">
+          {cap.icon && (
+            <div className="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center text-[#0A66C2] shrink-0 group-hover:bg-[#0A66C2] group-hover:text-white transition-colors duration-300">
+              {cap.icon}
+            </div>
+          )}
+
+          <div>
+            <h3 className="text-xl lg:text-2xl font-bold text-slate-900 font-['Chivo'] leading-snug">
+              {cap.title}
+            </h3>
+            <p className="text-[10px] font-black text-[#0A66C2] uppercase tracking-widest mt-1">
+              {cap.subtitle}
+            </p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-xl font-bold text-slate-900 font-['Chivo'] tracking-tight">{cap.title}</h3>
-          <p className="text-[10px] font-black text-[#0A66C2] uppercase tracking-widest mt-1">{cap.subtitle}</p>
-        </div>
-      </div>
-      <p className="text-sm text-slate-600 mb-6 leading-relaxed flex-grow">{cap.desc}</p>
-      <div className="mb-6">
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Key Capabilities</p>
-        <ul className="space-y-2">
-          {cap.keyCapabilities.map((k) => (
-            <li key={k} className="flex gap-2 text-sm text-slate-700 font-medium">
-              <CheckCircle size={14} className="text-[#0A66C2] shrink-0 mt-0.5" />
-              {k}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="mt-auto pt-5 border-t border-slate-50">
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Applications</p>
-        <div className="flex flex-wrap gap-2">
-          {cap.applications.map((a) => (
-            <span key={a} className="text-[10px] font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full uppercase">{a}</span>
-          ))}
+
+        <p className="text-base lg:text-[17px] text-slate-600 leading-relaxed">
+          {cap.desc}
+        </p>
+
+        {cap.keyCapabilities && cap.keyCapabilities.length > 0 && (
+          <div className="mb-2">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+              Key Capabilities
+            </p>
+            <ul className="space-y-3">
+              {cap.keyCapabilities.map((k, index) => (
+                <li
+                  key={index}
+                  className="text-[15px] lg:text-base text-slate-700 leading-relaxed flex items-start gap-3"
+                >
+                  <CheckCircle size={16} className="text-[#0A66C2] mt-1 shrink-0" />
+                  <span>{k}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="mt-auto pt-5 border-t border-slate-50">
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+            Applications
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {cap.applications.map((a, index) => (
+              <span
+                key={index}
+                className="text-[11px] font-semibold bg-slate-100 text-slate-600 px-3 py-1 rounded-full"
+              >
+                {a}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -159,10 +186,15 @@ export default function Capabilities() {
       {/* HEADER SECTION - Standardized */}
       <div className="bg-[#0F172A] h-[260px] flex items-center px-4">
         <div className="max-w-7xl mx-auto w-full">
-          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">What We Do</span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Manufacturing Capabilities</h1>
+          <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">
+            What We Do
+          </span>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">
+            Manufacturing Capabilities
+          </h1>
           <p className="text-slate-400 mt-3 max-w-2xl">
-Precision-driven manufacturing capabilities built on global standards, featuring advanced fiber laser cutting and specialized welding.          </p>
+            Precision-driven manufacturing capabilities built on global standards, featuring advanced fiber laser cutting and specialized welding.
+          </p>
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
             <Link to="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
@@ -176,7 +208,13 @@ Precision-driven manufacturing capabilities built on global standards, featuring
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 overflow-x-auto no-scrollbar">
           <div className="flex gap-3 whitespace-nowrap justify-center md:justify-start">
             {CAPABILITIES.map((c) => (
-              <a key={c.id} href={`#${c.id}`} className="px-5 py-2 text-[10px] font-black uppercase tracking-widest bg-slate-50 text-slate-500 rounded-full hover:bg-[#0A66C2] hover:text-white transition-all border border-slate-100">{c.title}</a>
+              <a
+                key={c.id}
+                href={`#${c.id}`}
+                className="px-5 py-2 text-[10px] font-black uppercase tracking-widest bg-slate-50 text-slate-500 rounded-full hover:bg-[#0A66C2] hover:text-white transition-all border border-slate-100"
+              >
+                {c.title}
+              </a>
             ))}
           </div>
         </div>
@@ -186,9 +224,14 @@ Precision-driven manufacturing capabilities built on global standards, featuring
       <section className="py-20 md:py-28" ref={capRef}>
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="text-center mb-16 reveal">
-            <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.2em]">Expertise</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 font-['Chivo']">End-to-End Manufacturing Solutions</h2>
+            <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-[0.2em]">
+              Expertise
+            </span>
+            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 font-['Chivo']">
+              End-to-End Manufacturing Solutions
+            </h2>
           </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {CAPABILITIES.map((cap) => (
               <div key={cap.id} id={cap.id} className="h-full scroll-mt-28">
@@ -202,23 +245,22 @@ Precision-driven manufacturing capabilities built on global standards, featuring
       {/* ✅ UNIQUE R&D AND INNOVATION SECTION (With Elevator Boxes & Custom Roles) */}
       <section className="py-28 bg-[#0F172A] relative overflow-hidden" ref={rdRef}>
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#0A66C2]/10 rounded-full blur-[120px]"></div>
-        
+
         <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
           <div className="flex flex-col lg:flex-row gap-16 items-center">
-            
             {/* LEFT CONTENT AREA */}
             <div className="lg:w-1/2 reveal">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#0A66C2]/10 text-[#0A66C2] rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-[#0A66C2]/20">
                 <Microscope size={14} className="animate-bounce-slow" />
                 Technical Innovation Hub
               </div>
-              
+
               <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 font-['Chivo'] leading-tight">
                 Research & <span className="text-[#0A66C2]">Development</span>
               </h2>
-              
+
               <p className="text-slate-400 text-lg leading-relaxed mb-10">
-              At DFAB, we bridge traditional craftsmanship with digital innovation by integrating AI-driven quality analysis into our fabrication workflows. Our R&D focuses on developing 'Smart Systems' that pair physical robustness with real-time digital traceability and safety compliance.
+                At DFAB, we bridge traditional craftsmanship with digital innovation by integrating AI-driven quality analysis into our fabrication workflows. Our R&D focuses on developing 'Smart Systems' that pair physical robustness with real-time digital traceability and safety compliance.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
@@ -226,13 +268,15 @@ Precision-driven manufacturing capabilities built on global standards, featuring
                   { label: "Consumer Safety Solutions", icon: <Settings size={18} /> },
                   { label: "Air filtration Solutions", icon: <Zap size={18} /> },
                   { label: "Industrial Automation", icon: <Compass size={18} /> },
-                  { label: "Digital Monitoring", icon: <Code2 size={18} /> }
+                  { label: "Digital Monitoring", icon: <Code2 size={18} /> },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3 group">
                     <div className="w-10 h-10 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-[#0A66C2] group-hover:bg-[#0A66C2] group-hover:text-white transition-all duration-300">
                       {item.icon}
                     </div>
-                    <span className="text-slate-300 font-bold text-sm tracking-tight">{item.label}</span>
+                    <span className="text-slate-300 font-bold text-sm tracking-tight">
+                      {item.label}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -241,8 +285,8 @@ Precision-driven manufacturing capabilities built on global standards, featuring
             {/* RIGHT SIDE: FOUR UNIQUE ROLE BOXES (Elevator Animation) */}
             <div className="lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full reveal">
               {RD_ROLES.map((role, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="group relative bg-white/5 border border-white/10 p-8 rounded-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden"
                 >
                   <div className="absolute top-0 left-0 w-[4px] h-full bg-[#0A66C2] shadow-[0_0_20px_#0A66C2] transition-transform duration-700 -translate-y-full group-hover:translate-y-0"></div>
@@ -261,24 +305,29 @@ Precision-driven manufacturing capabilities built on global standards, featuring
                 </div>
               ))}
             </div>
-
           </div>
         </div>
 
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
           @keyframes bounce-slow {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
           }
           .animate-bounce-slow { animation: bounce-slow 3s ease-in-out infinite; }
           .no-scrollbar::-webkit-scrollbar { display: none; }
-        `}} />
+        `,
+          }}
+        />
       </section>
 
       {/* CALL TO ACTION */}
       <section className="py-24 bg-white text-center border-t border-slate-100">
         <div className="max-w-4xl mx-auto px-4 reveal">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900 font-['Chivo']">Build with Precision</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900 font-['Chivo']">
+            Build with Precision
+          </h2>
           <p className="text-slate-500 mb-10 max-w-xl mx-auto text-lg leading-relaxed">
             Partner with an engineering team that understands the intersection of quality, durability, and digital innovation.
           </p>
@@ -289,7 +338,10 @@ Precision-driven manufacturing capabilities built on global standards, featuring
             >
               Start Inquiry <ArrowRight size={18} />
             </button>
-            <Link to="/contact" className="px-8 py-4 border-2 border-slate-200 text-slate-700 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-slate-50 transition-all">
+            <Link
+              to="/contact"
+              className="px-8 py-4 border-2 border-slate-200 text-slate-700 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-slate-50 transition-all"
+            >
               Contact Us
             </Link>
           </div>
@@ -300,5 +352,3 @@ Precision-driven manufacturing capabilities built on global standards, featuring
     </main>
   );
 }
-
-// Add the missing imports for the icons used in the grid

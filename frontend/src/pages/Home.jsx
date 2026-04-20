@@ -793,7 +793,7 @@ export default function Home() {
               </p>
 
               <p className="text-slate-600 leading-7 mb-8">
-                With a 7000 sq-ft facility, a 5-ton crane, 10+ welding machines (TIG,
+                With a 14000 sq-ft facility, a 5-ton crane, 10+ welding machines (TIG,
                 MIG), and a highly skilled team, we provide end-to-end solutions in
                 equipment fabrication, high-pressure pipeline welding, and precision
                 machining.
@@ -802,7 +802,7 @@ export default function Home() {
               {/* FEATURES */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                 {[
-                  "7000 sqft Operating Space",
+                  "14000 sqft Operating Space",
                   "5 Ton Crane Facility",
                   "10+ Welding Machines",
                   "Skilled 6G Welders",
@@ -1076,12 +1076,12 @@ export default function Home() {
                 World-Class Infrastructure
               </h2>
               <p className="text-slate-600 leading-7 mb-8 text-lg">
-                Our 7000 sq-ft state-of-the-art facility in Peenya Industrial Area is equipped with advanced machinery and operated by a highly skilled engineering team.
+                Our 14000 sq-ft state-of-the-art facility in Peenya Industrial Area is equipped with advanced machinery and operated by a highly skilled engineering team.
               </p>
 
               <div className="space-y-3 mb-10">
                 {[
-                  "7000 sqft Operating Space with 5 Ton Crane",
+                  "14000 sqft Operating Space with 5 Ton Crane",
                   "10+ TIG & MIG Welding Machines",
                   "Conventional Milling & Turning Machines",
                   "Radial Drilling Machine",

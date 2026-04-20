@@ -118,7 +118,7 @@ export default function About() {
 
                 <p className="text-slate-600 leading-relaxed mb-5">
                   We offer end-to-end solutions in the field of equipment
-                  fabrication and machining. With a 7000 sq-ft operating built-up
+                  fabrication and machining. With a 14000 sq-ft operating built-up
                   area, we are equipped with a highly skilled team with domain
                   experience to craft services for your products.
                 </p>
@@ -393,7 +393,7 @@ export default function About() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
               {[
                 {
-                  title: "7000 sqft Operating Space",
+                  title: "14000 sqft Operating Space",
                   desc: "Large, well-organized workspace for heavy fabrication work.",
                 },
                 {

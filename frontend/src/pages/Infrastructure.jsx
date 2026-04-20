@@ -36,7 +36,7 @@ export default function Infrastructure() {
           <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Our Facility</span>
           <h1 className="text-4xl md:text-5xl font-bold text-white mt-2 font-['Chivo']">Infrastructure</h1>
           <p className="text-slate-400 mt-3 max-w-2xl">
-            Explore our state-of-the-art 7,000 sqft manufacturing facility equipped with advanced precision machinery and heavy-duty fabrication equipment.
+            Explore our state-of-the-art 14000 sqft manufacturing facility equipped with advanced precision machinery and heavy-duty fabrication equipment.
           </p>
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-400">
             <Link to="/" className="hover:text-white transition-colors">Home</Link>
@@ -54,7 +54,7 @@ export default function Infrastructure() {
             <div className="flex flex-col justify-center">
               <span className="text-xs font-semibold text-[#0A66C2] uppercase tracking-wider">Our Workshop</span>
               <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mt-2 mb-6 font-['Chivo'] leading-tight">
-                State-of-the-Art 7000 sqft Precision Facility
+                State-of-the-Art 14000 sqft Precision Facility
               </h2>
               <p className="text-slate-600 leading-relaxed mb-5">
                 Located in the prime Peenya Industrial Area, Bengaluru, our modern workshop is equipped with advanced machinery and operated by a highly skilled engineering team.
@@ -65,7 +65,7 @@ export default function Infrastructure() {
               
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { value: "7000 sqft", label: "Workshop Area" },
+                  { value: "14000 sqft", label: "Workshop Area" },
                   { value: "5 Tons", label: "Crane Capacity" },
                   { value: "10+", label: "Welding Machines" },
                   { value: "ISO", label: "9001:2015 Certified" },
