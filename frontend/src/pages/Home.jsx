@@ -803,7 +803,7 @@ export default function Home() {
                 {[
                   "14000 sqft Operating Space",
                   "5 Ton Crane Facility",
-                  "10+ Welding Machines",
+                  "GTAW/GMAW/MMAW Welding Machines",
                   "Skilled 6G Welders",
                 ].map((item) => (
                   <div

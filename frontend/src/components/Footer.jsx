@@ -205,40 +205,45 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-12 border-b border-slate-800">
           
           {/* Brand Column */}
-          <div className="md:col-span-5 relative ui-corners p-2">
-            <div className="mb-6 flex flex-col items-start group">
-              {/* Logo container with automatic shine and hover scale */}
-              <Link to="/" className="logo-shine-container mb-4">
-                <img 
-                  src="/logo.png" 
-                  alt="DFAB Logo" 
-                  /* Increased size from h-16 to h-24 */
-                  className="h-24 w-auto object-contain transition-transform duration-500 group-hover:scale-105 relative z-0" 
-                />
-                {/* Automatic metallic shine overlay */}
-                <div className="logo-shine-overlay"></div>
-              </Link>
-              
-              {/* Animated Underline - Width matches image aspect naturally in flex layout */}
-              <div className="w-full animated-underline mb-2"></div>
+<div className="md:col-span-5 relative ui-corners p-2">
+  <div className="mb-6">
+    <Link to="/" className="flex items-center gap-4 group w-fit">
+      <img
+        src="/logo.png"
+        alt="DFAB Logo"
+        className="h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+      />
 
-              <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.3em] mt-2 pl-1">
-                Stainless System Pvt Ltd <sup className="text-[8px] text-[#0A66C2] ml-0.5">&trade;</sup> 
-              </p>
-            </div>
-            
-            <p className="text-slate-400 leading-relaxed mb-6 pr-4 text-sm pl-1">
-              From complex CNC machining to heavy structural fabrication, we engineer precision solutions that drive global industries forward.
-            </p>
+      <div className="h-10 w-px bg-slate-500/40"></div>
 
-            {/* Certifications Tags */}
-            <div className="flex flex-wrap gap-2 mb-8 pl-1">
-              {["ISO 9001:2015", "ZED CERTIFIED", "ADNOC APPROVED"].map(tag => (
-                <span key={tag} className="px-2.5 py-1 bg-[#020617] border border-slate-700/80 rounded-md text-[9px] font-bold text-slate-300 tracking-widest shadow-inner">
-                  {tag}
-                </span>
-              ))}
-            </div>
+      <p className="text-[12px] md:text-[13px] text-slate-300 font-medium uppercase tracking-[0.18em] leading-none whitespace-nowrap">
+        Stainless System Pvt Ltd
+        <sup className="text-[8px] text-white ml-1">TM</sup>
+      </p>
+    </Link>
+  </div>
+
+  <div className="w-full animated-underline mb-4"></div>
+
+<ul className="text-slate-400 mb-6 pr-4 text-sm pl-4 space-y-2 list-disc">
+  <li>Advanced CNC machining for high-precision components</li>
+  <li>Heavy structural fabrication for large-scale projects</li>
+  <li>Customized engineering solutions for diverse industries</li>
+  <li>Focus on quality, accuracy, and timely delivery</li>
+  <li>Supporting global industries with reliable performance</li>
+</ul>
+
+<div className="flex flex-wrap gap-2 mb-8 pl-1">
+  {["ISO 9001:2015", "ZED CERTIFIED", "ADNOC APPROVED"].map((tag) => (
+    <span
+      key={tag}
+      className="px-2.5 py-1 bg-[#020617] border border-slate-700/80 rounded-md text-[9px] font-bold text-slate-300 tracking-widest shadow-inner"
+    >
+      {tag}
+    </span>
+  ))}
+</div>
+  
             
             {/* Social Links */}
             <div className="flex flex-wrap gap-5 pt-2 pl-1">
@@ -304,8 +309,8 @@ export default function Footer() {
                 <div className="p-2 rounded bg-slate-800/80 text-[#0A66C2] border border-slate-700/50">
                   <Phone size={18} />
                 </div>
-                <a href="tel:+919187638186" className="text-sm text-slate-300 font-bold tracking-wide outline-none group-hover:text-white transition-colors">
-                  9187638186
+                <a href="tel:+91 9908504466" className="text-sm text-slate-300 font-bold tracking-wide outline-none group-hover:text-white transition-colors">
+                  +91 9908504466
                 </a>
               </li>
               <li className="flex gap-4 items-center welding-sparkle-card p-3 rounded-lg group">

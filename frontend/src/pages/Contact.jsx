@@ -139,10 +139,10 @@ export default function Contact() {
                           Call Us
                         </h4>
                         <a
-                          href="tel:+919187638186"
+                          href="tel:+91 9908504466"
                           className="text-sm text-[#0A66C2] hover:underline mt-1 inline-block"
                         >
-                          +91 9187638186
+                          +91 9908504466
                         </a>
                       </div>
                     </div>

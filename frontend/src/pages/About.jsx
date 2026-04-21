@@ -15,7 +15,7 @@ const LEADERS = [
     linkedin: "https://www.linkedin.com/in/jithendrababu-k-48603b77/",
     email: "jithendrababu.dfab@gmail.com",
     bio: "Highly experienced in the profession of welding and fabrication, with 30+ years of industrial experience executing projects in India and abroad. Niche skill in satisfying customer requirements.",
-    expertise: ["Business Development", "Client Relations"],
+    expertise: ["Technical Welding Expertise", " Global Client Relations"],
     greetings: [
       "Welcome to DFAB.",
       "Glad to have you here.",
@@ -29,8 +29,8 @@ const LEADERS = [
     img: sureshImg,
     linkedin: "https://www.linkedin.com/in/sureshkumarts/",
     email: "sureshkumar.dfab@gmail.com",
-    bio: "Experienced tooling engineer with 14+ years of product design background & core experience in OEM practice for product design and development, strong in process implementation and new product development.",
-    expertise: ["6G Qualification", "Process Optimization"],
+    bio: "Experienced tooling engineer with 18+ years of product design background & core experience in OEM practice for product design and development, strong in process implementation and new product development.",
+    expertise: ["Product Design", "Process Optimization"],
     greetings: [
       "Engineering ideas into reality.",
       "Great to connect with you.",
@@ -45,7 +45,7 @@ const LEADERS = [
     linkedin: "https://www.linkedin.com/in/pramod-shetty-7086b011/",
     email: "pramod.shetty@dfab.in",
     bio: "Dynamic leader, with 20+ years of industry experience in executing engineering product development & manufacturing projects from concept to production.",
-    expertise: ["NDT & Inspection", "Quality Systems"],
+    expertise: ["Business Development", "People Leader"],
     greetings: [
       "Quality drives every project.",
       "Welcome, excellence matters here.",
@@ -259,7 +259,7 @@ export default function About() {
             setActiveCard(leader.name);
           }}
           onMouseLeave={() => setActiveCard(null)}
-          className="group relative w-full sm:w-[320px] lg:w-[360px] min-h-[520px] rounded-[24px] border border-[#0A66C2]/20 bg-[#0A66C2]/5 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-lg overflow-hidden"
+          className="group relative w-full sm:w-[5px] lg:w-[800px] min-h-[360px] rounded-[24px] border border-[#0A66C2]/20 bg-[#0A66C2]/5 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-lg overflow-hidden"
         >
           {/* 🔵 Moving Border - Continuous Flow */}
 <div className="absolute inset-0 pointer-events-none rounded-[24px] overflow-hidden">
@@ -343,11 +343,11 @@ export default function About() {
             </div>
 
             <div className="mb-5">
-              <div className="flex justify-center gap-2 flex-nowrap overflow-hidden">
+              <div className="flex justify-center gap-1 flex-nowrap overflow-hidden">
                 {leader.expertise.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs whitespace-nowrap px-3 py-1 rounded-full border border-[#0A66C2]/10 bg-[#0A66C2]/5 text-[#0A66C2]"
+                    className="text-xs whitespace-nowrap px-1 py-1 rounded-full border border-[#0A66C2]/10 bg-[#0A66C2]/5 text-[#0A66C2]"
                   >
                     {tag}
                   </span>
@@ -355,7 +355,7 @@ export default function About() {
               </div>
             </div>
 
-            <div className="mt-3 flex justify-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
+            <div className="mt-3 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
   <a
     href={leader.linkedin}
     target="_blank"
@@ -401,7 +401,7 @@ export default function About() {
                   desc: "Heavy lifting capability for large fabrication assemblies.",
                 },
                 {
-                  title: "10+ Welding Machines",
+                  title: "Welding Machines",
                   desc: "GTAW, GMAW, MMAW welding machines for all types of welding requirements.",
                 },
                 {

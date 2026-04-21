@@ -67,7 +67,7 @@ export default function Infrastructure() {
                 {[
                   { value: "14000 sqft", label: "Workshop Area" },
                   { value: "5 Tons", label: "Crane Capacity" },
-                  { value: "10+", label: "Welding Machines" },
+                  { value: "GTAW,GMAW", label: "Welding Machines" },
                   { value: "ISO", label: "9001:2015 Certified" },
                 ].map((stat) => (
                   <div key={stat.label} className="bg-slate-50 rounded-xl p-5 text-center border border-slate-100 hover:border-blue-200 transition-colors">
