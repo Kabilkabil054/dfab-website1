@@ -27,9 +27,9 @@ export const SERVICES = [
   },
   {
     image: pressureVesselsImg,
-    title: "Pressure Vessels",
+    title: "CDU Manifold and Piping Assemblies",
     subtitle: "Pharma · Dairy · Industrial",
-    desc: "We develop pressure vessels ranging from small to large vessels used in pharma and dairy applications. All vessels are fabricated to ASME and industry standards with rigorous quality checks.",
+    desc: "We provide high-quality CDU Manifold and Piping Assemblies designed for efficient fluid distribution and cooling performance. Built with premium stainless steel, our systems ensure durability and seamless integration.",
     sectors: ["Pharmaceuticals", "Food & Dairy", "Chemical"],
   },
   {
