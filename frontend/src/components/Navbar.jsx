@@ -35,32 +35,29 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-50 bg-white transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full max-w-full overflow-x-hidden z-50 bg-white transition-all duration-300 ${
           scrolled ? "shadow-md py-1" : "border-b border-slate-100 py-2"
         }`}
       >
-        {/* W-FULL container allows buttons to stay at the very edge of the screen */}
-        <div className="w-full flex items-center h-14 px-4 md:px-8">
-          
-          {/* UPDATED LOGO SECTION - This container pushes the logo to match your page content flow */}
-          <div className="flex-1">
-             <div className="max-w-7xl w-full mx-auto px-20 md:px-33 flex justify-start">
-                <Link to="/" className="flex items-center gap-2 group shrink-0">
-                  <img
-                    src={logo}
-                    alt="DFAB Logo"
-                    className="h-10 md:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="flex items-center border-l border-slate-300 pl-3 h-5">
-                    <span className="text-[12px] md:text-[14px] font-normal text-gray-700 uppercase tracking-wide whitespace-nowrap">
-                      STAINLESS SYSTEM PVT LTD ™
-                    </span>
-                  </div>
-                </Link>
-             </div>
+        <div className="w-full max-w-full flex items-center h-14 px-3 sm:px-4 md:px-8 overflow-hidden">
+          <div className="flex-1 min-w-0">
+            <div className="max-w-7xl w-full mx-auto px-0 md:px-20 flex justify-start min-w-0">
+              <Link to="/" className="flex items-center gap-2 group min-w-0">
+                <img
+                  src={logo}
+                  alt="DFAB Logo"
+                  className="h-9 sm:h-10 md:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105 shrink-0"
+                />
+
+                <div className="flex items-center border-l border-slate-300 pl-2 sm:pl-3 h-5 min-w-0">
+                  <span className="text-[9px] xs:text-[10px] sm:text-[12px] md:text-[14px] font-normal text-gray-700 uppercase tracking-wide whitespace-nowrap truncate">
+                    STAINLESS SYSTEM PVT LTD ™
+                  </span>
+                </div>
+              </Link>
+            </div>
           </div>
 
-          {/* NAVIGATION SECTION - Stays pinned to the far right edge */}
           <div className="flex items-center gap-1 xl:gap-2 shrink-0">
             <nav className="hidden xl:flex items-center gap-0.5">
               {navLinks.map((link) => (
@@ -77,7 +74,7 @@ export default function Navbar() {
                 </Link>
               ))}
             </nav>
-            
+
             <button
               onClick={() => setShowInquire(true)}
               className="hidden sm:block bg-[#0A66C2] text-white px-5 py-2 text-[11px] font-bold uppercase tracking-widest rounded-full hover:bg-[#084e96] transition-all hover:shadow-md active:scale-95 whitespace-nowrap ml-4 shadow-sm"
@@ -87,20 +84,20 @@ export default function Navbar() {
 
             <button
               onClick={() => setOpen(!open)}
-              className="xl:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-lg ml-2"
+              className="xl:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-lg ml-1 sm:ml-2 shrink-0"
+              aria-label="Toggle menu"
             >
               {open ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile menu */}
         <div
           className={`xl:hidden bg-white border-t border-slate-100 overflow-hidden transition-all duration-300 ease-in-out ${
             open ? "max-h-[600px] opacity-100 shadow-2xl py-6" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="px-6 space-y-1">
+          <div className="px-4 sm:px-6 space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -114,6 +111,7 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+
             <button
               onClick={() => {
                 setOpen(false);
