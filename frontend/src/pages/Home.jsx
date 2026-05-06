@@ -227,11 +227,11 @@ const TESTIMONIALS = [
   },
   {
   name: "Raghavi Kodati",
-  role: "",
+  role: "Manager",
   company: "IIT Chemical Engineering",
   sector: "Chemical",
   rating: 5,
-  text: "DFAB stood out as an exceptional machining partner."
+  text: "As a deep tech startup developing novel electrolysers, DFAB stood out as an exceptional machining partner. Pramod's deep process expertise helped us refine our designs, accurately estimate machining times and costs, and deliver on time with quality. Beyond standard machining, DFAB proactively engaged in prototyping novel welding processes with us — working out the fixtures and process parameters needed to make it happen.",
 },
 ];
 
