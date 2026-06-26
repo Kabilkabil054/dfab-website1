@@ -54,7 +54,35 @@ function GlobalReveal() {
   return null;
 }
 
+function NotFoundPage() {
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        fontFamily: "Arial, sans-serif",
+        background: "#ffffff",
+        color: "#111827",
+        textAlign: "center",
+      }}
+    >
+      <h1 style={{ fontSize: "72px", margin: "0 0 10px" }}>404</h1>
+      <p style={{ fontSize: "20px", margin: 0 }}>Page Not Found</p>
+    </div>
+  );
+}
+
 function App() {
+  const blockedPaths = ["/wp-admin", "/wp-login.php"];
+  const currentPath = window.location.pathname;
+
+  if (blockedPaths.some((path) => currentPath.startsWith(path))) {
+    return <NotFoundPage />;
+  }
+
   return (
     <div className="App">
       <BrowserRouter>
