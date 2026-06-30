@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Download } from "lucide-react";
 import InquireModal from "./InquireModal";
 import logo from "../logo.png";
 
@@ -20,7 +20,20 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showInquire, setShowInquire] = useState(false);
+  const [showBrochure, setShowBrochure] = useState(false);
+  const [brochureForm, setBrochureForm] = useState({ name: "", email: "" });
   const location = useLocation();
+
+  const canDownload =
+    brochureForm.name.trim() !== "" &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(brochureForm.email);
+
+  const handleDownloadBrochure = () => {
+    const link = document.createElement("a");
+    link.href = "/brochure.pdf";
+    link.download = "DFAB-Brochure.pdf";
+    link.click();
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -83,6 +96,14 @@ export default function Navbar() {
             </button>
 
             <button
+              onClick={() => setShowBrochure(true)}
+              className="hidden sm:flex items-center justify-center w-9 h-9 rounded-full border border-[#0A66C2]/20 text-[#0A66C2] hover:bg-blue-50 transition-all active:scale-95"
+              aria-label="Download brochure"
+            >
+              <Download size={17} />
+            </button>
+
+            <button
               onClick={() => setOpen(!open)}
               className="xl:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-lg ml-1 sm:ml-2 shrink-0"
               aria-label="Toggle menu"
@@ -121,11 +142,79 @@ export default function Navbar() {
             >
               Inquire Now
             </button>
+
+            <button
+              onClick={() => {
+                setOpen(false);
+                setShowBrochure(true);
+              }}
+              className="w-full border border-[#0A66C2] text-[#0A66C2] py-3.5 text-[13px] font-bold uppercase tracking-widest rounded-xl mt-3 flex items-center justify-center gap-2"
+            >
+              <Download size={16} />
+              Download Brochure
+            </button>
           </div>
         </div>
       </header>
 
       {showInquire && <InquireModal onClose={() => setShowInquire(false)} />}
+
+      {showBrochure && (
+        <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center px-4">
+          <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 relative">
+            <button
+              onClick={() => setShowBrochure(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700"
+              aria-label="Close brochure popup"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="mb-5">
+              <h3 className="text-xl font-bold text-slate-900">
+                Download Brochure
+              </h3>
+              <p className="text-sm text-slate-500 mt-1">
+                Enter your details to download our company brochure.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <input
+                type="text"
+                value={brochureForm.name}
+                onChange={(e) =>
+                  setBrochureForm({ ...brochureForm, name: e.target.value })
+                }
+                placeholder="Your Name"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0A66C2] focus:ring-2 focus:ring-blue-100"
+              />
+
+              <input
+                type="email"
+                value={brochureForm.email}
+                onChange={(e) =>
+                  setBrochureForm({ ...brochureForm, email: e.target.value })
+                }
+                placeholder="Email Address"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0A66C2] focus:ring-2 focus:ring-blue-100"
+              />
+
+              <button
+                onClick={handleDownloadBrochure}
+                disabled={!canDownload}
+                className={`w-full py-3 rounded-xl text-sm font-bold uppercase tracking-widest transition-all ${
+                  canDownload
+                    ? "bg-[#0A66C2] text-white hover:bg-[#084e96]"
+                    : "bg-slate-100 text-slate-400 cursor-not-allowed"
+                }`}
+              >
+                Download Brochure
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
