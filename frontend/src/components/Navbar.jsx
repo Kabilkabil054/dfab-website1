@@ -33,6 +33,8 @@ export default function Navbar() {
     link.href = "/brochure.pdf";
     link.download = "DFAB-Brochure.pdf";
     link.click();
+    setShowBrochure(false);
+    setBrochureForm({ name: "", email: "" });
   };
 
   useEffect(() => {
