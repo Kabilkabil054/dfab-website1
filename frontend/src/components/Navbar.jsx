@@ -21,12 +21,17 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [showInquire, setShowInquire] = useState(false);
   const [showBrochure, setShowBrochure] = useState(false);
-  const [brochureForm, setBrochureForm] = useState({ name: "", email: "" });
+  const [brochureForm, setBrochureForm] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+  });
   const location = useLocation();
 
   const canDownload =
     brochureForm.name.trim() !== "" &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(brochureForm.email);
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(brochureForm.email) &&
+    /^\d{10}$/.test(brochureForm.mobile);
 
   const handleDownloadBrochure = () => {
     const link = document.createElement("a");
@@ -34,7 +39,7 @@ export default function Navbar() {
     link.download = "DFAB-Brochure.pdf";
     link.click();
     setShowBrochure(false);
-    setBrochureForm({ name: "", email: "" });
+    setBrochureForm({ name: "", email: "", mobile: "" });
   };
 
   useEffect(() => {
@@ -199,6 +204,20 @@ export default function Navbar() {
                   setBrochureForm({ ...brochureForm, email: e.target.value })
                 }
                 placeholder="Email Address"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0A66C2] focus:ring-2 focus:ring-blue-100"
+              />
+
+              <input
+                type="tel"
+                value={brochureForm.mobile}
+                onChange={(e) =>
+                  setBrochureForm({
+                    ...brochureForm,
+                    mobile: e.target.value.replace(/\D/g, "").slice(0, 10),
+                  })
+                }
+                placeholder="Mobile Number"
+                maxLength={10}
                 className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0A66C2] focus:ring-2 focus:ring-blue-100"
               />
 
